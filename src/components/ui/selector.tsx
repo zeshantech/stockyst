@@ -1,0 +1,75 @@
+"use client";
+
+import * as React from "react";
+import { Label } from "./label";
+import { Info } from "./info";
+import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+
+interface Option {
+  label: string;
+  value: string;
+}
+
+interface SelectorProps {
+  options: Option[];
+  value?: string;
+  onChange?: (value: string) => void;
+  label?: string;
+  info?: string;
+  placeholder?: string;
+  error?: string;
+  className?: string;
+  disabled?: boolean;
+  required?: boolean;
+}
+
+function Selector({
+  options,
+  value,
+  onChange,
+  label,
+  info,
+  placeholder = "Select an option",
+  error,
+  className,
+  disabled,
+  required,
+}: SelectorProps) {
+  return (
+    <div className="space-y-2">
+      {label && (
+        <Label>
+          {label} {required && <span className="text-destructive">*</span>}
+          {info && <Info tooltip={info} />}
+        </Label>
+      )}
+      <Select
+        value={value}
+        onValueChange={onChange}
+        disabled={disabled}
+        required={required}
+      >
+        <SelectTrigger className={cn("w-full", className)}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {error && <span className="text-sm text-error">{error}</span>}
+    </div>
+  );
+}
+
+export { Selector, type SelectorProps, type Option };
