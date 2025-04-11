@@ -67,7 +67,7 @@ export function CTASection({
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Button href={primaryButtonLink} size="lg" className="group">
                   {primaryButtonText}
-                  <IconArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <IconArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                 </Button>
                 <Button href={secondaryButtonLink} size="lg" variant="outline">
                   {secondaryButtonText}
@@ -78,7 +78,7 @@ export function CTASection({
               <div className="flex flex-col sm:flex-row gap-6 mt-8 pt-8 border-t border-border">
                 <div className="flex items-center gap-3">
                   <div className="bg-primary/10 text-primary rounded-lg p-2">
-                    <IconUsers className="h-5 w-5" />
+                    <IconUsers className="size-5" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">5,000+</p>
@@ -89,7 +89,7 @@ export function CTASection({
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-primary/10 text-primary rounded-lg p-2">
-                    <IconDeviceAnalytics className="h-5 w-5" />
+                    <IconDeviceAnalytics className="size-5" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">99.9%</p>
@@ -98,7 +98,7 @@ export function CTASection({
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="bg-primary/10 text-primary rounded-lg p-2">
-                    <IconShield className="h-5 w-5" />
+                    <IconShield className="size-5" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">ISO 27001</p>

@@ -164,7 +164,7 @@ export function PricingSection() {
                               : "bg-muted text-muted-foreground"
                           )}
                         >
-                          <IconCheck className="h-3 w-3" />
+                          <IconCheck className="size-3" />
                         </div>
                         <span className="text-foreground">{feature}</span>
                       </motion.li>
@@ -206,7 +206,7 @@ export function PricingSection() {
           className="mt-16 text-center"
         >
           <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-            <IconShield className="h-4 w-4 text-primary" />
+            <IconShield className="size-4 text-primary" />
             All plans include 99.9% uptime guarantee and 24/7 technical support
           </p>
         </motion.div>

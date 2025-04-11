@@ -63,9 +63,9 @@ export function PageHeader({ showBackToHome = true }: PageHeaderProps) {
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
-                <SunIcon className="h-5 w-5" />
+                <SunIcon className="size-5" />
               ) : (
-                <MoonIcon className="h-5 w-5" />
+                <MoonIcon className="size-5" />
               )}
             </Button>
 
@@ -83,7 +83,7 @@ export function PageHeader({ showBackToHome = true }: PageHeaderProps) {
                   size="sm"
                   className="flex items-center gap-1.5"
                 >
-                  <IconCalendar className="h-4 w-4" />
+                  <IconCalendar className="size-4" />
                   Schedule Demo
                 </Button>
               </Link>

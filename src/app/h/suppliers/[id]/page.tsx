@@ -209,7 +209,7 @@ export default function SupplierDetailsPage({
                   <label className="text-sm font-medium">Status</label>
                   <Selector
                     value={form.watch("status")}
-                    onChange={(value: "active" | "inactive") =>
+                    onChange={(value) =>
                       form.setValue("status", value)
                     }
                     error={form.formState.errors.status?.message}
@@ -259,12 +259,7 @@ export default function SupplierDetailsPage({
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <Badge
-                    variant="outline"
-                    className={
-                      supplier.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-800"
-                    }
+                    variant={supplier.status === "active" ? "success" : "muted"}
                   >
                     {supplier.status.charAt(0).toUpperCase() +
                       supplier.status.slice(1)}
@@ -281,7 +276,7 @@ export default function SupplierDetailsPage({
                 <div className="md:col-span-2">
                   <p className="text-sm text-muted-foreground">Address</p>
                   <p className="font-medium">
-                    {`${supplier.address.street}, ${supplier.address.city}, ${supplier.address.state} ${supplier.address.zip}, ${supplier.address.country}`}
+                    {`${supplier.address.street}, ${supplier.address.city}, ${supplier.address.state} ${supplier.address.zipCode}, ${supplier.address.country}`}
                   </p>
                 </div>
                 <div>
@@ -319,12 +314,7 @@ export default function SupplierDetailsPage({
             </CardHeader>
             <CardContent>
               <Badge
-                variant="outline"
-                className={
-                  supplier.status === "active"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-800"
-                }
+                variant={supplier.status === "active" ? "success" : "muted"}
               >
                 {supplier.status.charAt(0).toUpperCase() +
                   supplier.status.slice(1)}

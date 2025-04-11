@@ -91,9 +91,7 @@ export function AboutComponent({
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Badge className="mb-4 bg-primary/10 text-primary">
-                Our Story
-              </Badge>
+              <Badge className="mb-4">Our Story</Badge>
               <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
                 {title}
               </h1>
@@ -195,9 +193,7 @@ export function AboutComponent({
         <section className="py-16 bg-muted/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <Badge className="mb-4 bg-primary/10 text-primary">
-                Our Values
-              </Badge>
+              <Badge className="mb-4">Our Values</Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
                 What drives us
               </h2>
@@ -219,7 +215,7 @@ export function AboutComponent({
                   <Card className="h-full">
                     <CardHeader>
                       <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                        <value.icon className="h-6 w-6 text-primary" />
+                        <value.icon className="size-6 text-primary" />
                       </div>
                       <CardTitle>{value.title}</CardTitle>
                     </CardHeader>
@@ -241,9 +237,7 @@ export function AboutComponent({
         <section className="py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <Badge className="mb-4 bg-primary/10 text-primary">
-                Meet the Creator
-              </Badge>
+              <Badge className="mb-4">Meet the Creator</Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
                 The Mind Behind InvenTree
               </h2>

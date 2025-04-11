@@ -122,7 +122,7 @@ export default function StockPage() {
           description="Items below reorder point"
           subtitle="Requires attention"
           badge={
-            <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+            <Badge variant="warning" >
               Needs Attention
             </Badge>
           }
@@ -138,7 +138,7 @@ export default function StockPage() {
           description="Items with zero inventory"
           subtitle="Urgent restock needed"
           badge={
-            <Badge variant="outline" className="bg-red-100 text-red-800">
+            <Badge variant="error">
               Critical
             </Badge>
           }

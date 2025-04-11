@@ -121,7 +121,7 @@ export default function OrdersPage() {
           description="Average order value"
           subtitle={`$${stats.avgOrderValue.toFixed(2)} per order`}
           badge={
-            <Badge variant="outline" className="bg-green-100 text-green-800">
+            <Badge variant="success">
               <IconPackage className="mr-1 size-4" />
               Revenue
             </Badge>
@@ -138,7 +138,7 @@ export default function OrdersPage() {
           description="Processing orders"
           subtitle={`${stats.processingOrders} in processing`}
           badge={
-            <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+            <Badge variant="warning">
               <IconTruck className="mr-1 size-4" />
               Pending
             </Badge>
@@ -155,7 +155,7 @@ export default function OrdersPage() {
           description="Shipped orders"
           subtitle={`${stats.shippedOrders} in transit`}
           badge={
-            <Badge variant="outline" className="bg-green-100 text-green-800">
+            <Badge variant="success">
               <IconTruck className="mr-1 size-4" />
               Delivered
             </Badge>

@@ -49,7 +49,7 @@ function FeatureCard({
                 : "bg-muted text-foreground"
             )}
           >
-            <Icon className="h-6 w-6" />
+            <Icon className="size-6" />
           </div>
           <CardTitle className="mt-4 text-foreground">{title}</CardTitle>
         </CardHeader>

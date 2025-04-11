@@ -101,7 +101,7 @@ export default function LocationsPage() {
           </p>
         </div>
         <Button onClick={() => router.push("/h/locations/add")}>
-          <IconPlus className="mr-2 h-4 w-4" />
+          <IconPlus  />
           Add Location
         </Button>
       </div>

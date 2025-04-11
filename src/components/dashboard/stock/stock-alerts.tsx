@@ -204,14 +204,7 @@ export function StockAlerts({ data }: StockAlertsProps) {
       cell: ({ row }) => {
         const alertType = row.getValue("alertType") as string;
         return (
-          <Badge
-            variant="outline"
-            className={
-              alertType === "low-stock"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
-            }
-          >
+          <Badge variant={alertType === "low-stock" ? "success" : "error"}>
             {alertType.charAt(0).toUpperCase() + alertType.slice(1)}
           </Badge>
         );
@@ -233,13 +226,12 @@ export function StockAlerts({ data }: StockAlertsProps) {
         const severity = row.getValue("severity") as string;
         return (
           <Badge
-            variant="outline"
-            className={
+            variant={
               severity === "low"
-                ? "bg-green-100 text-green-800"
+                ? "success"
                 : severity === "medium"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
+                ? "warning"
+                : "error"
             }
           >
             {severity.charAt(0).toUpperCase() + severity.slice(1)}
@@ -263,13 +255,12 @@ export function StockAlerts({ data }: StockAlertsProps) {
         const status = row.getValue("status") as string;
         return (
           <Badge
-            variant="outline"
-            className={
+            variant={
               status === "active"
-                ? "bg-blue-100 text-blue-800"
+                ? "info"
                 : status === "resolved"
-                ? "bg-green-100 text-green-800"
-                : "bg-gray-100 text-gray-800"
+                ? "success"
+                : "muted"
             }
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}

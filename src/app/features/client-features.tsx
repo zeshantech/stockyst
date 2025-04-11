@@ -212,7 +212,7 @@ function FeatureCard({
                 : "bg-muted text-foreground"
             )}
           >
-            <Icon className="h-6 w-6" />
+            <Icon className="size-6" />
           </div>
           <CardTitle className="text-xl text-foreground mb-2">
             {title}
@@ -278,7 +278,7 @@ function CompactFeatureCard({
       <Card className="h-full hover:shadow-md transition-all">
         <CardHeader>
           <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-3">
-            <Icon className="h-5 w-5" />
+            <Icon className="size-5" />
           </div>
           <CardTitle className="text-lg mb-2">{title}</CardTitle>
           <p className="text-sm text-muted-foreground">{description}</p>
@@ -335,7 +335,7 @@ export function ClientFeatures() {
               viewport={{ once: true }}
               className="flex items-center gap-2 bg-muted/50 text-muted-foreground rounded-full px-4 py-2"
             >
-              <platform.icon className="h-4 w-4" />
+              <platform.icon className="size-4" />
               <span className="text-sm font-medium">{platform.label}</span>
             </motion.div>
           ))}

@@ -58,7 +58,7 @@ export function DashboardPreview() {
           {/* Sidebar */}
           <div className="col-span-2 border-r border-border p-4 flex flex-col gap-4">
             <div className="flex items-center gap-2 px-3 py-2">
-              <IconBox className="h-6 w-6 text-primary" />
+              <IconBox className="size-6 text-primary" />
               <span className="font-semibold">InvenTree</span>
             </div>
 
@@ -83,7 +83,7 @@ export function DashboardPreview() {
                       : "text-muted-foreground hover:bg-muted"
                   )}
                 >
-                  <item.icon className="h-4 w-4" />
+                  <item.icon className="size-4" />
                   {item.label}
                 </motion.div>
               ))}
@@ -102,7 +102,7 @@ export function DashboardPreview() {
               </div>
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <IconBell className="h-5 w-5 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
+                  <IconBell className="size-5 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></div>
                 </div>
                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
@@ -152,7 +152,7 @@ export function DashboardPreview() {
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="p-2 rounded-lg bg-primary/10">
-                      <stat.icon className="h-5 w-5 text-primary" />
+                      <stat.icon className="size-5 text-primary" />
                     </div>
                     <div
                       className={cn(
@@ -161,9 +161,9 @@ export function DashboardPreview() {
                       )}
                     >
                       {stat.trendUp ? (
-                        <IconArrowUpRight className="h-4 w-4" />
+                        <IconArrowUpRight className="size-4" />
                       ) : (
-                        <IconArrowDownRight className="h-4 w-4" />
+                        <IconArrowDownRight className="size-4" />
                       )}
                       {stat.trend}
                     </div>
@@ -185,7 +185,7 @@ export function DashboardPreview() {
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-semibold">Recent Activity</h3>
                   <Button variant="outline" size="sm" className="h-8">
-                    <IconRefresh className="h-4 w-4 mr-2" />
+                    <IconRefresh className="size-4 mr-2" />
                     Refresh
                   </Button>
                 </div>
@@ -221,7 +221,7 @@ export function DashboardPreview() {
                       className="flex items-start gap-4 p-4 rounded-lg border border-border/50 bg-background"
                     >
                       <div className={cn("p-2 rounded-lg bg-card", item.color)}>
-                        <item.icon className="h-4 w-4" />
+                        <item.icon className="size-4" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
@@ -244,7 +244,7 @@ export function DashboardPreview() {
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-semibold">Stock Levels</h3>
                   <Button variant="outline" size="sm" className="h-8">
-                    <IconFilter className="h-4 w-4 mr-2" />
+                    <IconFilter className="size-4 mr-2" />
                     Filter
                   </Button>
                 </div>

@@ -211,12 +211,7 @@ export default function CategoryDetailsPage({
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <Badge
-                    variant="outline"
-                    className={
-                      category.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-800"
-                    }
+                    variant={category.status === "active" ? "success" : "muted"}
                   >
                     {category.status.charAt(0).toUpperCase() +
                       category.status.slice(1)}
@@ -255,12 +250,7 @@ export default function CategoryDetailsPage({
             </CardHeader>
             <CardContent>
               <Badge
-                variant="outline"
-                className={
-                  category.status === "active"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-800"
-                }
+                variant={category.status === "active" ? "success" : "muted"}
               >
                 {category.status.charAt(0).toUpperCase() +
                   category.status.slice(1)}

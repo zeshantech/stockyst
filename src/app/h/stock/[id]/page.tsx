@@ -111,7 +111,7 @@ export default function StockDetailsPage({
     <div className="flex flex-col gap-6 p-6">
       <div className="flex items-center gap-4">
         <Button variant="outline" size="icon" onClick={() => router.back()}>
-          <IconArrowLeft className="h-4 w-4" />
+          <IconArrowLeft className="size-4" />
         </Button>
         <div>
           <h1 className="text-3xl font-bold">Stock Details</h1>
@@ -228,13 +228,12 @@ export default function StockDetailsPage({
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <Badge
-                    variant="outline"
-                    className={
+                    variant={
                       stock.status === "in-stock"
-                        ? "bg-green-100 text-green-800"
+                        ? "success"
                         : stock.status === "low-stock"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                        ? "warning"
+                        : "error"
                     }
                   >
                     {stock.status.charAt(0).toUpperCase() +
@@ -290,13 +289,12 @@ export default function StockDetailsPage({
             </CardHeader>
             <CardContent>
               <Badge
-                variant="outline"
-                className={
+                variant={
                   stock.status === "in-stock"
-                    ? "bg-green-100 text-green-800"
+                    ? "success"
                     : stock.status === "low-stock"
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-red-100 text-red-800"
+                    ? "warning"
+                    : "error"
                 }
               >
                 {stock.status.charAt(0).toUpperCase() + stock.status.slice(1)}

@@ -92,7 +92,7 @@ export function CreateStoreDialog() {
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Store className="h-5 w-5" />
+            <Store className="size-5" />
             Create New Store
           </DialogTitle>
           <DialogDescription>

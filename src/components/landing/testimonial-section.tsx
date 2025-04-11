@@ -111,11 +111,11 @@ function TestimonialCard({
                 <span key={star}>
                   {star <= 5 ? (
                     <IconStarFilled
-                      className={cn("h-4 w-4", colorClasses.starFill)}
+                      className={cn("size-4", colorClasses.starFill)}
                     />
                   ) : (
                     <IconStar
-                      className={cn("h-4 w-4", colorClasses.starEmpty)}
+                      className={cn("size-4", colorClasses.starEmpty)}
                     />
                   )}
                 </span>

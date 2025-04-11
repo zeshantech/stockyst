@@ -317,7 +317,7 @@ export function StoreSettings() {
                   </CardDescription>
                 </div>
                 <Button onClick={handleCreateStore}>
-                  <IconPlus className="mr-2 h-4 w-4" />
+                  <IconPlus />
                   Add Store
                 </Button>
               </CardHeader>
@@ -356,7 +356,7 @@ export function StoreSettings() {
                               <div className="flex items-center gap-3">
                                 <Avatar className="h-8 w-8 bg-primary/10">
                                   <AvatarFallback>
-                                    <StoreIcon className="h-4 w-4" />
+                                    <StoreIcon className="size-4" />
                                   </AvatarFallback>
                                 </Avatar>
                                 <div>{store.name}</div>
@@ -373,16 +373,9 @@ export function StoreSettings() {
                             </TableCell>
                             <TableCell>
                               {store.id === "store-1" ? (
-                                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-                                  Default
-                                </Badge>
+                                <Badge variant="info">Default</Badge>
                               ) : (
-                                <Badge
-                                  variant="outline"
-                                  className="bg-green-100 text-green-800 hover:bg-green-100"
-                                >
-                                  Active
-                                </Badge>
+                                <Badge variant="success">Active</Badge>
                               )}
                             </TableCell>
                             <TableCell className="text-right">
@@ -392,7 +385,7 @@ export function StoreSettings() {
                                   size="icon"
                                   onClick={() => handleEditStore(store.id)}
                                 >
-                                  <IconEdit className="h-4 w-4" />
+                                  <IconEdit className="size-4" />
                                   <span className="sr-only">Edit</span>
                                 </Button>
                                 <Button
@@ -401,7 +394,7 @@ export function StoreSettings() {
                                   onClick={() => handleDeleteStore(store.id)}
                                   disabled={store.id === "store-1"} // Prevent deleting default store
                                 >
-                                  <IconTrash className="h-4 w-4 text-red-500" />
+                                  <IconTrash className="size-4 text-red-500" />
                                   <span className="sr-only">Delete</span>
                                 </Button>
                               </div>
@@ -414,7 +407,7 @@ export function StoreSettings() {
                 ) : (
                   <div className="text-center py-8 px-4 border rounded-md bg-muted/20">
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                      <IconBuildingStore className="h-6 w-6 text-primary" />
+                      <IconBuildingStore className="size-6 text-primary" />
                     </div>
                     <h3 className="mt-4 text-lg font-medium">
                       No stores configured

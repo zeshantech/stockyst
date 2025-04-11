@@ -144,7 +144,7 @@ export function FeaturesSection({ className }: FeaturesSectionProps) {
                       : "bg-muted text-muted-foreground"
                   )}
                 >
-                  <feature.icon className="h-5 w-5" />
+                  <feature.icon className="size-5" />
                 </div>
                 <div>
                   <h3
@@ -188,7 +188,7 @@ export function FeaturesSection({ className }: FeaturesSectionProps) {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="ml-1 h-3 w-3"
+                  className="ml-1 size-3"
                 >
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
@@ -226,7 +226,7 @@ export function FeaturesSection({ className }: FeaturesSectionProps) {
 
                   <div className="p-6 md:p-8">
                     <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                      <feature.icon className="h-6 w-6 text-primary" />
+                      <feature.icon className="size-6 text-primary" />
                       {feature.title}
                     </h3>
                     <p className="text-muted-foreground mb-6">
@@ -327,7 +327,7 @@ export function FeaturesSection({ className }: FeaturesSectionProps) {
               >
                 <div className="bg-card rounded-lg border border-border p-5 h-full">
                   <div className="bg-primary/10 text-primary rounded-lg p-2 inline-flex mb-3">
-                    <item.icon className="h-5 w-5" />
+                    <item.icon className="size-5" />
                   </div>
                   <h4 className="font-medium mb-2">{item.title}</h4>
                   <p className="text-sm text-muted-foreground">{item.desc}</p>

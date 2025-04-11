@@ -163,19 +163,6 @@ export function APISettings() {
     });
   };
 
-  const getPermissionColor = (permission: "read" | "write" | "admin") => {
-    switch (permission) {
-      case "read":
-        return "bg-green-100 text-green-800";
-      case "write":
-        return "bg-blue-100 text-blue-800";
-      case "admin":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
     <div className="space-y-6">
       <Card>
@@ -191,7 +178,7 @@ export function APISettings() {
             onClick={() => setIsCreatingKey(true)}
             disabled={isCreatingKey}
           >
-            <IconPlus className="mr-2 h-4 w-4" />
+            <IconPlus />
             New API Key
           </Button>
         </CardHeader>
@@ -286,7 +273,7 @@ export function APISettings() {
             <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4">
               <div className="flex items-start space-x-3">
                 <div className="mt-0.5">
-                  <IconAlertCircle className="h-5 w-5 text-yellow-600" />
+                  <IconAlertCircle className="size-5 text-yellow-600" />
                 </div>
                 <div className="flex-1">
                   <h4 className="font-medium text-yellow-800">
@@ -301,11 +288,11 @@ export function APISettings() {
                       {newKeyRevealed}
                     </code>
                     <Button
-                      size="sm"
+                      size="icon"
                       variant="outline"
                       onClick={() => copyKey(newKeyRevealed)}
                     >
-                      <IconCopy className="h-4 w-4" />
+                      <IconCopy />
                     </Button>
                   </div>
                 </div>
@@ -343,18 +330,22 @@ export function APISettings() {
                         {key.prefix}••••••••
                       </span>
                       <Badge
-                        variant="outline"
-                        className={getPermissionColor(key.permission)}
+                        variant={
+                          key.permission === "read"
+                            ? "success"
+                            : key.permission === "write"
+                            ? "info"
+                            : key.permission === "admin"
+                            ? "error"
+                            : "muted"
+                        }
                       >
                         {key.permission === "read" && "Read-only"}
                         {key.permission === "write" && "Read & Write"}
                         {key.permission === "admin" && "Full Access"}
                       </Badge>
                       {key.expiresAt && (
-                        <Badge
-                          variant="outline"
-                          className="bg-orange-100 text-orange-800"
-                        >
+                        <Badge variant="error">
                           Expires {formatDate(key.expiresAt)}
                         </Badge>
                       )}
@@ -378,7 +369,7 @@ export function APISettings() {
                       size="icon"
                       onClick={() => deleteKey(key.id)}
                     >
-                      <IconTrash className="h-4 w-4 text-red-500" />
+                      <IconTrash className="size-4 text-red-500" />
                       <span className="sr-only">Delete</span>
                     </Button>
                   </div>
@@ -388,7 +379,7 @@ export function APISettings() {
           ) : (
             <div className="text-center py-8 px-4 border rounded-md bg-muted/20">
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <IconKey className="h-6 w-6 text-primary" />
+                <IconKey className="size-6 text-primary" />
               </div>
               <h3 className="mt-4 text-lg font-medium">No API keys yet</h3>
               <p className="mt-2 text-sm text-muted-foreground">
@@ -413,7 +404,7 @@ export function APISettings() {
           <div className="rounded-md border p-4 bg-primary/5">
             <div className="flex items-start space-x-3">
               <div className="mt-0.5">
-                <IconInfoCircle className="h-5 w-5 text-primary" />
+                <IconInfoCircle className="size-5 text-primary" />
               </div>
               <div>
                 <h4 className="font-medium">API Base URL</h4>
@@ -441,7 +432,7 @@ export function APISettings() {
                   <div className="font-medium">Quick Start Guide</div>
                 </div>
                 <IconChevronDown
-                  className={`h-4 w-4 transition-transform ${
+                  className={`size-4 transition-transform ${
                     apiDocExpanded ? "rotate-180" : ""
                   }`}
                 />

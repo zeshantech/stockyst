@@ -18,6 +18,7 @@ import {
   IconPlugConnected,
   IconReceipt,
 } from "@tabler/icons-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -89,7 +90,7 @@ export default function SettingsPage() {
                 value={tab.id}
                 className="flex items-center gap-2 px-4 py-2 data-[state=active]:bg-background rounded-md"
               >
-                <tab.icon className="h-4 w-4" />
+                <tab.icon className="size-4" />
                 <span>{tab.label}</span>
               </TabsTrigger>
             ))}

@@ -82,7 +82,7 @@ export default function StockAlertsPage() {
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="text-2xl font-bold">{stats.activeAlerts}</div>
-            <Badge variant="outline" className="bg-blue-100 text-blue-800">
+            <Badge variant="info">
               Active
             </Badge>
           </div>
@@ -94,7 +94,7 @@ export default function StockAlertsPage() {
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="text-2xl font-bold">{stats.highSeverityAlerts}</div>
-            <Badge variant="outline" className="bg-red-100 text-red-800">
+            <Badge variant="error">
               Critical
             </Badge>
           </div>
@@ -106,7 +106,7 @@ export default function StockAlertsPage() {
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="text-2xl font-bold">{stats.lowStockAlerts}</div>
-            <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+            <Badge variant="warning">
               Warning
             </Badge>
           </div>

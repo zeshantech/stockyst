@@ -301,13 +301,12 @@ export default function ProductDetailsPage({
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <Badge
-                    variant="outline"
-                    className={
+                    variant={
                       product.status === "active"
-                        ? "bg-green-100 text-green-800"
+                        ? "success"
                         : product.status === "inactive"
-                        ? "bg-gray-100 text-gray-800"
-                        : "bg-red-100 text-red-800"
+                        ? "muted"
+                        : "error"
                     }
                   >
                     {product.status.charAt(0).toUpperCase() +
@@ -347,13 +346,12 @@ export default function ProductDetailsPage({
             </CardHeader>
             <CardContent>
               <Badge
-                variant="outline"
-                className={
+                variant={
                   product.status === "active"
-                    ? "bg-green-100 text-green-800"
+                    ? "success"
                     : product.status === "inactive"
-                    ? "bg-gray-100 text-gray-800"
-                    : "bg-red-100 text-red-800"
+                    ? "muted"
+                    : "error"
                 }
               >
                 {product.status.charAt(0).toUpperCase() +

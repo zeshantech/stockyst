@@ -106,8 +106,7 @@ export function ProfileSettings() {
                   variant="secondary"
                   className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <IconCamera className="h-4 w-4" />
-                  <span className="sr-only">Change profile picture</span>
+                  <IconCamera  />
                 </Button>
               </div>
 

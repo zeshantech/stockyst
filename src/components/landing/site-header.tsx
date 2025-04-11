@@ -50,9 +50,9 @@ export function SiteHeader() {
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
-                <SunIcon className="h-5 w-5" />
+                <SunIcon className="size-5" />
               ) : (
-                <MoonIcon className="h-5 w-5" />
+                <MoonIcon className="size-5" />
               )}
             </Button>
             <Link href="/h" className="hidden md:inline-flex">

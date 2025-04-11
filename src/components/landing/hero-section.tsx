@@ -91,7 +91,7 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
               <Link href="/request-demo">
                 <Button size="lg" className="w-full sm:w-auto group">
                   Schedule Demo
-                  <IconArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <IconArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
               <Link href="/features">
@@ -194,7 +194,7 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
             {/* Floating features badges */}
             <div className="absolute -bottom-5 -left-5 bg-background rounded-lg p-4 shadow-lg flex items-center border border-border">
               <div className="bg-primary/10 p-2 rounded-full mr-3">
-                <IconDevices className="h-5 w-5 text-primary" />
+                <IconDevices className="size-5 text-primary" />
               </div>
               <div>
                 <p className="font-medium text-sm">Cross-Platform</p>
@@ -206,7 +206,7 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
 
             <div className="absolute -top-5 -right-5 bg-background rounded-lg p-4 shadow-lg flex items-center border border-border">
               <div className="bg-primary/10 p-2 rounded-full mr-3">
-                <IconCloudUpload className="h-5 w-5 text-primary" />
+                <IconCloudUpload className="size-5 text-primary" />
               </div>
               <div>
                 <p className="font-medium text-sm">Real-time Sync</p>
@@ -218,7 +218,7 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
 
             <div className="absolute top-1/2 -right-6 transform -translate-y-1/2 hidden lg:block bg-background rounded-lg p-4 shadow-lg flex items-center border border-border">
               <div className="bg-primary/10 p-2 rounded-full mr-3">
-                <IconShieldCheck className="h-5 w-5 text-primary" />
+                <IconShieldCheck className="size-5 text-primary" />
               </div>
               <div>
                 <p className="font-medium text-sm">Enterprise Security</p>

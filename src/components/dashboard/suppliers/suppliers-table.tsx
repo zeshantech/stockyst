@@ -142,7 +142,7 @@ export function SuppliersTable({ data }: SuppliersTableProps) {
         return (
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1">
-              <IconPhone className="h-3 w-3 text-muted-foreground" />
+              <IconPhone className="size-3 text-muted-foreground" />
               <span className="text-sm">{supplier.phone}</span>
             </div>
             <span className="text-sm text-muted-foreground">
@@ -157,12 +157,7 @@ export function SuppliersTable({ data }: SuppliersTableProps) {
       header: "Status",
       cell: ({ row }) => (
         <Badge
-          variant="outline"
-          className={
-            row.getValue("status") === "active"
-              ? "bg-green-100 text-green-800"
-              : "bg-gray-100 text-gray-800"
-          }
+          variant={row.getValue("status") === "active" ? "success" : "muted"}
         >
           {(row.getValue("status") as string).charAt(0).toUpperCase() +
             (row.getValue("status") as string).slice(1)}

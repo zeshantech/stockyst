@@ -30,7 +30,7 @@ export function StoreSelector() {
   if (isLoading) {
     return (
       <Button variant="outline" className="w-[200px] justify-start">
-        <Store className="mr-2 h-4 w-4" />
+        <Store className="mr-2 size-4" />
         <span>Loading stores...</span>
       </Button>
     );
@@ -47,12 +47,12 @@ export function StoreSelector() {
           className="w-[200px] justify-between"
         >
           <div className="flex items-center truncate">
-            <Store className="mr-2 h-4 w-4 shrink-0" />
+            <Store className="mr-2 size-4 shrink-0" />
             <span className="truncate">
               {activeStore ? activeStore.name : "Select store"}
             </span>
           </div>
-          <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-auto size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
@@ -73,7 +73,7 @@ export function StoreSelector() {
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-4 w-4",
+                      "mr-2 size-4",
                       activeStore?.id === store.id ? "opacity-100" : "opacity-0"
                     )}
                   />
@@ -90,7 +90,7 @@ export function StoreSelector() {
                 }}
                 className="cursor-pointer text-blue-600"
               >
-                <PlusCircle className="mr-2 h-4 w-4" />
+                <PlusCircle className="mr-2 size-4" />
                 Create Store
               </CommandItem>
             </CommandGroup>

@@ -92,7 +92,7 @@ export function NotificationSettings() {
             <div className="flex items-center justify-between p-3 rounded-md border">
               <div className="flex items-start gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                  <IconMail className="h-5 w-5 text-primary" />
+                  <IconMail className="size-5 text-primary" />
                 </div>
                 <div>
                   <div className="font-medium">Email Notifications</div>
@@ -113,7 +113,7 @@ export function NotificationSettings() {
             <div className="flex items-center justify-between p-3 rounded-md border">
               <div className="flex items-start gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                  <IconBellRinging className="h-5 w-5 text-primary" />
+                  <IconBellRinging className="size-5 text-primary" />
                 </div>
                 <div>
                   <div className="font-medium">In-App Notifications</div>
@@ -128,7 +128,7 @@ export function NotificationSettings() {
             <div className="flex items-center justify-between p-3 rounded-md border">
               <div className="flex items-start gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                  <IconDeviceMobile className="h-5 w-5 text-primary" />
+                  <IconDeviceMobile className="size-5 text-primary" />
                 </div>
                 <div>
                   <div className="font-medium">Push Notifications</div>
@@ -148,7 +148,7 @@ export function NotificationSettings() {
             <div className="flex items-center justify-between p-3 rounded-md border">
               <div className="flex items-start gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                  <IconBrowserCheck className="h-5 w-5 text-primary" />
+                  <IconBrowserCheck className="size-5 text-primary" />
                 </div>
                 <div>
                   <div className="font-medium">Browser Notifications</div>
@@ -168,7 +168,7 @@ export function NotificationSettings() {
             <div className="flex items-center justify-between p-3 rounded-md border">
               <div className="flex items-start gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                  <IconBrandSlack className="h-5 w-5 text-primary" />
+                  <IconBrandSlack className="size-5 text-primary" />
                 </div>
                 <div>
                   <div className="font-medium">Slack Integration</div>
@@ -363,7 +363,7 @@ export function NotificationSettings() {
                 <div className="flex items-center justify-between p-3 rounded-md border">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-red-100">
-                      <IconBellRinging className="h-5 w-5 text-red-600" />
+                      <IconBellRinging className="size-5 text-red-600" />
                     </div>
                     <div>
                       <div className="font-medium">Low Stock Alerts</div>
@@ -383,7 +383,7 @@ export function NotificationSettings() {
                 <div className="flex items-center justify-between p-3 rounded-md border">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100">
-                      <IconRotate className="h-5 w-5 text-green-600" />
+                      <IconRotate className="size-5 text-green-600" />
                     </div>
                     <div>
                       <div className="font-medium">New Orders</div>
@@ -403,7 +403,7 @@ export function NotificationSettings() {
                 <div className="flex items-center justify-between p-3 rounded-md border">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100">
-                      <IconClock className="h-5 w-5 text-blue-600" />
+                      <IconClock className="size-5 text-blue-600" />
                     </div>
                     <div>
                       <div className="font-medium">Delivery Updates</div>
@@ -423,7 +423,7 @@ export function NotificationSettings() {
                 <div className="flex items-center justify-between p-3 rounded-md border">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-yellow-100">
-                      <IconRotate className="h-5 w-5 text-yellow-600" />
+                      <IconRotate className="size-5 text-yellow-600" />
                     </div>
                     <div>
                       <div className="font-medium">Price Changes</div>
@@ -443,7 +443,7 @@ export function NotificationSettings() {
                 <div className="flex items-center justify-between p-3 rounded-md border">
                   <div className="flex items-start gap-3">
                     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-purple-100">
-                      <IconRotate className="h-5 w-5 text-purple-600" />
+                      <IconRotate className="size-5 text-purple-600" />
                     </div>
                     <div>
                       <div className="font-medium">System Updates</div>

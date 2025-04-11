@@ -94,15 +94,15 @@ export function NotificationPopup() {
   const getIconForType = (type: NotificationType) => {
     switch (type) {
       case "info":
-        return <Info className="h-5 w-5 text-blue-500" />;
+        return <Info className="size-5 text-blue-500" />;
       case "success":
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
+        return <CheckCircle2 className="size-5 text-green-500" />;
       case "warning":
-        return <AlertTriangle className="h-5 w-5 text-amber-500" />;
+        return <AlertTriangle className="size-5 text-amber-500" />;
       case "error":
-        return <AlertTriangle className="h-5 w-5 text-red-500" />;
+        return <AlertTriangle className="size-5 text-red-500" />;
       default:
-        return <Info className="h-5 w-5 text-blue-500" />;
+        return <Info className="size-5 text-blue-500" />;
     }
   };
 
@@ -127,10 +127,10 @@ export function NotificationPopup() {
           >
             <div className="flex items-center justify-between border-b p-4 dark:border-gray-700">
               <div className="flex items-center space-x-2">
-                <Bell className="h-5 w-5 text-primary" />
+                <Bell className="size-5 text-primary" />
                 <h2 className="text-lg font-semibold">Notifications</h2>
                 {unreadCount > 0 && (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-white">
+                  <span className="flex size-5 items-center justify-center rounded-full bg-primary text-xs text-white">
                     {unreadCount}
                   </span>
                 )}
@@ -151,7 +151,7 @@ export function NotificationPopup() {
                   size="icon"
                   onClick={() => setIsOpen(false)}
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               </div>
             </div>
@@ -183,7 +183,7 @@ export function NotificationPopup() {
                             {notification.title}
                           </h3>
                           <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3 text-gray-400" />
+                            <Clock className="size-3 text-gray-400" />
                             <p className="text-xs text-gray-400">
                               {notification.time}
                             </p>

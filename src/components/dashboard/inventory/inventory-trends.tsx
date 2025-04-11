@@ -30,12 +30,8 @@ export function InventoryTrends({ monthlyData }: InventoryTrendsProps) {
             <div className="text-sm font-medium text-muted-foreground">
               Value Trend
             </div>
-            <Badge variant={valueTrend >= 0 ? "default" : "destructive"}>
-              {valueTrend >= 0 ? (
-                <IconTrendingUp className="mr-1 size-4" />
-              ) : (
-                <IconTrendingDown className="mr-1 size-4" />
-              )}
+            <Badge variant={valueTrend >= 0 ? "default" : "error"}>
+              {valueTrend >= 0 ? <IconTrendingUp /> : <IconTrendingDown />}
               {Math.abs(valueTrend).toFixed(1)}%
             </Badge>
           </div>
@@ -54,12 +50,8 @@ export function InventoryTrends({ monthlyData }: InventoryTrendsProps) {
             <div className="text-sm font-medium text-muted-foreground">
               Stock Trend
             </div>
-            <Badge variant={stockTrend >= 0 ? "default" : "destructive"}>
-              {stockTrend >= 0 ? (
-                <IconTrendingUp className="mr-1 size-4" />
-              ) : (
-                <IconTrendingDown className="mr-1 size-4" />
-              )}
+            <Badge variant={stockTrend >= 0 ? "default" : "error"}>
+              {stockTrend >= 0 ? <IconTrendingUp /> : <IconTrendingDown />}
               {Math.abs(stockTrend).toFixed(1)}%
             </Badge>
           </div>

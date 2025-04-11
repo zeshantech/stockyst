@@ -196,18 +196,9 @@ export function StockTable({ data }: StockTableProps) {
           <div className="flex items-center gap-2">
             <span>{quantity}</span>
             {quantity <= reorderPoint && (
-              <Badge
-                variant="outline"
-                className="bg-yellow-100 text-yellow-800"
-              >
-                Low Stock
-              </Badge>
+              <Badge variant="warning">Low Stock</Badge>
             )}
-            {quantity === 0 && (
-              <Badge variant="outline" className="bg-red-100 text-red-800">
-                Out of Stock
-              </Badge>
-            )}
+            {quantity === 0 && <Badge variant="error">Out of Stock</Badge>}
           </div>
         );
       },
@@ -270,13 +261,12 @@ export function StockTable({ data }: StockTableProps) {
         const status = row.getValue("status") as string;
         return (
           <Badge
-            variant="outline"
-            className={
+            variant={
               status === "in-stock"
-                ? "bg-green-100 text-green-800"
+                ? "success"
                 : status === "low-stock"
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
+                ? "warning"
+                : "error"
             }
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}

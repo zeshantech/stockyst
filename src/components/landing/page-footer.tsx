@@ -15,7 +15,7 @@ export function PageFooter() {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <Link href="/" className="flex items-center">
-              <IconBox className="h-6 w-6 text-primary" />
+              <IconBox className="size-6 text-primary" />
               <span className="ml-2 text-lg font-bold text-foreground">
                 InvenTree
               </span>
@@ -30,9 +30,9 @@ export function PageFooter() {
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
-                <SunIcon className="h-5 w-5" />
+                <SunIcon className="size-5" />
               ) : (
-                <MoonIcon className="h-5 w-5" />
+                <MoonIcon className="size-5" />
               )}
             </Button>
           </div>

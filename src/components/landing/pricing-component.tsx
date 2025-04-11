@@ -240,7 +240,7 @@ export function PricingComponent({
                               : "bg-muted text-muted-foreground"
                           )}
                         >
-                          <IconCheck className="h-3 w-3" />
+                          <IconCheck className="size-3" />
                         </div>
                         <span className="text-foreground">{feature}</span>
                       </motion.li>
@@ -265,7 +265,7 @@ export function PricingComponent({
                             viewport={{ once: true }}
                           >
                             <div className="rounded-full p-1 mt-0.5 bg-muted text-muted-foreground">
-                              <IconCheck className="h-3 w-3" />
+                              <IconCheck className="size-3" />
                             </div>
                             <span>{limitation}</span>
                           </motion.li>
@@ -314,7 +314,7 @@ export function PricingComponent({
           className="mt-16 text-center"
         >
           <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-            <IconShield className="h-4 w-4 text-primary" />
+            <IconShield className="size-4 text-primary" />
             All plans include secure data storage, regular updates, and
             responsive technical support
           </p>

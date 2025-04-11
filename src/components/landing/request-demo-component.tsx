@@ -184,7 +184,7 @@ export function RequestDemoComponent({
                             : "bg-muted text-muted-foreground"
                         }`}
                       >
-                        {step > 1 ? <IconCheck className="h-4 w-4" /> : "1"}
+                        {step > 1 ? <IconCheck className="size-4" /> : "1"}
                       </div>
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
@@ -312,7 +312,7 @@ export function RequestDemoComponent({
 
                       <Button type="submit" className="w-full">
                         Continue to Scheduling
-                        <IconCalendar className="ml-2 h-4 w-4" />
+                        <IconCalendar className="ml-2 size-4" />
                       </Button>
                     </form>
                   ) : (
@@ -368,7 +368,7 @@ export function RequestDemoComponent({
                                 handleSelectChange("demoTime", slot.id)
                               }
                             >
-                              <IconClock className="mr-2 h-4 w-4" />
+                              <IconClock className="mr-2 size-4" />
                               {slot.label}
                             </Button>
                           ))}
@@ -390,7 +390,7 @@ export function RequestDemoComponent({
                                 htmlFor="video"
                                 className="flex items-center cursor-pointer"
                               >
-                                <IconDeviceDesktop className="mr-2 h-4 w-4" />
+                                <IconDeviceDesktop className="mr-2 size-4" />
                                 Video Call
                               </Label>
                             </div>
@@ -400,7 +400,7 @@ export function RequestDemoComponent({
                                 htmlFor="phone"
                                 className="flex items-center cursor-pointer"
                               >
-                                <IconHeadset className="mr-2 h-4 w-4" />
+                                <IconHeadset className="mr-2 size-4" />
                                 Phone Call
                               </Label>
                             </div>
@@ -410,7 +410,7 @@ export function RequestDemoComponent({
                                 htmlFor="mobile"
                                 className="flex items-center cursor-pointer"
                               >
-                                <IconDeviceMobile className="mr-2 h-4 w-4" />
+                                <IconDeviceMobile className="mr-2 size-4" />
                                 Mobile Demo
                               </Label>
                             </div>
@@ -435,7 +435,7 @@ export function RequestDemoComponent({
                           {isSubmitting ? (
                             <span className="flex items-center">
                               <svg
-                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                className="animate-spin -ml-1 mr-2 size-4 text-white"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
@@ -459,7 +459,7 @@ export function RequestDemoComponent({
                           ) : (
                             <span className="flex items-center">
                               Schedule Demo
-                              <IconSend className="ml-2 h-4 w-4" />
+                              <IconSend className="ml-2 size-4" />
                             </span>
                           )}
                         </Button>
@@ -484,7 +484,7 @@ export function RequestDemoComponent({
                 <CardContent className="space-y-4">
                   <div className="flex items-start space-y-1">
                     <div className="bg-primary/10 p-2 rounded-full mr-3 flex-shrink-0 mt-1">
-                      <IconCheck className="h-4 w-4 text-primary" />
+                      <IconCheck className="size-4 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">Personalized Walkthrough</p>
@@ -497,7 +497,7 @@ export function RequestDemoComponent({
 
                   <div className="flex items-start space-y-1">
                     <div className="bg-primary/10 p-2 rounded-full mr-3 flex-shrink-0 mt-1">
-                      <IconCheck className="h-4 w-4 text-primary" />
+                      <IconCheck className="size-4 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">Q&A Session</p>
@@ -510,7 +510,7 @@ export function RequestDemoComponent({
 
                   <div className="flex items-start space-y-1">
                     <div className="bg-primary/10 p-2 rounded-full mr-3 flex-shrink-0 mt-1">
-                      <IconCheck className="h-4 w-4 text-primary" />
+                      <IconCheck className="size-4 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">Implementation Discussion</p>
@@ -522,7 +522,7 @@ export function RequestDemoComponent({
 
                   <div className="flex items-start space-y-1">
                     <div className="bg-primary/10 p-2 rounded-full mr-3 flex-shrink-0 mt-1">
-                      <IconCheck className="h-4 w-4 text-primary" />
+                      <IconCheck className="size-4 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">Pricing Overview</p>
@@ -558,11 +558,11 @@ export function RequestDemoComponent({
                   </p>
                   <div className="space-y-2">
                     <div className="flex items-center">
-                      <IconDeviceDesktop className="h-4 w-4 mr-2 text-primary" />
+                      <IconDeviceDesktop className="size-4 mr-2 text-primary" />
                       <span>support@inventree.com</span>
                     </div>
                     <div className="flex items-center">
-                      <IconHeadset className="h-4 w-4 mr-2 text-primary" />
+                      <IconHeadset className="size-4 mr-2 text-primary" />
                       <span>+1 (123) 456-7890</span>
                     </div>
                   </div>

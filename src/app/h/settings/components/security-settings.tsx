@@ -163,7 +163,7 @@ export function SecuritySettings() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                <IconDeviceMobile className="h-5 w-5 text-primary" />
+                <IconDeviceMobile className="size-5 text-primary" />
               </div>
               <div>
                 <div className="font-medium">Two-Factor Authentication</div>
@@ -179,7 +179,7 @@ export function SecuritySettings() {
             <div className="rounded-lg border p-4 mt-4">
               <div className="flex items-start gap-4">
                 <div className="h-10 w-10 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center">
-                  <IconShieldLock className="h-5 w-5 text-primary" />
+                  <IconShieldLock className="size-5 text-primary" />
                 </div>
                 <div className="flex-1 space-y-1">
                   <p className="font-medium">Authentication Methods</p>
@@ -187,7 +187,7 @@ export function SecuritySettings() {
                     <div className="flex items-center justify-between p-2 rounded-md border">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-50">
-                          <IconBrandGoogle className="h-4 w-4 text-green-600" />
+                          <IconBrandGoogle className="size-4 text-green-600" />
                         </div>
                         <div>
                           <div className="font-medium text-sm">
@@ -199,14 +199,14 @@ export function SecuritySettings() {
                         </div>
                       </div>
                       <Button variant="ghost" size="sm" className="h-8 gap-1">
-                        Manage <IconChevronRight className="h-3 w-3" />
+                        Manage <IconChevronRight className="size-3" />
                       </Button>
                     </div>
 
                     <div className="flex items-center justify-between p-2 rounded-md border bg-muted/50">
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50">
-                          <IconFingerprint className="h-4 w-4 text-blue-600" />
+                          <IconFingerprint className="size-4 text-blue-600" />
                         </div>
                         <div>
                           <div className="font-medium text-sm">
@@ -218,7 +218,7 @@ export function SecuritySettings() {
                         </div>
                       </div>
                       <Button variant="ghost" size="sm" className="h-8 gap-1">
-                        Setup <IconChevronRight className="h-3 w-3" />
+                        Setup <IconChevronRight className="size-3" />
                       </Button>
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export function SecuritySettings() {
               variant="destructive"
               className="text-red-600 border-red-600/20 bg-red-50 dark:bg-red-950 dark:text-red-400 dark:border-red-800/20"
             >
-              <IconAlertCircle className="h-4 w-4" />
+              <IconAlertCircle className="size-4" />
               <AlertTitle>Your account is at risk</AlertTitle>
               <AlertDescription>
                 We strongly recommend enabling two-factor authentication to
@@ -253,7 +253,7 @@ export function SecuritySettings() {
             <div className="flex items-center justify-between p-4 border-b">
               <div className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-                  <IconHistory className="h-4 w-4 text-green-600" />
+                  <IconHistory className="size-4 text-green-600" />
                 </div>
                 <div>
                   <div className="font-medium">Current Session</div>
@@ -272,7 +272,7 @@ export function SecuritySettings() {
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-                  <IconHistory className="h-4 w-4 text-gray-600" />
+                  <IconHistory className="size-4 text-gray-600" />
                 </div>
                 <div>
                   <div className="font-medium">Mobile Session</div>
@@ -308,7 +308,7 @@ export function SecuritySettings() {
           <div className="space-y-4">
             <div className="flex items-start gap-3 p-3 rounded-md border bg-muted/50">
               <div className="mt-0.5 text-muted-foreground">
-                <IconShieldLock className="h-4 w-4" />
+                <IconShieldLock className="size-4" />
               </div>
               <div>
                 <div className="font-medium text-sm">Password changed</div>
@@ -320,7 +320,7 @@ export function SecuritySettings() {
 
             <div className="flex items-start gap-3 p-3 rounded-md border bg-muted/50">
               <div className="mt-0.5 text-muted-foreground">
-                <IconDeviceMobile className="h-4 w-4" />
+                <IconDeviceMobile className="size-4" />
               </div>
               <div>
                 <div className="font-medium text-sm">New device logged in</div>
@@ -332,7 +332,7 @@ export function SecuritySettings() {
 
             <div className="flex items-start gap-3 p-3 rounded-md border bg-muted/50">
               <div className="mt-0.5 text-muted-foreground">
-                <IconShieldLock className="h-4 w-4" />
+                <IconShieldLock className="size-4" />
               </div>
               <div>
                 <div className="font-medium text-sm">

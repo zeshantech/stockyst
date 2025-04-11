@@ -165,14 +165,7 @@ export function CategoriesTable({ data }: CategoriesTableProps) {
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
         return (
-          <Badge
-            variant="outline"
-            className={
-              status === "active"
-                ? "bg-green-100 text-green-800"
-                : "bg-gray-100 text-gray-800"
-            }
-          >
+          <Badge variant={status === "active" ? "success" : "muted"}>
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </Badge>
         );
@@ -404,7 +397,7 @@ export function CategoriesTable({ data }: CategoriesTableProps) {
             accept={{
               csv: ".csv",
               excel: ".xlsx,.xls",
-              
+
               json: ".json",
             }}
           />

@@ -125,7 +125,7 @@ export function LocationsTable({ data }: LocationsTableProps) {
       cell: ({ row }) => {
         return (
           <div className="flex items-center gap-2">
-            <IconMapPin className="h-4 w-4 text-muted-foreground" />
+            <IconMapPin className="size-4 text-muted-foreground" />
             <span className="font-medium">{row.getValue("name")}</span>
           </div>
         );
@@ -149,7 +149,7 @@ export function LocationsTable({ data }: LocationsTableProps) {
               status === "active"
                 ? "secondary"
                 : status === "inactive"
-                ? "destructive"
+                ? "error"
                 : "default"
             }
           >
@@ -199,7 +199,7 @@ export function LocationsTable({ data }: LocationsTableProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <IconDotsVertical className="h-4 w-4" />
+                <IconDotsVertical className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -207,13 +207,13 @@ export function LocationsTable({ data }: LocationsTableProps) {
               <DropdownMenuItem
                 onClick={() => router.push(`/h/locations/${location.id}`)}
               >
-                <IconEye className="mr-2 h-4 w-4" />
+                <IconEye />
                 View Details
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push(`/h/locations/${location.id}/edit`)}
               >
-                <IconPlus className="mr-2 h-4 w-4" />
+                <IconPlus />
                 Edit Location
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -224,7 +224,7 @@ export function LocationsTable({ data }: LocationsTableProps) {
                   setDeleteDialogOpen(true);
                 }}
               >
-                <IconTrash className="mr-2 h-4 w-4" />
+                <IconTrash />
                 Delete Location
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -327,9 +327,9 @@ export function LocationsTable({ data }: LocationsTableProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                <IconEye className="mr-2 h-4 w-4" />
+                <IconEye />
                 View
-                <IconChevronDown className="ml-2 h-4 w-4" />
+                <IconChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -360,7 +360,7 @@ export function LocationsTable({ data }: LocationsTableProps) {
               size="sm"
               onClick={() => setBulkDeleteDialogOpen(true)}
             >
-              <IconTrash className="mr-2 h-4 w-4" />
+              <IconTrash />
               Delete Selected ({table.getFilteredSelectedRowModel().rows.length}
               )
             </Button>
@@ -368,21 +368,21 @@ export function LocationsTable({ data }: LocationsTableProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
-                <IconDownload className="mr-2 h-4 w-4" />
+                <IconDownload />
                 Export
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => handleExport("csv")}>
-                <IconFileText className="mr-2 h-4 w-4" />
+                <IconFileText />
                 Export as CSV
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleExport("excel")}>
-                <IconFileSpreadsheet className="mr-2 h-4 w-4" />
+                <IconFileSpreadsheet />
                 Export as Excel
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleExport("json")}>
-                <IconFileText className="mr-2 h-4 w-4" />
+                <IconFileText />
                 Export as JSON
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -455,35 +455,35 @@ export function LocationsTable({ data }: LocationsTableProps) {
         <div className="space-x-2">
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
-            <IconChevronsLeft className="h-4 w-4" />
+            <IconChevronsLeft />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <IconChevronLeft className="h-4 w-4" />
+            <IconChevronLeft />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            <IconChevronRight className="h-4 w-4" />
+            <IconChevronRight />
           </Button>
           <Button
             variant="outline"
-            size="sm"
+            size="icon"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
-            <IconChevronsRight className="h-4 w-4" />
+            <IconChevronsRight />
           </Button>
         </div>
       </div>

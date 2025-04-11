@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { IOrder } from "@/types/order";
 import { useOrderActions } from "@/hooks/use-order-actions";
+import { cn } from "@/lib/utils";
 
 const sampleOrder: IOrder = {
   id: "1",
@@ -303,17 +304,16 @@ export default function OrderDetailsPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Order Status</p>
                   <Badge
-                    variant="outline"
-                    className={
+                    variant={
                       order.status === "pending"
-                        ? "bg-yellow-100 text-yellow-800"
+                        ? "warning"
                         : order.status === "processing"
-                        ? "bg-blue-100 text-blue-800"
+                        ? "default"
                         : order.status === "shipped"
-                        ? "bg-purple-100 text-purple-800"
+                        ? "secondary"
                         : order.status === "delivered"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
+                        ? "success"
+                        : "error"
                     }
                   >
                     {order.status.charAt(0).toUpperCase() +
@@ -325,15 +325,14 @@ export default function OrderDetailsPage() {
                     Payment Status
                   </p>
                   <Badge
-                    variant="outline"
-                    className={
+                    variant={
                       order.paymentStatus === "pending"
-                        ? "bg-yellow-100 text-yellow-800"
+                        ? "warning"
                         : order.paymentStatus === "paid"
-                        ? "bg-green-100 text-green-800"
+                        ? "success"
                         : order.paymentStatus === "failed"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-gray-100 text-gray-800"
+                        ? "error"
+                        : "muted"
                     }
                   >
                     {order.paymentStatus.charAt(0).toUpperCase() +
@@ -400,18 +399,19 @@ export default function OrderDetailsPage() {
             </CardHeader>
             <CardContent>
               <Badge
-                variant="outline"
-                className={
+                variant={
                   order.status === "pending"
-                    ? "bg-yellow-100 text-yellow-800"
+                    ? "warning"
                     : order.status === "processing"
-                    ? "bg-blue-100 text-blue-800"
-                    : order.status === "shipped"
-                    ? "bg-purple-100 text-purple-800"
+                    ? "info"
                     : order.status === "delivered"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
+                    ? "success"
+                    : "error"
                 }
+                className={cn(
+                  order.status === "shipped" &&
+                    "border-purple-800/30 bg-purple-800/10 text-purple-800"
+                )}
               >
                 {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
               </Badge>
@@ -436,15 +436,14 @@ export default function OrderDetailsPage() {
             </CardHeader>
             <CardContent>
               <Badge
-                variant="outline"
-                className={
+                variant={
                   order.paymentStatus === "pending"
-                    ? "bg-yellow-100 text-yellow-800"
+                    ? "warning"
                     : order.paymentStatus === "paid"
-                    ? "bg-green-100 text-green-800"
+                    ? "success"
                     : order.paymentStatus === "failed"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-gray-100 text-gray-800"
+                    ? "error"
+                    : "muted"
                 }
               >
                 {order.paymentStatus.charAt(0).toUpperCase() +

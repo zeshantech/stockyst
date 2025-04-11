@@ -116,9 +116,7 @@ export function InventoryStats({
             Stock Health
           </div>
           <Badge
-            variant={
-              lowStockItems + outOfStockItems > 10 ? "destructive" : "default"
-            }
+            variant={lowStockItems + outOfStockItems > 10 ? "error" : "default"}
           >
             {lowStockItems + outOfStockItems > 10
               ? "Needs Attention"

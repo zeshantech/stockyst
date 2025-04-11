@@ -247,16 +247,9 @@ export function IntegrationSettings() {
                       <div className="flex items-center gap-2">
                         <h3 className="font-medium">{integration.name}</h3>
                         {integration.status === "connected" ? (
-                          <Badge className="bg-green-100 text-green-800">
-                            Connected
-                          </Badge>
+                          <Badge variant={"success"}>Connected</Badge>
                         ) : (
-                          <Badge
-                            variant="outline"
-                            className="text-muted-foreground"
-                          >
-                            Disconnected
-                          </Badge>
+                          <Badge variant="muted">Disconnected</Badge>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
@@ -278,39 +271,27 @@ export function IntegrationSettings() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleSync(integration.id)}
-                          disabled={syncing === integration.id}
+                          loading={syncing === integration.id}
                         >
-                          {syncing === integration.id ? (
-                            <>Syncing...</>
-                          ) : (
-                            <>
-                              <IconRefresh className="mr-2 h-4 w-4" />
-                              Sync
-                            </>
-                          )}
+                          <IconRefresh />
+                          Sync
                         </Button>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleDisconnect(integration.id)}
                         >
-                          <IconX className="mr-2 h-4 w-4" />
+                          <IconX />
                           Disconnect
                         </Button>
                       </>
                     ) : (
                       <Button
                         onClick={() => handleConnect(integration.id)}
-                        disabled={connecting === integration.id}
+                        loading={connecting === integration.id}
                       >
-                        {connecting === integration.id ? (
-                          <>Connecting...</>
-                        ) : (
-                          <>
-                            <IconLink className="mr-2 h-4 w-4" />
-                            Connect
-                          </>
-                        )}
+                        <IconLink />
+                        Connect
                       </Button>
                     )}
                   </div>
@@ -433,7 +414,7 @@ export function IntegrationSettings() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label>Shopify Integration</Label>
-                <Badge className="bg-green-100 text-green-800">Healthy</Badge>
+                <Badge variant="success">Healthy</Badge>
               </div>
               <Progress value={98} className="h-2" />
               <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -445,9 +426,7 @@ export function IntegrationSettings() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label>QuickBooks Integration</Label>
-                <Badge className="bg-yellow-100 text-yellow-800">
-                  Degraded
-                </Badge>
+                <Badge variant="warning">Degraded</Badge>
               </div>
               <Progress value={85} className="h-2" />
               <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -459,7 +438,7 @@ export function IntegrationSettings() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label>Stripe Integration</Label>
-                <Badge className="bg-green-100 text-green-800">Healthy</Badge>
+                <Badge variant="success">Healthy</Badge>
               </div>
               <Progress value={100} className="h-2" />
               <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -471,7 +450,7 @@ export function IntegrationSettings() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label>Google Workspace Integration</Label>
-                <Badge className="bg-green-100 text-green-800">Healthy</Badge>
+                <Badge variant="success">Healthy</Badge>
               </div>
               <Progress value={95} className="h-2" />
               <div className="flex items-center justify-between text-xs text-muted-foreground">

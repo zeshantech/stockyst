@@ -97,7 +97,7 @@ export default function ProductsPage() {
           </p>
         </div>
         <Button onClick={() => router.push("/h/products/add")}>
-          <IconPlus className="mr-2 h-4 w-4" />
+          <IconPlus />
           Add Product
         </Button>
       </div>
@@ -124,11 +124,7 @@ export default function ProductsPage() {
           }}
           description="Below reorder point"
           subtitle="Requires immediate action"
-          badge={
-            <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
-              Needs Attention
-            </Badge>
-          }
+          badge={<Badge variant="warning">Needs Attention</Badge>}
         />
 
         <StatsCard
@@ -140,11 +136,7 @@ export default function ProductsPage() {
           }}
           description="Zero inventory"
           subtitle="Urgent restock needed"
-          badge={
-            <Badge variant="outline" className="bg-red-100 text-red-800">
-              Critical
-            </Badge>
-          }
+          badge={<Badge variant="error">Critical</Badge>}
         />
 
         <StatsCard

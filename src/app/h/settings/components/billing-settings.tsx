@@ -203,7 +203,7 @@ export function BillingSettings() {
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="font-medium text-lg">{currentPlan.name} Plan</h3>
-                <Badge className="bg-green-100 text-green-800">Active</Badge>
+                <Badge variant="success">Active</Badge>
               </div>
               <p className="text-sm text-muted-foreground mt-1">
                 {currentPlan.price} billed {currentPlan.billingCycle}

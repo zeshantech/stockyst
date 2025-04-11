@@ -220,13 +220,8 @@ export function ProductsTable({ data }: ProductsTableProps) {
         const quantity = row.getValue("quantity") as number;
         return (
           <Badge
-            variant="outline"
-            className={
-              quantity > 20
-                ? "bg-green-100 text-green-800"
-                : quantity > 10
-                ? "bg-yellow-100 text-yellow-800"
-                : "bg-red-100 text-red-800"
+            variant={
+              quantity > 20 ? "success" : quantity > 10 ? "warning" : "error"
             }
           >
             {quantity}
@@ -282,13 +277,12 @@ export function ProductsTable({ data }: ProductsTableProps) {
         const status = row.getValue("status") as string;
         return (
           <Badge
-            variant="outline"
-            className={
+            variant={
               status === "active"
-                ? "bg-green-100 text-green-800"
+                ? "success"
                 : status === "inactive"
-                ? "bg-gray-100 text-gray-800"
-                : "bg-red-100 text-red-800"
+                ? "muted"
+                : "error"
             }
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}

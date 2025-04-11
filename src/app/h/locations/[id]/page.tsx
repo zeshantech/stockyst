@@ -148,7 +148,7 @@ export default function LocationDetailsPage({
                         location.status === "active"
                           ? "secondary"
                           : location.status === "inactive"
-                          ? "destructive"
+                          ? "error"
                           : "default"
                       }
                     >

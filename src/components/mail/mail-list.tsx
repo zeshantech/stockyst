@@ -73,9 +73,7 @@ export function MailList({ items }: MailListProps) {
   );
 }
 
-function getBadgeVariantFromLabel(
-  label: string
-): ComponentProps<typeof Badge>["variant"] {
+function getBadgeVariantFromLabel(label: string) {
   if (["work"].includes(label.toLowerCase())) {
     return "default";
   }
