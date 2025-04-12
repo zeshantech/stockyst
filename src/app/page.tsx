@@ -1,16 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { BackgroundGradient } from "@/components/landing/background-gradient";
-import { SiteHeader } from "@/components/landing/site-header";
-import { HeroSection } from "@/components/landing/hero-section";
-import { DashboardPreview } from "@/components/landing/dashboard-preview";
-import { FeaturesSection } from "@/components/landing/features-section";
-import { TestimonialSection } from "@/components/landing/testimonial-section";
-import { PricingSection } from "@/components/landing/pricing-section";
-import { CTASection } from "@/components/landing/cta-section";
-import { FAQSection } from "@/components/landing/faq-section";
-import { SiteFooter } from "@/components/landing/site-footer";
+import { BackgroundGradient } from "@/components/(public)/background-gradient";
+import { SiteHeader } from "@/components/(public)/site-header";
+import { HeroSection } from "@/components/(public)/hero-section";
+import { DashboardPreview } from "@/components/(public)/dashboard-preview";
+import { FeaturesSection } from "@/components/(public)/features-section";
+import { TestimonialSection } from "@/components/(public)/testimonial-section";
+import { PricingSection } from "@/components/(public)/pricing-section";
+import { CTASection } from "@/components/(public)/cta-section";
+import { FAQSection } from "@/components/(public)/faq-section";
+import { SiteFooter } from "@/components/(public)/site-footer";
 
 export default function LandingPage() {
   return (

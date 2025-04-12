@@ -9,6 +9,8 @@ interface CreateStoreInput {
   country?: string;
   phone?: string;
   email?: string;
+  logo?: string;
+  type?: string;
 }
 
 // Mock function to create a store

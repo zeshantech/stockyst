@@ -45,7 +45,7 @@ export function DatePickerWithRange({
               !date && "text-muted-foreground"
             )}
           >
-            <CalendarIcon className="mr-2 size-4" />
+            <CalendarIcon />
             {date?.from ? (
               date.to ? (
                 <>

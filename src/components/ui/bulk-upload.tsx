@@ -77,7 +77,7 @@ export function BulkUpload({
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="outline" size="sm">
-          <IconUpload className="mr-2 size-4" />
+          <IconUpload />
           {buttonText}
         </Button>
       </SheetTrigger>
@@ -126,7 +126,7 @@ export function BulkUpload({
               className="w-full"
               onClick={() => onExport(uploadMethod)}
             >
-              <IconDownload className="mr-2 size-4" />
+              <IconDownload />
               Download Template
             </Button>
           </div>

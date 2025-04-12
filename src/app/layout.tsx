@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Provider from "./provider";
-import { NotificationPopup } from "@/components/notifications/notification-popup";
+import { NotificationPopup } from "@/components/(private)/dashboard/notifications/notification-popup";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -1,8 +1,8 @@
 "use client";
 
-import { PageHeader } from "@/components/landing/page-header";
-import { PageFooter } from "@/components/landing/page-footer";
-import { PricingComponent } from "@/components/landing/pricing-component";
+import { PageHeader } from "@/components/(public)/page-header";
+import { PageFooter } from "@/components/(public)/page-footer";
+import { PricingComponent } from "@/components/(public)/pricing-component";
 
 export default function PricingPage() {
   return (

@@ -226,11 +226,8 @@ export function SecuritySettings() {
               </div>
             </div>
           ) : (
-            <Alert
-              variant="destructive"
-              className="text-red-600 border-red-600/20 bg-red-50 dark:bg-red-950 dark:text-red-400 dark:border-red-800/20"
-            >
-              <IconAlertCircle className="size-4" />
+            <Alert variant="error">
+              <IconAlertCircle />
               <AlertTitle>Your account is at risk</AlertTitle>
               <AlertDescription>
                 We strongly recommend enabling two-factor authentication to
@@ -252,8 +249,8 @@ export function SecuritySettings() {
           <div className="rounded-md border">
             <div className="flex items-center justify-between p-4 border-b">
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100">
-                  <IconHistory className="size-4 text-green-600" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success-background">
+                  <IconHistory className="size-4 text-success" />
                 </div>
                 <div>
                   <div className="font-medium">Current Session</div>
@@ -263,7 +260,7 @@ export function SecuritySettings() {
                 </div>
               </div>
               <div className="flex items-center">
-                <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                <span className="inline-flex items-center rounded-full bg-success-background px-2.5 py-0.5 text-xs font-medium text-success">
                   Active
                 </span>
               </div>
@@ -271,7 +268,7 @@ export function SecuritySettings() {
 
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-success-background">
                   <IconHistory className="size-4 text-gray-600" />
                 </div>
                 <div>
@@ -281,18 +278,14 @@ export function SecuritySettings() {
                   </div>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-              >
+              <Button variant="ghost" size="sm" color="error">
                 Revoke
               </Button>
             </div>
           </div>
 
           <div className="flex justify-end">
-            <Button variant="destructive">Revoke All Other Sessions</Button>
+            <Button color="error">Revoke All Other Sessions</Button>
           </div>
         </CardContent>
       </Card>

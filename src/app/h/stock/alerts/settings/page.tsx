@@ -3,8 +3,8 @@
 import * as React from "react";
 import { IconAlertCircle } from "@tabler/icons-react";
 
-import { AlertRules } from "@/components/dashboard/stock/alert-rules";
-import { NotificationPreferences } from "@/components/dashboard/stock/notification-preferences";
+import { AlertRules } from "@/components/(private)/dashboard/stock/alert-rules";
+import { NotificationPreferences } from "@/components/(private)/dashboard/stock/notification-preferences";
 import { AlertRule, NotificationPreference } from "@/types/stock-alerts";
 
 // Mock data - replace with actual API calls

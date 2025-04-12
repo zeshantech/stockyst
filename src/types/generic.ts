@@ -1,7 +1,7 @@
 export interface ISchema {
   id: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface IPaginatedResponse<T> {

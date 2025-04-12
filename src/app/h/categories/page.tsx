@@ -18,9 +18,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CategoriesTable } from "@/components/dashboard/categories/categories-table";
+import { CategoriesTable } from "@/components/(private)/dashboard/categories/categories-table";
 import { useCategories } from "@/hooks/use-categories";
-import StatsCard from "@/components/dashboard/categories/stats-card";
+import StatsCard from "@/components/(private)/dashboard/categories/stats-card";
 
 export default function CategoriesPage() {
   const router = useRouter();
@@ -47,7 +47,7 @@ export default function CategoriesPage() {
           </p>
         </div>
         <Button onClick={() => router.push("/h/categories/add")}>
-          <IconPlus className="mr-2 size-4" />
+          <IconPlus />
           Add Category
         </Button>
       </div>

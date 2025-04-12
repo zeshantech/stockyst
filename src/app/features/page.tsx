@@ -1,5 +1,5 @@
-import { PageHeader } from "@/components/landing/page-header";
-import { PageFooter } from "@/components/landing/page-footer";
+import { PageHeader } from "@/components/(public)/page-header";
+import { PageFooter } from "@/components/(public)/page-footer";
 import { ClientFeatures } from "./client-features";
 
 export default function FeaturesPage() {

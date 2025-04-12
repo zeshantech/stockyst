@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { IconAlertCircle, IconPlus } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
-import { StockAlerts } from "@/components/dashboard/stock/stock-alerts";
+import { StockAlerts } from "@/components/(private)/dashboard/stock/stock-alerts";
 import { useStockAlerts } from "@/hooks/use-stock-alerts";
 import { Badge } from "@/components/ui/badge";
 import { Link, Settings } from "lucide-react";
@@ -82,9 +82,7 @@ export default function StockAlertsPage() {
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="text-2xl font-bold">{stats.activeAlerts}</div>
-            <Badge variant="info">
-              Active
-            </Badge>
+            <Badge variant="info">Active</Badge>
           </div>
         </div>
 
@@ -94,9 +92,7 @@ export default function StockAlertsPage() {
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="text-2xl font-bold">{stats.highSeverityAlerts}</div>
-            <Badge variant="error">
-              Critical
-            </Badge>
+            <Badge variant="error">Critical</Badge>
           </div>
         </div>
 
@@ -106,9 +102,7 @@ export default function StockAlertsPage() {
           </div>
           <div className="mt-2 flex items-center gap-2">
             <div className="text-2xl font-bold">{stats.lowStockAlerts}</div>
-            <Badge variant="warning">
-              Warning
-            </Badge>
+            <Badge variant="warning">Warning</Badge>
           </div>
         </div>
       </div>

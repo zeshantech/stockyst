@@ -10,8 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 import { ILocation } from "@/types/location";
 import { toast } from "sonner";
 import { useLocationActions } from "@/hooks/use-location-actions";
-import { LocationForm } from "@/components/dashboard/locations/location-form";
-import { LocationMap } from "@/components/dashboard/locations/location-map";
+import { LocationForm } from "@/components/(private)/dashboard/locations/location-form";
+import { LocationMap } from "@/components/(private)/dashboard/locations/location-map";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -111,7 +111,7 @@ export default function LocationDetailsPage({
               <CardTitle>Location Details</CardTitle>
               {!isEditing ? (
                 <Button variant="outline" onClick={() => setIsEditing(true)}>
-                  <IconEdit className="mr-2 size-4" />
+                  <IconEdit />
                   Edit Location
                 </Button>
               ) : (
@@ -247,11 +247,8 @@ export default function LocationDetailsPage({
                     be certain.
                   </p>
                 </div>
-                <Button
-                  variant="destructive"
-                  onClick={() => setDeleteDialogOpen(true)}
-                >
-                  <IconTrash className="mr-2 size-4" />
+                <Button color="error" onClick={() => setDeleteDialogOpen(true)}>
+                  <IconTrash />
                   Delete Location
                 </Button>
               </div>

@@ -26,7 +26,7 @@ import {
   useInventoryValuation,
   InventoryValuationResult,
 } from "@/hooks/use-inventory-valuation";
-import { InventoryValuationReport } from "@/components/reports/inventory-valuation-report";
+import { InventoryValuationReport } from "@/components/(private)/reports/inventory-valuation-report";
 
 export default function ReportsPage() {
   const { locations } = useLocations();
@@ -65,7 +65,7 @@ export default function ReportsPage() {
     <div className="flex flex-col gap-6 p-6">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <IconChartBar className="size-8 text-blue-500" />
+        <IconChartBar className="size-8 text-info" />
         <div>
           <h1 className="text-3xl font-bold">Reports</h1>
           <p className="text-muted-foreground">
@@ -112,14 +112,10 @@ export default function ReportsPage() {
             <Button
               className="w-full"
               onClick={handleGenerateValuation}
-              disabled={isLoading}
+              loading={isLoading}
             >
-              {isLoading ? (
-                <IconLoader className="mr-2 size-4 animate-spin" />
-              ) : (
-                <IconFileReport className="mr-2 size-4" />
-              )}
-              {isLoading ? "Generating..." : "Generate Report"}
+              <IconFileReport />
+              Generate Report
             </Button>
           </CardContent>
         </Card>
@@ -177,9 +173,8 @@ export default function ReportsPage() {
               </Select>
             </div>
             <Button className="w-full" disabled>
-              {" "}
               {/* TODO: Implement */}
-              <IconFileReport className="mr-2 size-4" />
+              <IconFileReport />
               Generate Report (Coming Soon)
             </Button>
           </CardContent>

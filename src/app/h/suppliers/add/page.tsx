@@ -157,15 +157,9 @@ export default function AddSupplierPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>Saving...</>
-              ) : (
-                <>
-                  <IconCheck className="mr-2 size-4" />
-                  Save Supplier
-                </>
-              )}
+            <Button type="submit" loading={isSubmitting}>
+              <IconCheck />
+              Save Supplier
             </Button>
           </div>
         </form>

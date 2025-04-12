@@ -219,15 +219,9 @@ export default function AddProductPage() {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>Saving...</>
-              ) : (
-                <>
-                  <IconCheck className="mr-2 size-4" />
-                  Save Product
-                </>
-              )}
+            <Button type="submit" loading={isSubmitting}>
+              <IconCheck />
+              Save Product
             </Button>
           </div>
         </form>

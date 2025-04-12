@@ -708,7 +708,7 @@ export function BillingSettings() {
                 premium features. Your data will be retained for 30 days after
                 cancellation.
               </p>
-              <Button variant="destructive" className="mt-4">
+              <Button color="error" className="mt-4">
                 Cancel Subscription
               </Button>
             </div>

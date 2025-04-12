@@ -63,8 +63,8 @@
   --popover-foreground: oklch(0.141 0.005 285.823);
   --primary: #6200ee; /* Primary purple */
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: #03dac6; /* Teal */
-  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: #018786; /* Darker teal for better visibility in light mode */
+  --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.967 0.001 286.375);
   --muted-foreground: oklch(0.552 0.016 285.938);
   --accent: oklch(0.967 0.001 286.375);

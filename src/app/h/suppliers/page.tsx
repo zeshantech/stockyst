@@ -27,9 +27,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SuppliersTable } from "@/components/dashboard/suppliers/suppliers-table";
+import { SuppliersTable } from "@/components/(private)/dashboard/suppliers/suppliers-table";
 import { useSuppliers } from "@/hooks/use-suppliers";
-import StatsCard from "@/components/dashboard/suppliers/stats-card";
+import StatsCard from "@/components/(private)/dashboard/suppliers/stats-card";
 
 export default function SuppliersPage() {
   const router = useRouter();
@@ -81,7 +81,7 @@ export default function SuppliersPage() {
           </p>
         </div>
         <Button onClick={() => router.push("/h/suppliers/new")}>
-          <IconPlus className="mr-2 size-4" />
+          <IconPlus />
           Add Supplier
         </Button>
       </div>

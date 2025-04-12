@@ -1,8 +1,8 @@
 "use client";
 
-import { PageHeader } from "@/components/landing/page-header";
-import { PageFooter } from "@/components/landing/page-footer";
-import { RequestDemoComponent } from "@/components/landing/request-demo-component";
+import { PageHeader } from "@/components/(public)/page-header";
+import { PageFooter } from "@/components/(public)/page-footer";
+import { RequestDemoComponent } from "@/components/(public)/request-demo-component";
 
 export default function RequestDemoPage() {
   return (

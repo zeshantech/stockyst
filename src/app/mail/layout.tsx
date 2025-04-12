@@ -1,4 +1,4 @@
-import { MailSidebar } from "@/components/mail/mail-sidebar";
+import { MailSidebar } from "@/components/(private)/mail/mail-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { ReactNode } from "react";

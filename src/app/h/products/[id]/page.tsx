@@ -251,15 +251,9 @@ export default function ProductDetailsPage({
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                      "Saving..."
-                    ) : (
-                      <>
-                        <IconCheck className="mr-2 size-4" />
-                        Save Changes
-                      </>
-                    )}
+                  <Button type="submit" loading={isSubmitting}>
+                    <IconCheck />
+                    Save Changes
                   </Button>
                 </div>
               </form>
@@ -269,7 +263,7 @@ export default function ProductDetailsPage({
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Product Information</h2>
                 <Button variant="outline" onClick={() => setIsEditing(true)}>
-                  <IconEdit className="mr-2 size-4" />
+                  <IconEdit />
                   Edit Product
                 </Button>
               </div>
@@ -413,12 +407,8 @@ export default function ProductDetailsPage({
               <CardDescription>Irreversible actions</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button
-                variant="destructive"
-                className="w-full"
-                onClick={handleDelete}
-              >
-                <IconTrash className="mr-2 size-4" />
+              <Button color="error" className="w-full" onClick={handleDelete}>
+                <IconTrash />
                 Delete Product
               </Button>
             </CardContent>

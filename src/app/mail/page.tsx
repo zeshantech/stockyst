@@ -2,7 +2,7 @@
 import { cookies } from "next/headers";
 import Image from "next/image";
 import { mails } from "./data";
-import { Mail } from "@/components/mail/mail";
+import { Mail } from "@/components/(private)/mail/mail";
 
 export default async function MailPage() {
   const layout = (await cookies()).get("react-resizable-panels:layout:mail");

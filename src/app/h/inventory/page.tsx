@@ -3,9 +3,9 @@
 import * as React from "react";
 import { IconDatabase } from "@tabler/icons-react";
 
-import { InventoryStats } from "@/components/dashboard/inventory/inventory-stats";
-import { InventoryTrends } from "@/components/dashboard/inventory/inventory-trends";
-import { InventoryChart } from "@/components/dashboard/inventory/inventory-chart";
+import { InventoryStats } from "@/components/(private)/dashboard/inventory/inventory-stats";
+import { InventoryTrends } from "@/components/(private)/dashboard/inventory/inventory-trends";
+import { InventoryChart } from "@/components/(private)/dashboard/inventory/inventory-chart";
 import { useInventoryOverview } from "@/hooks/use-inventory-overview";
 import { Skeleton } from "@/components/ui/skeleton";
 

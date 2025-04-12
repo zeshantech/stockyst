@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { IconAlertCircle } from "@tabler/icons-react";
 
-import { AlertRuleForm } from "@/components/dashboard/stock/alert-rule-form";
+import { AlertRuleForm } from "@/components/(private)/dashboard/stock/alert-rule-form";
 import { AlertRuleFormData } from "@/types/stock-alerts";
 
 export default function EditAlertRulePage({

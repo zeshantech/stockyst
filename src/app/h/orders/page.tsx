@@ -6,7 +6,7 @@ import { IconPlus, IconTruck, IconPackage } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { OrdersTable } from "@/components/dashboard/orders/orders-table";
+import { OrdersTable } from "@/components/(private)/dashboard/orders/orders-table";
 import { useOrders } from "@/hooks/use-orders";
 import StatsCard from "@/components/ui/stats-card";
 
@@ -93,7 +93,7 @@ export default function OrdersPage() {
           <p className="text-muted-foreground">Manage your customer orders</p>
         </div>
         <Button onClick={handleAddOrder}>
-          <IconPlus className="mr-2 size-4" />
+          <IconPlus />
           Add Order
         </Button>
       </div>

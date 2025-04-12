@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ICategory } from "@/components/dashboard/categories/categories-table";
+import { ICategory } from "@/components/(private)/dashboard/categories/categories-table";
 
 // Sample data - replace with actual API call
 const sampleCategories: ICategory[] = [

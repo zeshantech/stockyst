@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { PageHeader } from "@/components/landing/page-header";
-import { PageFooter } from "@/components/landing/page-footer";
-import { AboutComponent } from "@/components/landing/about-component";
+import { PageHeader } from "@/components/(public)/page-header";
+import { PageFooter } from "@/components/(public)/page-footer";
+import { AboutComponent } from "@/components/(public)/about-component";
 
 export const metadata: Metadata = {
   title: "About Us | Your Company",

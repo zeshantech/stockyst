@@ -21,7 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { StockTable } from "@/components/dashboard/stock/stock-table";
+import { StockTable } from "@/components/(private)/dashboard/stock/stock-table";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -83,7 +83,7 @@ export default function StockPage() {
           </p>
         </div>
         <Button onClick={() => router.push("/h/stock/add")}>
-          <IconPlus className="mr-2 size-4" />
+          <IconPlus />
           Add Stock
         </Button>
       </div>
@@ -121,11 +121,7 @@ export default function StockPage() {
           }}
           description="Items below reorder point"
           subtitle="Requires attention"
-          badge={
-            <Badge variant="warning" >
-              Needs Attention
-            </Badge>
-          }
+          badge={<Badge variant="warning">Needs Attention</Badge>}
         />
 
         <StatsCard
@@ -137,11 +133,7 @@ export default function StockPage() {
           }}
           description="Items with zero inventory"
           subtitle="Urgent restock needed"
-          badge={
-            <Badge variant="error">
-              Critical
-            </Badge>
-          }
+          badge={<Badge variant="error">Critical</Badge>}
         />
       </div>
 

@@ -31,16 +31,42 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
+import { ImagePicker } from "@/components/ui/image-picker";
+import { Selector } from "@/components/ui/selector";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const storeFormSchema = z.object({
+  name: z.string().min(1, "Store name is required"),
+  type: z.enum(["warehouse", "retail", "distribution", "supplier"]),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  country: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email().optional().or(z.literal("")),
+  isActive: z.boolean(),
+  isDefault: z.boolean(),
+  logo: z.string().optional(),
+});
+
+type StoreFormValues = z.infer<typeof storeFormSchema>;
+
+const DEFAULT = {
+  name: "",
+  type: "warehouse" as const,
+  address: "",
+  city: "",
+  country: "",
+  phone: "",
+  email: "",
+  isActive: true,
+  isDefault: false,
+  logo: "",
+};
 
 export function StoreSettings() {
   const { data: stores = [], isLoading } = useStores();
@@ -48,29 +74,33 @@ export function StoreSettings() {
   const [isEditingStore, setIsEditingStore] = useState(false);
   const [selectedStore, setSelectedStore] = useState<string | null>(null);
 
-  // Form state
-  const [storeForm, setStoreForm] = useState({
-    name: "",
-    type: "warehouse",
-    address: "",
-    city: "",
-    country: "",
-    isActive: true,
-    isDefault: false,
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm<StoreFormValues>({
+    resolver: zodResolver(storeFormSchema),
+    defaultValues: DEFAULT,
   });
 
   const handleEditStore = (storeId: string) => {
     const store = stores.find((s) => s.id === storeId);
     if (store) {
       setSelectedStore(storeId);
-      setStoreForm({
+      reset({
         name: store.name,
-        type: "warehouse", // This would come from the store data in a real app
+        type: store.type || "warehouse",
         address: store.address || "",
         city: store.city || "",
         country: store.country || "",
+        phone: store.phone || "",
+        email: store.email || "",
         isActive: true,
         isDefault: false,
+        logo: store.logo || "",
       });
       setIsEditingStore(true);
     }
@@ -78,21 +108,11 @@ export function StoreSettings() {
 
   const handleCreateStore = () => {
     setSelectedStore(null);
-    setStoreForm({
-      name: "",
-      type: "warehouse",
-      address: "",
-      city: "",
-      country: "",
-      isActive: true,
-      isDefault: false,
-    });
+    reset(DEFAULT);
     setIsEditingStore(true);
   };
 
-  const handleSaveStore = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSaveStore = async (data: StoreFormValues) => {
     try {
       // Here you would save the store data
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -160,94 +180,92 @@ export function StoreSettings() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSaveStore} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Store Name</Label>
-                      <Input
-                        id="name"
-                        value={storeForm.name}
-                        onChange={(e) =>
-                          setStoreForm((prev) => ({
-                            ...prev,
-                            name: e.target.value,
-                          }))
-                        }
-                        placeholder="Main Warehouse"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="type">Store Type</Label>
-                      <Select
-                        value={storeForm.type}
-                        onValueChange={(value) =>
-                          setStoreForm((prev) => ({ ...prev, type: value }))
-                        }
-                      >
-                        <SelectTrigger id="type">
-                          <SelectValue placeholder="Select store type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="warehouse">Warehouse</SelectItem>
-                          <SelectItem value="retail">Retail Store</SelectItem>
-                          <SelectItem value="distribution">
-                            Distribution Center
-                          </SelectItem>
-                          <SelectItem value="supplier">
-                            Supplier Location
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="address">Address</Label>
-                    <Input
-                      id="address"
-                      value={storeForm.address}
-                      onChange={(e) =>
-                        setStoreForm((prev) => ({
-                          ...prev,
-                          address: e.target.value,
-                        }))
+                <form
+                  onSubmit={handleSubmit(handleSaveStore)}
+                  className="space-y-6"
+                >
+                  <ImagePicker
+                    image={watch("logo")}
+                    onChange={(file) => {
+                      if (file) {
+                        // In a real app, you would upload the file here
+                        // and then set the returned URL
+                        const mockImageUrl = URL.createObjectURL(file);
+                        setValue("logo", mockImageUrl);
                       }
-                      placeholder="123 Main St"
+                    }}
+                    onRemove={() => setValue("logo", "")}
+                    className="w-full h-32"
+                    cropOptions={{ crop: true, ratio: 1 }}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      id="name"
+                      label="Store Name"
+                      {...register("name")}
+                      placeholder="Main Warehouse"
+                      required
+                      error={errors.name?.message}
+                    />
+
+                    <Selector
+                      label="Store Type"
+                      value={watch("type")}
+                      onChange={(value) => setValue("type", value as any)}
+                      options={[
+                        { label: "Warehouse", value: "warehouse" },
+                        { label: "Retail Store", value: "retail" },
+                        { label: "Distribution Center", value: "distribution" },
+                        { label: "Supplier Location", value: "supplier" },
+                      ]}
+                      placeholder="Select store type"
+                      error={errors.type?.message}
                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="city">City</Label>
-                      <Input
-                        id="city"
-                        value={storeForm.city}
-                        onChange={(e) =>
-                          setStoreForm((prev) => ({
-                            ...prev,
-                            city: e.target.value,
-                          }))
-                        }
-                        placeholder="New York"
-                      />
-                    </div>
+                    <Input
+                      id="phone"
+                      label="Phone"
+                      {...register("phone")}
+                      placeholder="+1 (234) 567-8901"
+                      error={errors.phone?.message}
+                    />
 
-                    <div className="space-y-2">
-                      <Label htmlFor="country">Country</Label>
-                      <Input
-                        id="country"
-                        value={storeForm.country}
-                        onChange={(e) =>
-                          setStoreForm((prev) => ({
-                            ...prev,
-                            country: e.target.value,
-                          }))
-                        }
-                        placeholder="United States"
-                      />
-                    </div>
+                    <Input
+                      id="email"
+                      label="Email"
+                      type="email"
+                      {...register("email")}
+                      placeholder="store@example.com"
+                      error={errors.email?.message}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Input
+                      id="address"
+                      label="Address"
+                      {...register("address")}
+                      placeholder="123 Main St"
+                      error={errors.address?.message}
+                    />
+                    <Input
+                      id="city"
+                      label="City"
+                      {...register("city")}
+                      placeholder="New York"
+                      error={errors.city?.message}
+                    />
+
+                    <Input
+                      id="country"
+                      label="Country"
+                      {...register("country")}
+                      placeholder="United States"
+                      error={errors.country?.message}
+                    />
                   </div>
 
                   <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center p-4 border rounded-md bg-muted/30">
@@ -263,12 +281,9 @@ export function StoreSettings() {
                       <div className="flex items-center gap-2">
                         <Switch
                           id="active-status"
-                          checked={storeForm.isActive}
+                          checked={watch("isActive")}
                           onCheckedChange={(checked) =>
-                            setStoreForm((prev) => ({
-                              ...prev,
-                              isActive: checked,
-                            }))
+                            setValue("isActive", checked)
                           }
                         />
                         <Label htmlFor="active-status">Store is active</Label>
@@ -277,12 +292,9 @@ export function StoreSettings() {
                       <div className="flex items-center gap-2">
                         <Switch
                           id="default-status"
-                          checked={storeForm.isDefault}
+                          checked={watch("isDefault")}
                           onCheckedChange={(checked) =>
-                            setStoreForm((prev) => ({
-                              ...prev,
-                              isDefault: checked,
-                            }))
+                            setValue("isDefault", checked)
                           }
                         />
                         <Label htmlFor="default-status">
@@ -391,10 +403,11 @@ export function StoreSettings() {
                                 <Button
                                   variant="ghost"
                                   size="icon"
+                                  color="error"
                                   onClick={() => handleDeleteStore(store.id)}
                                   disabled={store.id === "store-1"} // Prevent deleting default store
                                 >
-                                  <IconTrash className="size-4 text-red-500" />
+                                  <IconTrash />
                                   <span className="sr-only">Delete</span>
                                 </Button>
                               </div>
@@ -482,68 +495,56 @@ export function StoreSettings() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="default-currency">Default Currency</Label>
-                    <Select defaultValue="usd">
-                      <SelectTrigger id="default-currency">
-                        <SelectValue placeholder="Select currency" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="usd">USD ($)</SelectItem>
-                        <SelectItem value="eur">EUR (€)</SelectItem>
-                        <SelectItem value="gbp">GBP (£)</SelectItem>
-                        <SelectItem value="jpy">JPY (¥)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Selector
+                    label="Default Currency"
+                    value="usd"
+                    onChange={() => {}}
+                    options={[
+                      { label: "USD ($)", value: "usd" },
+                      { label: "EUR (€)", value: "eur" },
+                      { label: "GBP (£)", value: "gbp" },
+                      { label: "JPY (¥)", value: "jpy" },
+                    ]}
+                    placeholder="Select currency"
+                  />
 
-                  <div className="space-y-2">
-                    <Label htmlFor="default-weight-unit">
-                      Default Weight Unit
-                    </Label>
-                    <Select defaultValue="kg">
-                      <SelectTrigger id="default-weight-unit">
-                        <SelectValue placeholder="Select weight unit" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="kg">Kilograms (kg)</SelectItem>
-                        <SelectItem value="g">Grams (g)</SelectItem>
-                        <SelectItem value="lb">Pounds (lb)</SelectItem>
-                        <SelectItem value="oz">Ounces (oz)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Selector
+                    label="Default Weight Unit"
+                    value="kg"
+                    onChange={() => {}}
+                    options={[
+                      { label: "Kilograms (kg)", value: "kg" },
+                      { label: "Grams (g)", value: "g" },
+                      { label: "Pounds (lb)", value: "lb" },
+                      { label: "Ounces (oz)", value: "oz" },
+                    ]}
+                    placeholder="Select weight unit"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="default-dimension-unit">
-                      Default Dimension Unit
-                    </Label>
-                    <Select defaultValue="cm">
-                      <SelectTrigger id="default-dimension-unit">
-                        <SelectValue placeholder="Select dimension unit" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="cm">Centimeters (cm)</SelectItem>
-                        <SelectItem value="m">Meters (m)</SelectItem>
-                        <SelectItem value="in">Inches (in)</SelectItem>
-                        <SelectItem value="ft">Feet (ft)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Selector
+                    label="Default Dimension Unit"
+                    value="cm"
+                    onChange={() => {}}
+                    options={[
+                      { label: "Centimeters (cm)", value: "cm" },
+                      { label: "Meters (m)", value: "m" },
+                      { label: "Inches (in)", value: "in" },
+                      { label: "Feet (ft)", value: "ft" },
+                    ]}
+                    placeholder="Select dimension unit"
+                  />
 
-                  <div className="space-y-2">
-                    <Label htmlFor="tax-rate">Default Tax Rate (%)</Label>
-                    <Input
-                      id="tax-rate"
-                      type="number"
-                      defaultValue="7.5"
-                      min="0"
-                      max="100"
-                      step="0.01"
-                    />
-                  </div>
+                  <Input
+                    id="tax-rate"
+                    label="Default Tax Rate (%)"
+                    type="number"
+                    defaultValue="7.5"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                  />
                 </div>
               </div>
 

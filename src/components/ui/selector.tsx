@@ -26,6 +26,7 @@ interface SelectorProps {
   placeholder?: string;
   error?: string;
   className?: string;
+  containerClass?: string;
   disabled?: boolean;
   required?: boolean;
 }
@@ -39,11 +40,12 @@ function Selector({
   placeholder = "Select an option",
   error,
   className,
+  containerClass,
   disabled,
   required,
 }: SelectorProps) {
   return (
-    <div className="space-y-2">
+    <div className={cn("space-y-2", containerClass)}>
       {label && (
         <Label>
           {label} {required && <span className="text-destructive">*</span>}

@@ -6,7 +6,7 @@ import { IconPlus } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ProductsTable } from "@/components/dashboard/products-table";
+import { ProductsTable } from "@/components/(private)/dashboard/products-table";
 import { IProduct } from "@/types/product";
 import StatsCard from "@/components/ui/stats-card";
 
@@ -96,7 +96,7 @@ export default function ProductsPage() {
             Manage your inventory products
           </p>
         </div>
-        <Button onClick={() => router.push("/h/products/add")}>
+        <Button href="/h/products/add">
           <IconPlus />
           Add Product
         </Button>

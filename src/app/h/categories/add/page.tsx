@@ -116,15 +116,9 @@ export default function AddCategoryPage() {
           </div>
 
           <div className="flex justify-end">
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                "Creating..."
-              ) : (
-                <>
-                  <IconCheck className="mr-2 size-4" />
-                  Create Category
-                </>
-              )}
+            <Button type="submit" loading={isSubmitting}>
+              <IconCheck />
+              Create Category
             </Button>
           </div>
         </form>

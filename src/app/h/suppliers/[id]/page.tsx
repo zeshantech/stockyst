@@ -209,9 +209,7 @@ export default function SupplierDetailsPage({
                   <label className="text-sm font-medium">Status</label>
                   <Selector
                     value={form.watch("status")}
-                    onChange={(value) =>
-                      form.setValue("status", value)
-                    }
+                    onChange={(value) => form.setValue("status", value)}
                     error={form.formState.errors.status?.message}
                     info="Current status of the supplier"
                     options={[
@@ -229,15 +227,9 @@ export default function SupplierDetailsPage({
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? (
-                      "Saving..."
-                    ) : (
-                      <>
-                        <IconCheck className="mr-2 size-4" />
-                        Save Changes
-                      </>
-                    )}
+                  <Button type="submit" loading={isSubmitting}>
+                    <IconCheck />
+                    Save Changes
                   </Button>
                 </div>
               </form>
@@ -247,7 +239,7 @@ export default function SupplierDetailsPage({
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Supplier Information</h2>
                 <Button variant="outline" onClick={() => setIsEditing(true)}>
-                  <IconEdit className="mr-2 size-4" />
+                  <IconEdit />
                   Edit Supplier
                 </Button>
               </div>
@@ -366,12 +358,8 @@ export default function SupplierDetailsPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button
-                variant="destructive"
-                className="w-full"
-                onClick={handleDelete}
-              >
-                <IconTrash className="mr-2 size-4" />
+              <Button color="error" className="w-full" onClick={handleDelete}>
+                <IconTrash />
                 Delete Supplier
               </Button>
             </CardContent>

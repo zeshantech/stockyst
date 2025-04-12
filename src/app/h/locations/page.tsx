@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LocationMap } from "@/components/locations/location-map";
-import { LocationsTable } from "@/components/dashboard/locations/locations-table";
+import { LocationMap } from "@/components/(private)/locations/location-map";
+import { LocationsTable } from "@/components/(private)/dashboard/locations/locations-table";
 import { useQuery } from "@tanstack/react-query";
 import { ILocation } from "@/types/location";
 
@@ -101,7 +101,7 @@ export default function LocationsPage() {
           </p>
         </div>
         <Button onClick={() => router.push("/h/locations/add")}>
-          <IconPlus  />
+          <IconPlus />
           Add Location
         </Button>
       </div>
