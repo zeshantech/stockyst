@@ -44,6 +44,7 @@
 - Use hooks with static actions instead of just logging
 - Place hooks in /hooks directory
 - Use Tanstack Query for data fetching hooks
+- avoid to create multiple hooks for 1 feature (e.g, we can handle all product operations and queries in useProduct)
 
 ## Authentication
 

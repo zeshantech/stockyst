@@ -2,7 +2,7 @@
 
 import { PageHeader } from "@/components/(public)/page-header";
 import { PageFooter } from "@/components/(public)/page-footer";
-import { PricingComponent } from "@/components/(public)/pricing-component";
+import { SubscriptionManager } from "@/components/subscription/subscription-manager";
 
 export default function PricingPage() {
   return (
@@ -12,7 +12,7 @@ export default function PricingPage() {
 
       {/* Main Content */}
       <main className="flex-grow bg-muted/30">
-        <PricingComponent defaultBillingCycle="yearly" />
+        <SubscriptionManager defaultBillingCycle="yearly" />
       </main>
 
       {/* Footer */}

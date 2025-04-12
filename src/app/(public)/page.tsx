@@ -7,10 +7,10 @@ import { HeroSection } from "@/components/(public)/hero-section";
 import { DashboardPreview } from "@/components/(public)/dashboard-preview";
 import { FeaturesSection } from "@/components/(public)/features-section";
 import { TestimonialSection } from "@/components/(public)/testimonial-section";
-import { PricingSection } from "@/components/(public)/pricing-section";
 import { CTASection } from "@/components/(public)/cta-section";
 import { FAQSection } from "@/components/(public)/faq-section";
 import { SiteFooter } from "@/components/(public)/site-footer";
+import { SubscriptionManager } from "@/components/subscription/subscription-manager";
 
 export default function LandingPage() {
   return (
@@ -36,7 +36,9 @@ export default function LandingPage() {
         <TestimonialSection />
 
         {/* Pricing Section */}
-        <PricingSection />
+        <section className="py-20 bg-gradient-to-b from-background to-muted/50">
+          <SubscriptionManager showTitle={true} />
+        </section>
 
         {/* CTA Section */}
         <CTASection />

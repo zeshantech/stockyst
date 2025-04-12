@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ProfileSettings } from "./components/profile-settings";
 import { SecuritySettings } from "./components/security-settings";
 import { APISettings } from "./components/api-settings";
@@ -18,55 +19,25 @@ import {
   IconPlugConnected,
   IconReceipt,
 } from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState("profile");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabParam || "profile");
 
-  const tabs = [
-    {
-      id: "profile",
-      label: "Profile",
-      icon: IconUser,
-      component: ProfileSettings,
-    },
-    {
-      id: "security",
-      label: "Security",
-      icon: IconLock,
-      component: SecuritySettings,
-    },
-    {
-      id: "api",
-      label: "API",
-      icon: IconKey,
-      component: APISettings,
-    },
-    {
-      id: "stores",
-      label: "Stores",
-      icon: IconBuildingStore,
-      component: StoreSettings,
-    },
-    {
-      id: "notifications",
-      label: "Notifications",
-      icon: IconBell,
-      component: NotificationSettings,
-    },
-    {
-      id: "integrations",
-      label: "Integrations",
-      icon: IconPlugConnected,
-      component: IntegrationSettings,
-    },
-    {
-      id: "billing",
-      label: "Billing",
-      icon: IconReceipt,
-      component: BillingSettings,
-    },
-  ];
+  useEffect(() => {
+    if (tabParam && TABS.some((tab) => tab.id === tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleOnTabChange = (value: string) => {
+    setActiveTab(value);
+    const params = new URLSearchParams(searchParams);
+    params.set("tab", value);
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -80,11 +51,11 @@ export default function SettingsPage() {
 
         <Tabs
           value={activeTab}
-          onValueChange={setActiveTab}
+          onValueChange={handleOnTabChange}
           className="space-y-6"
         >
           <TabsList className="bg-muted p-1 h-auto gap-1 flex flex-wrap items-center">
-            {tabs.map((tab) => (
+            {TABS.map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
@@ -96,7 +67,7 @@ export default function SettingsPage() {
             ))}
           </TabsList>
 
-          {tabs.map((tab) => (
+          {TABS.map((tab) => (
             <TabsContent key={tab.id} value={tab.id} className="pt-4">
               <tab.component />
             </TabsContent>
@@ -106,3 +77,48 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+const TABS = [
+  {
+    id: "profile",
+    label: "Profile",
+    icon: IconUser,
+    component: ProfileSettings,
+  },
+  {
+    id: "security",
+    label: "Security",
+    icon: IconLock,
+    component: SecuritySettings,
+  },
+  {
+    id: "api",
+    label: "API",
+    icon: IconKey,
+    component: APISettings,
+  },
+  {
+    id: "stores",
+    label: "Stores",
+    icon: IconBuildingStore,
+    component: StoreSettings,
+  },
+  {
+    id: "notifications",
+    label: "Notifications",
+    icon: IconBell,
+    component: NotificationSettings,
+  },
+  {
+    id: "integrations",
+    label: "Integrations",
+    icon: IconPlugConnected,
+    component: IntegrationSettings,
+  },
+  {
+    id: "billing",
+    label: "Billing",
+    icon: IconReceipt,
+    component: BillingSettings,
+  },
+];

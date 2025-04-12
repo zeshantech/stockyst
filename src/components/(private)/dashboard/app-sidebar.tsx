@@ -47,7 +47,6 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/h",
       icon: IconDashboard,
       items: [
         {
@@ -66,7 +65,6 @@ const data = {
     },
     {
       title: "Products",
-      url: "/h/products",
       icon: IconBox,
       items: [
         {
@@ -101,9 +99,12 @@ const data = {
     },
     {
       title: "Stock Management",
-      url: "/h/stock",
       icon: IconPackage,
       items: [
+        {
+          title: "Stock Overview",
+          url: "/h/stock",
+        },
         {
           title: "Inventory Levels",
           url: "/h/stock/levels",
@@ -144,7 +145,6 @@ const data = {
     },
     {
       title: "Orders",
-      url: "/h/orders",
       icon: IconShoppingCart,
       items: [
         {
@@ -179,9 +179,12 @@ const data = {
     },
     {
       title: "Purchasing",
-      url: "/h/purchasing",
       icon: IconReceipt,
       items: [
+        {
+          title: "Purchasing Overview",
+          url: "/h/purchasing",
+        },
         {
           title: "Purchase Orders",
           url: "/h/purchasing/orders",
@@ -210,7 +213,6 @@ const data = {
     },
     {
       title: "Suppliers",
-      url: "/h/suppliers",
       icon: IconTruck,
       items: [
         {
@@ -241,7 +243,6 @@ const data = {
     },
     {
       title: "Categories",
-      url: "/h/categories",
       icon: IconCategory,
       items: [
         {
@@ -264,9 +265,12 @@ const data = {
     },
     {
       title: "Warehousing",
-      url: "/h/warehousing",
       icon: IconBuildingWarehouse,
       items: [
+        {
+          title: "Warehousing Overview",
+          url: "/h/warehousing",
+        },
         {
           title: "Locations",
           url: "/h/warehousing/locations",
@@ -299,7 +303,6 @@ const data = {
     },
     {
       title: "Customers",
-      url: "/h/customers",
       icon: IconUsersGroup,
       items: [
         {
@@ -326,9 +329,12 @@ const data = {
     },
     {
       title: "Analytics",
-      url: "/h/analytics",
       icon: IconChartBar,
       items: [
+        {
+          title: "Analytics Overview",
+          url: "/h/analytics",
+        },
         {
           title: "Sales Analytics",
           url: "/h/analytics/sales",
@@ -365,9 +371,12 @@ const data = {
     },
     {
       title: "Barcode Management",
-      url: "/h/barcodes",
       icon: IconBarcode,
       items: [
+        {
+          title: "Barcode Overview",
+          url: "/h/barcodes",
+        },
         {
           title: "Generate Barcodes",
           url: "/h/barcodes/generate",
@@ -454,7 +463,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <StoreSwitcher />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="hide-scrollbar">
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
