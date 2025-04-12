@@ -41,6 +41,7 @@ export interface CreateLocationParams {
   type: ILocation["type"];
   status: ILocation["status"];
   capacity: number;
+  currentStock: number;
   manager: string;
   phone: string;
   email: string;

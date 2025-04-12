@@ -1,6 +1,6 @@
 import { atom, useAtom } from "jotai";
 
-import { mails } from "@/app/mail/data";
+import { mails } from "@/app/(private)/mail/data";
 import { IMail } from "@/types/mail";
 
 type Config = {

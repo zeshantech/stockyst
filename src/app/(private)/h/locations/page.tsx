@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LocationMap } from "@/components/(private)/locations/location-map";
+import { LocationsOverviewMap } from "@/components/(private)/dashboard/locations/locations-overview-map";
 import { LocationsTable } from "@/components/(private)/dashboard/locations/locations-table";
 import { useQuery } from "@tanstack/react-query";
 import { ILocation } from "@/types/location";
@@ -108,7 +108,7 @@ export default function LocationsPage() {
 
       {/* Map Section */}
       <Card className="p-0">
-        <LocationMap
+        <LocationsOverviewMap
           locations={locations}
           selectedLocation={selectedLocation}
           onLocationSelect={setSelectedLocation}

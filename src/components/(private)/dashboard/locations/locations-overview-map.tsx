@@ -8,23 +8,10 @@ import {
   Popup,
   useMap,
   LayerGroup,
-  useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { ILocation } from "@/types/location";
-import * as iconsReact from "@tabler/icons-react";
-
-// Fix for default marker icons in Leaflet
-const icon = L.icon({
-  iconUrl: "/marker-icon.png",
-  iconRetinaUrl: "/marker-icon-2x.png",
-  shadowUrl: "/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
 
 // Custom icons for different location types
 const locationIcons = {
@@ -48,71 +35,62 @@ const locationIcons = {
   }),
 };
 
-interface LocationMapProps {
-  locations: ILocation[];
+// Default icon fallback
+const defaultIcon = L.icon({
+  iconUrl: "/marker-icon.png",
+  iconRetinaUrl: "/marker-icon-2x.png",
+  shadowUrl: "/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+interface MapControllerProps {
   selectedLocation?: ILocation | null;
-  onLocationSelect?: (location: ILocation) => void;
-  onMapClick?: (lat: number, lng: number) => void;
-  isSelecting?: boolean;
-  typeFilter?: string;
-  statusFilter?: string;
-  searchQuery?: string;
-  isEditMode?: boolean;
-  currentPosition?: { lat: number; lng: number } | null;
 }
 
-function MapController({
-  selectedLocation,
-  currentPosition,
-}: {
-  selectedLocation?: ILocation | null;
-  currentPosition?: { lat: number; lng: number } | null;
-}) {
+function MapController({ selectedLocation }: MapControllerProps) {
   const map = useMap();
 
   React.useEffect(() => {
     if (selectedLocation) {
       map.setView([selectedLocation.latitude, selectedLocation.longitude], 15);
-    } else if (currentPosition) {
-      map.setView([currentPosition.lat, currentPosition.lng], 15);
-    }
-  }, [selectedLocation, currentPosition, map]);
+    } else if (map) {
+      // Auto-fit to show all markers if no selection
+      const bounds = new L.LatLngBounds([]);
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          bounds.extend(layer.getLatLng());
+        }
+      });
 
-  return null;
-}
-
-function MapClickHandler({
-  onMapClick,
-  isSelecting,
-}: {
-  onMapClick?: (lat: number, lng: number) => void;
-  isSelecting?: boolean;
-}) {
-  useMapEvents({
-    click: (e) => {
-      if (isSelecting && onMapClick) {
-        onMapClick(e.latlng.lat, e.latlng.lng);
+      if (bounds.isValid()) {
+        map.fitBounds(bounds, { padding: [50, 50] });
       }
-    },
-  });
+    }
+  }, [selectedLocation, map]);
 
   return null;
 }
 
-export function LocationMap({
+interface LocationsOverviewMapProps {
+  locations: ILocation[];
+  selectedLocation?: ILocation | null;
+  onLocationSelect: (location: ILocation) => void;
+  typeFilter?: string;
+  statusFilter?: string;
+  searchQuery?: string;
+}
+
+export function LocationsOverviewMap({
   locations,
   selectedLocation,
   onLocationSelect,
-  onMapClick,
-  isSelecting = false,
   typeFilter = "all",
   statusFilter = "all",
   searchQuery = "",
-  isEditMode = false,
-  currentPosition = null,
-}: LocationMapProps) {
-  const [map, setMap] = React.useState<L.Map | null>(null);
-
+}: LocationsOverviewMapProps) {
   // Filter locations based on filters
   const filteredLocations = React.useMemo(() => {
     return locations.filter((location) => {
@@ -120,40 +98,12 @@ export function LocationMap({
       const matchesStatus =
         statusFilter === "all" || location.status === statusFilter;
       const matchesSearch =
+        searchQuery === "" ||
         location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         location.address.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesType && matchesStatus && matchesSearch;
     });
   }, [locations, typeFilter, statusFilter, searchQuery]);
-
-  // Calculate bounds to fit all markers
-  const bounds = React.useMemo(() => {
-    const positions: [number, number][] = [];
-
-    // Add existing locations
-    filteredLocations.forEach((loc) => {
-      positions.push([loc.latitude, loc.longitude]);
-    });
-
-    // Add selected location if exists
-    if (selectedLocation) {
-      positions.push([selectedLocation.latitude, selectedLocation.longitude]);
-    }
-
-    // Add current position if exists
-    if (currentPosition) {
-      positions.push([currentPosition.lat, currentPosition.lng]);
-    }
-
-    if (positions.length === 0) return null;
-    return L.latLngBounds(positions);
-  }, [filteredLocations, selectedLocation, currentPosition]);
-
-  React.useEffect(() => {
-    if (map && bounds) {
-      map.fitBounds(bounds, { padding: [50, 50] });
-    }
-  }, [map, bounds]);
 
   return (
     <div className="h-[600px] w-full rounded-lg overflow-hidden relative">
@@ -161,21 +111,19 @@ export function LocationMap({
         center={[0, 0]}
         zoom={2}
         style={{ height: "100%", width: "100%" }}
-        whenReady={() => setMap(map)}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LayerGroup>
-          {/* Show existing locations */}
           {filteredLocations.map((location) => (
             <Marker
               key={location.id}
               position={[location.latitude, location.longitude]}
-              icon={locationIcons[location.type]}
+              icon={locationIcons[location.type] || defaultIcon}
               eventHandlers={{
-                click: () => onLocationSelect?.(location),
+                click: () => onLocationSelect(location),
               }}
             >
               <Popup>
@@ -223,28 +171,8 @@ export function LocationMap({
               </Popup>
             </Marker>
           ))}
-
-          {/* Show selected location */}
-          {selectedLocation && (
-            <Marker
-              position={[selectedLocation.latitude, selectedLocation.longitude]}
-              icon={locationIcons[selectedLocation.type]}
-            />
-          )}
-
-          {/* Show current position (for add/edit) */}
-          {currentPosition && (
-            <Marker
-              position={[currentPosition.lat, currentPosition.lng]}
-              icon={icon}
-            />
-          )}
         </LayerGroup>
-        <MapController
-          selectedLocation={selectedLocation}
-          currentPosition={currentPosition}
-        />
-        <MapClickHandler onMapClick={onMapClick} isSelecting={isSelecting} />
+        <MapController selectedLocation={selectedLocation} />
       </MapContainer>
     </div>
   );

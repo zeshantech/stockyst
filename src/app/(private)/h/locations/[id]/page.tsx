@@ -7,11 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
-import { ILocation } from "@/types/location";
+import { ILocation, UpdateLocationParams } from "@/types/location";
 import { toast } from "sonner";
 import { useLocationActions } from "@/hooks/use-location-actions";
-import { LocationForm } from "@/components/(private)/dashboard/locations/location-form";
-import { LocationMap } from "@/components/(private)/dashboard/locations/location-map";
+import { LocationPickerMap } from "@/components/(private)/dashboard/locations/location-picker-map";
+import {
+  LocationForm,
+  LocationFormValues,
+} from "@/components/(private)/dashboard/locations/location-form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,10 +65,11 @@ export default function LocationDetailsPage({
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { deleteLocation } = useLocationActions();
 
   // Mock query - Replace with actual API call
-  const { data: location = mockLocation } = useQuery({
+  const { data: location = mockLocation, isLoading } = useQuery({
     queryKey: ["location", params.id],
     queryFn: async () => {
       // Simulate API call
@@ -85,46 +89,71 @@ export default function LocationDetailsPage({
     }
   };
 
+  const handleUpdate = async (data: LocationFormValues) => {
+    setIsSubmitting(true);
+
+    try {
+      // Here you would usually call your API to update the location
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      toast.success("Location updated successfully");
+      setIsEditing(false);
+    } catch (error) {
+      toast.error("Failed to update location");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+  };
+
+  if (isLoading) {
+    return <div className="p-6">Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center gap-4">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => router.push("/h/locations")}
-        >
-          <IconArrowLeft />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold">{location.name}</h1>
-          <p className="text-muted-foreground">
-            {location.address}, {location.city}, {location.state}{" "}
-            {location.postalCode}
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => router.push("/h/locations")}
+          >
+            <IconArrowLeft />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold">{location.name}</h1>
+            <p className="text-muted-foreground">
+              {location.address}, {location.city}, {location.state}{" "}
+              {location.postalCode}
+            </p>
+          </div>
         </div>
+
+        {!isEditing && (
+          <Button variant="outline" onClick={() => setIsEditing(true)}>
+            <IconEdit className="mr-2 h-4 w-4" />
+            Edit Location
+          </Button>
+        )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
+      {isEditing ? (
+        <LocationForm
+          initialData={location}
+          onSubmit={handleUpdate}
+          onCancel={handleCancelEdit}
+          isLoading={isSubmitting}
+        />
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
               <CardTitle>Location Details</CardTitle>
-              {!isEditing ? (
-                <Button variant="outline" onClick={() => setIsEditing(true)}>
-                  <IconEdit />
-                  Edit Location
-                </Button>
-              ) : (
-                <Button variant="outline" onClick={() => setIsEditing(false)}>
-                  Cancel
-                </Button>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent>
-            {isEditing ? (
-              <LocationForm mode="edit" location={location} />
-            ) : (
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -163,6 +192,15 @@ export default function LocationDetailsPage({
                       {location.currentStock} / {location.capacity}
                     </p>
                   </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Coordinates
+                  </p>
+                  <p className="text-lg">
+                    {location.latitude.toFixed(6)},{" "}
+                    {location.longitude.toFixed(6)}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
@@ -208,54 +246,63 @@ export default function LocationDetailsPage({
                     )}
                   </div>
                 </div>
+                {location.notes && (
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Notes
+                    </p>
+                    <p className="text-lg whitespace-pre-wrap">
+                      {location.notes}
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Location Map</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[500px] rounded-lg overflow-hidden">
-              <LocationMap
-                locations={[location]}
-                selectedLocation={location}
-                onLocationSelect={(loc) => {
-                  if (isEditing) {
-                    // Update location coordinates when map is clicked
-                    // This will be handled by the form
-                  }
-                }}
-              />
-            </div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Location Map</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[500px] rounded-lg overflow-hidden">
+                <LocationPickerMap
+                  location={location}
+                  isPicker={false}
+                  locationType={location.type}
+                />
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle>Danger Zone</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-medium">Delete Location</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Once you delete a location, there is no going back. Please
-                    be certain.
-                  </p>
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle>Danger Zone</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium">Delete Location</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Once you delete a location, there is no going back. Please
+                      be certain.
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    className="text-red-500 border-red-500 hover:bg-red-50"
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
+                    <IconTrash className="mr-2 h-4 w-4" />
+                    Delete Location
+                  </Button>
                 </div>
-                <Button color="error" onClick={() => setDeleteDialogOpen(true)}>
-                  <IconTrash />
-                  Delete Location
-                </Button>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>

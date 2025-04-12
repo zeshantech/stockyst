@@ -26,7 +26,7 @@ import {
   useInventoryValuation,
   InventoryValuationResult,
 } from "@/hooks/use-inventory-valuation";
-import { InventoryValuationReport } from "@/components/(private)/reports/inventory-valuation-report";
+import { InventoryValuationReport } from "@/components/(private)/dashboard/reports/inventory-valuation-report";
 
 export default function ReportsPage() {
   const { locations } = useLocations();
