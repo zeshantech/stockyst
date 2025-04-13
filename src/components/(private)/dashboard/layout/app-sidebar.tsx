@@ -26,10 +26,10 @@ import {
   IconBooks,
 } from "@tabler/icons-react";
 
-import { NavDocuments } from "@/components/(private)/dashboard/nav-documents";
-import { NavMain } from "@/components/(private)/dashboard/nav-main";
-import { NavSecondary } from "@/components/(private)/dashboard/nav-secondary";
-import { NavUser } from "@/components/(private)/dashboard/nav-user";
+import { NavDocuments } from "./nav-documents";
+import { NavMain } from "./nav-main";
+import { NavSecondary } from "./nav-secondary";
+import { NavUser } from "./nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -73,7 +73,7 @@ const data = {
         },
         {
           title: "Add New Product",
-          url: "/h/products/new",
+          url: "/h/products/add",
         },
         {
           title: "Bulk Import",

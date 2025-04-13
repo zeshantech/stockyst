@@ -25,9 +25,14 @@ const badgeVariants = cva(
         muted:
           "border-muted bg-muted text-muted-foreground [a&]:hover:bg-muted/20 focus-visible:ring-muted/20 dark:focus-visible:ring-muted/40",
       },
+      mode: {
+        default: "",
+        solid: "border-transparent",
+      },
     },
     defaultVariants: {
       variant: "default",
+      mode: "default",
     },
   }
 );
@@ -35,6 +40,7 @@ const badgeVariants = cva(
 function Badge({
   className,
   variant,
+  mode,
   asChild = false,
   ...props
 }: React.ComponentProps<"span"> &
@@ -44,7 +50,7 @@ function Badge({
   return (
     <Comp
       data-slot="badge"
-      className={cn(badgeVariants({ variant }), className)}
+      className={cn(badgeVariants({ variant, mode }), className)}
       {...props}
     />
   );

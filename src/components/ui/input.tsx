@@ -25,8 +25,10 @@ function Input({
   return (
     <div className={cn("space-y-2", container?.className)}>
       {label && (
-        <Label>
-          {label} {info ? <Info tooltip={info} /> : null}
+        <Label className="flex gap-1 items-center">
+          {label}{" "}
+          {props.required && <span className="text-destructive">*</span>}
+          {info && <Info tooltip={info} />}
         </Label>
       )}
       <input

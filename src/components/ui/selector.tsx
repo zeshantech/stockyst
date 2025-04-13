@@ -47,7 +47,7 @@ function Selector({
   return (
     <div className={cn("space-y-2", containerClass)}>
       {label && (
-        <Label>
+        <Label className="flex gap-1 items-center">
           {label} {required && <span className="text-destructive">*</span>}
           {info && <Info tooltip={info} />}
         </Label>

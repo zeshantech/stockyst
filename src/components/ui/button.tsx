@@ -11,13 +11,10 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-        ghost:
-          "bg-background/50 dark:bg-input/20 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "bg-transparent text-primary underline-offset-4 hover:underline",
+        default: "",
+        outline: "border",
+        ghost: "",
+        link: "underline-offset-4 hover:underline",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3 min-w-[100px]",
@@ -30,9 +27,9 @@ const buttonVariants = cva(
       },
       color: {
         default:
-          "bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary/20 dark:focus-visible:ring-primary/40 [&.outline]:border-primary/30 [&.outline]:bg-primary/10 [&.outline]:text-primary [&.outline]:hover:bg-primary/20 [&.ghost]:text-primary [&.ghost]:hover:bg-primary/10 [&.ghost]:bg-transparent [&.link]:text-primary [&.link]:hover:text-primary/90 [&.link]:bg-transparent",
+          "bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary/20 dark:focus-visible:ring-primary/40 [&.outline]:border-primary/30 [&.outline]:bg-primary/10 [&.outline]:text-primary [&.outline]:hover:bg-primary/20 [&.ghost]:text-primary [&.ghost]:hover:bg-primary/10 [&.ghost]:bg-transparent [&.link]:text-primary [&.link]:hover:text-primary/90 [&.link]:bg-transparent",
         secondary:
-          "bg-secondary text-white hover:bg-secondary/90 focus-visible:ring-secondary/20 dark:focus-visible:ring-secondary/40 [&.outline]:border-secondary/30 [&.outline]:bg-secondary/10 [&.outline]:text-secondary [&.outline]:hover:bg-secondary/20 [&.ghost]:text-secondary [&.ghost]:hover:bg-secondary/10 [&.ghost]:hover:bg-transparent [&.link]:text-secondary [&.link]:hover:text-secondary/90 [&.link]:bg-transparent",
+          "bg-secondary text-white hover:bg-secondary/90 focus-visible:ring-secondary/20 dark:focus-visible:ring-secondary/40 [&.outline]:border-secondary/30 [&.outline]:bg-secondary/10 [&.outline]:text-secondary [&.outline]:hover:bg-secondary/20 [&.ghost]:text-secondary [&.ghost]:hover:bg-secondary/10 [&.ghost]:bg-transparent [&.link]:text-secondary [&.link]:hover:text-secondary/90 [&.link]:bg-transparent",
         error:
           "bg-error text-white hover:bg-error/90 focus-visible:ring-error/20 dark:focus-visible:ring-error/40 [&.outline]:border-error/30 [&.outline]:bg-error/10 [&.outline]:text-error [&.outline]:hover:bg-error/20 [&.ghost]:text-error [&.ghost]:hover:bg-error/10 [&.ghost]:bg-transparent [&.link]:text-error [&.link]:hover:text-error/90 [&.link]:bg-transparent",
         success:
@@ -70,7 +67,7 @@ export interface ButtonProps
   asChild?: boolean;
   href?: string;
   loading?: boolean;
-  color?: "default" | "error" | "success" | "info" | "warning";
+  color?: "default" | "secondary" | "error" | "success" | "info" | "warning";
 }
 
 function Button({

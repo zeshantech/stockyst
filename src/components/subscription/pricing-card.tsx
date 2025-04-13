@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { IconCheck } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { BillingCycle, ISubscriptionPlan } from "@/types/subscription";
+import { Badge } from "../ui/badge";
 
 interface PricingCardProps {
   plan: ISubscriptionPlan;
@@ -39,7 +40,7 @@ export function PricingCard({
           plan.isPopular
             ? "border-primary/40 shadow-primary/20"
             : "border-border hover:border-primary/20 hover:shadow-md",
-          isCurrentPlan && "border-green-500 shadow-green-500/20"
+          isCurrentPlan && "border-success shadow-success/20"
         )}
       >
         {/* Popular badge */}
@@ -54,9 +55,9 @@ export function PricingCard({
 
         {/* Current plan badge */}
         {isCurrentPlan && (
-          <div className="absolute top-2 right-2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+          <Badge className="absolute top-2 right-2 bg-success text-white">
             Current Plan
-          </div>
+          </Badge>
         )}
 
         <div
@@ -72,7 +73,7 @@ export function PricingCard({
               className={cn(
                 "text-2xl font-bold",
                 plan.isPopular ? "text-primary" : "text-foreground",
-                isCurrentPlan && "text-green-500"
+                isCurrentPlan && "text-success"
               )}
             >
               {plan.name}
@@ -108,7 +109,7 @@ export function PricingCard({
                     plan.isPopular
                       ? "bg-primary/20 text-primary"
                       : "bg-muted text-muted-foreground",
-                    isCurrentPlan && "bg-green-500/20 text-green-500"
+                    isCurrentPlan && "bg-success/20 text-success"
                   )}
                 >
                   <IconCheck className="h-3 w-3" />

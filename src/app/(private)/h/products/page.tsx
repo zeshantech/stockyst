@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { ProductsTable } from "@/components/(private)/dashboard/products-table";
 import { IProduct } from "@/types/product";
 import StatsCard from "@/components/ui/stats-card";
+import { PageHeader } from "@/components/(private)/dashboard/page-header";
+import { Page } from "@/components/(private)/dashboard/page";
 
 // Sample data - replace with actual data fetching
 const sampleProducts: IProduct[] = [
@@ -83,24 +85,20 @@ const sampleProducts: IProduct[] = [
   },
 ];
 
-export default function ProductsPage() {
-  const router = useRouter();
-
+export default function page() {
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <Page>
       {/* Header Section */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Products</h1>
-          <p className="text-muted-foreground">
-            Manage your inventory products
-          </p>
-        </div>
-        <Button href="/h/products/add">
-          <IconPlus />
-          Add Product
-        </Button>
-      </div>
+      <PageHeader
+        title="Products"
+        description="Manage your inventory products"
+        action={
+          <Button href="/h/products/add">
+            <IconPlus />
+            Add Product
+          </Button>
+        }
+      />
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -153,6 +151,6 @@ export default function ProductsPage() {
 
       {/* Products Table */}
       <ProductsTable data={sampleProducts} />
-    </div>
+    </Page>
   );
 }

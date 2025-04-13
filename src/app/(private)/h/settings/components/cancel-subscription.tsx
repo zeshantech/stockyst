@@ -52,7 +52,7 @@ export function CancelSubscription() {
               onConfirm={handleCancelSubscription}
               isLoading={isCancellingSubscription}
               confirmButtonProps={{
-                className: "bg-red-500 hover:bg-red-600 text-white",
+                color: "error",
               }}
               open={isConfirmOpen}
               onOpenChange={setIsConfirmOpen}

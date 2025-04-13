@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Selector } from "@/components/ui/selector";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { PageHeader } from "@/components/(private)/dashboard/page-header";
 
 // Form validation schema
 const productFormSchema = z.object({
@@ -97,21 +98,11 @@ export default function AddProductPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center gap-4">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => router.push("/h/products")}
-        >
-          <IconArrowLeft />
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold">Add New Product</h1>
-          <p className="text-muted-foreground">
-            Create a new product in your inventory
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="Add New Product"
+        description="Create a new product in your inventory"
+        backButtonHref={"/h/products"}
+      />
 
       <div className="rounded-lg border p-6">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
