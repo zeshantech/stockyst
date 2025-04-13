@@ -87,14 +87,6 @@ const data = {
           title: "Product Bundles",
           url: "/h/products/bundles",
         },
-        {
-          title: "Digital Products",
-          url: "/h/products/digital",
-        },
-        {
-          title: "Product Catalog",
-          url: "/h/products/catalog",
-        },
       ],
     },
     {

@@ -4,88 +4,18 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { IconPlus } from "@tabler/icons-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ProductsTable } from "@/components/(private)/dashboard/products-table";
-import { IProduct } from "@/types/product";
-import StatsCard from "@/components/ui/stats-card";
+import { ProductsTable } from "@/components/(private)/dashboard/products/products-table";
 import { PageHeader } from "@/components/(private)/dashboard/page-header";
 import { Page } from "@/components/(private)/dashboard/page";
+import { ProductsStats } from "@/components/(private)/dashboard/products/products-stats";
+import { useAllProducts } from "@/hooks/use-products";
+import { Loader } from "@/components/ui/loader";
 
-// Sample data - replace with actual data fetching
-const sampleProducts: IProduct[] = [
-  {
-    id: "1",
-    name: "Laptop Pro X1",
-    sku: "LP-X1-2024",
-    description: "High-performance laptop for professionals",
-    category: "Electronics",
-    price: 1299.99,
-    cost: 899.99,
-    quantity: 45,
-    reorderPoint: 10,
-    supplier: "TechSuppliers Inc",
-    location: "Warehouse A",
-    status: "active",
-    lastRestocked: "2024-03-15",
-    createdAt: "2024-01-01",
-    updatedAt: "2024-03-15",
-    tags: ["laptop", "professional", "high-performance"],
-    specifications: {
-      processor: "Intel i7",
-      ram: "16GB",
-      storage: "512GB SSD",
-    },
-  },
-  {
-    id: "2",
-    name: "Office Chair Ergo",
-    sku: "OC-E-2024",
-    description: "Ergonomic office chair with lumbar support",
-    category: "Furniture",
-    price: 299.99,
-    cost: 199.99,
-    quantity: 8,
-    reorderPoint: 15,
-    supplier: "FurniCorp",
-    location: "Warehouse B",
-    status: "active",
-    lastRestocked: "2024-02-15",
-    createdAt: "2024-01-15",
-    updatedAt: "2024-02-15",
-    tags: ["chair", "ergonomic", "office"],
-    specifications: {
-      material: "Mesh",
-      color: "Black",
-      weight: "15kg",
-    },
-  },
-  {
-    id: "3",
-    name: "Wireless Mouse",
-    sku: "WM-2024",
-    description: "Ergonomic wireless mouse",
-    category: "Electronics",
-    price: 49.99,
-    cost: 29.99,
-    quantity: 0,
-    reorderPoint: 20,
-    supplier: "TechSuppliers Inc",
-    location: "Warehouse A",
-    status: "inactive",
-    lastRestocked: "2024-01-01",
-    createdAt: "2024-01-01",
-    updatedAt: "2024-03-01",
-    tags: ["mouse", "wireless", "ergonomic"],
-    specifications: {
-      connectivity: "Bluetooth",
-      battery: "AA",
-      dpi: "1600",
-    },
-  },
-];
+export default function ProductsPage() {
+  const router = useRouter();
+  const { data: products, isLoading } = useAllProducts();
 
-export default function page() {
   return (
     <Page>
       {/* Header Section */}
@@ -101,56 +31,16 @@ export default function page() {
       />
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatsCard
-          title="Total Products"
-          value="1,234"
-          trend={{
-            value: 12.5,
-            isPositive: true,
-          }}
-          description="Growing inventory"
-          subtitle="Compared to last month"
-        />
-
-        <StatsCard
-          title="Low Stock Items"
-          value="23"
-          trend={{
-            value: 20,
-            isPositive: false,
-          }}
-          description="Below reorder point"
-          subtitle="Requires immediate action"
-          badge={<Badge variant="warning">Needs Attention</Badge>}
-        />
-
-        <StatsCard
-          title="Out of Stock"
-          value="5"
-          trend={{
-            value: 0,
-            isPositive: false,
-          }}
-          description="Zero inventory"
-          subtitle="Urgent restock needed"
-          badge={<Badge variant="error">Critical</Badge>}
-        />
-
-        <StatsCard
-          title="Total Value"
-          value="$45,678"
-          trend={{
-            value: 8.3,
-            isPositive: true,
-          }}
-          description="Inventory value"
-          subtitle="Current stock value"
-        />
-      </div>
+      <ProductsStats />
 
       {/* Products Table */}
-      <ProductsTable data={sampleProducts} />
+      {isLoading ? (
+        <div className="flex h-64 items-center justify-center">
+          <Loader size="lg" />
+        </div>
+      ) : (
+        <ProductsTable data={products} />
+      )}
     </Page>
   );
 }

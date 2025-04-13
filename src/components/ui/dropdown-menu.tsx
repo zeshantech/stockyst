@@ -238,7 +238,84 @@ function DropdownMenuSubContent({
   );
 }
 
+interface DropdownMenuComponentProps {
+  trigger: React.ReactNode;
+  options: Array<
+    | {
+        label: string;
+        value: string;
+        onClick?: () => void;
+        disabled?: boolean;
+        className?: string;
+      }[]
+    | {
+        label: string;
+        value: string;
+        onClick?: () => void;
+        disabled?: boolean;
+        className?: string;
+      }
+  >;
+  label?: string;
+  align?: "start" | "center" | "end";
+  triggerClassName?: string;
+  contentClassName?: string;
+}
+
+function DropdownMenuComponent({
+  trigger,
+  options,
+  label,
+  align = "end",
+  triggerClassName,
+  contentClassName,
+}: DropdownMenuComponentProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild className={triggerClassName}>
+        {trigger}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align={align} className={cn(contentClassName)}>
+        {label && <DropdownMenuLabel>{label}</DropdownMenuLabel>}
+        {options.map((optionGroup, groupIndex) => {
+          // If optionGroup is an array, render it as a group with separator
+          if (Array.isArray(optionGroup)) {
+            return (
+              <React.Fragment key={`group-${groupIndex}`}>
+                {groupIndex > 0 && <DropdownMenuSeparator />}
+                {optionGroup.map((option, index) => (
+                  <DropdownMenuItem
+                    key={`${option.value}-${groupIndex}-${index}`}
+                    onClick={option.onClick}
+                    disabled={option.disabled}
+                    className={option.className}
+                  >
+                    {option.label}
+                  </DropdownMenuItem>
+                ))}
+              </React.Fragment>
+            );
+          } else {
+            // If optionGroup is a single option, render it directly
+            return (
+              <DropdownMenuItem
+                key={`${optionGroup.value}-${groupIndex}`}
+                onClick={optionGroup.onClick}
+                disabled={optionGroup.disabled}
+                className={optionGroup.className}
+              >
+                {optionGroup.label}
+              </DropdownMenuItem>
+            );
+          }
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 export {
+  DropdownMenuComponent,
   DropdownMenu,
   DropdownMenuPortal,
   DropdownMenuTrigger,

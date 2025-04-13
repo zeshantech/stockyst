@@ -1,221 +1,132 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { IconArrowLeft, IconCheck } from "@tabler/icons-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Selector } from "@/components/ui/selector";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/(private)/dashboard/page-header";
-
-// Form validation schema
-const productFormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Product name must be at least 2 characters.",
-  }),
-  sku: z.string().min(3, {
-    message: "SKU must be at least 3 characters.",
-  }),
-  description: z.string().min(10, {
-    message: "Description must be at least 10 characters.",
-  }),
-  category: z.string({
-    required_error: "Please select a category.",
-  }),
-  price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "Price must be a positive number.",
-  }),
-  cost: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "Cost must be a positive number.",
-  }),
-  quantity: z
-    .string()
-    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-      message: "Quantity must be a non-negative number.",
-    }),
-  reorderPoint: z
-    .string()
-    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-      message: "Reorder point must be a non-negative number.",
-    }),
-  supplier: z.string().min(2, {
-    message: "Supplier name must be at least 2 characters.",
-  }),
-  location: z.string().min(2, {
-    message: "Location must be at least 2 characters.",
-  }),
-});
-
-type ProductFormValues = z.infer<typeof productFormSchema>;
-
-const defaultValues: Partial<ProductFormValues> = {
-  name: "",
-  sku: "",
-  description: "",
-  category: "",
-  price: "",
-  cost: "",
-  quantity: "0",
-  reorderPoint: "10",
-  supplier: "",
-  location: "",
-};
-
-const categories = [
-  { value: "Electronics", label: "Electronics" },
-  { value: "Office Supplies", label: "Office Supplies" },
-  { value: "Furniture", label: "Furniture" },
-  { value: "Clothing", label: "Clothing" },
-  { value: "Food", label: "Food" },
-];
+import { ProductForm } from "@/components/(private)/dashboard/products/product-form";
+import {
+  ProductFormValues,
+  BundleFormValues,
+  VariantFormValues,
+} from "@/types/product";
+import { useCreateProduct } from "@/hooks/use-products";
+import { VariantForm } from "@/components/(private)/dashboard/products/variant-form";
+import { BundleForm } from "@/components/(private)/dashboard/products/bundle-form";
 
 export default function AddProductPage() {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
 
-  const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
-    defaultValues,
-  });
+  const { mutate: createProduct, isPending: isSubmitting } = useCreateProduct();
 
-  function onSubmit(data: ProductFormValues) {
-    setIsSubmitting(true);
+  // Set page title and description based on product type
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log(data);
-      toast.success("Product added successfully!");
-      setIsSubmitting(false);
+  const handleSubmit = (
+    data: ProductFormValues | BundleFormValues | VariantFormValues
+  ) => {
+    // Add appropriate tags based on product type
+    const tags = data.tags || [];
+
+    if (type === "variant") {
+      if (!tags.includes("variant")) {
+        tags.push("variant");
+      }
+    } else if (type === "bundle") {
+      if (!tags.includes("bundle")) {
+        tags.push("bundle");
+      }
+    }
+
+    // Convert string values to appropriate types for API
+    createProduct({
+      name: data.name,
+      sku: data.sku,
+      description: data.description,
+      categoryId: data.categoryId,
+      price: parseFloat(data.price),
+      cost: parseFloat(data.cost),
+      quantity: parseInt(data.quantity),
+      reorderPoint: parseInt(data.reorderPoint),
+      supplierId: data.supplierId,
+      location: data.location,
+      status: data.status || "active",
+      tags: tags,
+      specifications: data.specifications || {},
+      lastRestocked: new Date(),
+      image: data.image,
+    });
+
+    // Redirect to appropriate page based on product type
+    if (type === "variant") {
+      router.push("/h/products/variants");
+    } else if (type === "bundle") {
+      router.push("/h/products/bundles");
+    } else {
       router.push("/h/products");
-    }, 1000);
-  }
+    }
+  };
+
+  const handleCancel = () => {
+    // Redirect to appropriate page based on product type
+    if (type === "variant") {
+      router.push("/h/products/variants");
+    } else if (type === "bundle") {
+      router.push("/h/products/bundles");
+    } else {
+      router.push("/h/products");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 p-6">
       <PageHeader
-        title="Add New Product"
-        description="Create a new product in your inventory"
-        backButtonHref={"/h/products"}
+        title={
+          type === "variant"
+            ? "Add Product Variant"
+            : type === "bundle"
+            ? "Create Product Bundle"
+            : "Add New Product"
+        }
+        description={
+          type === "variant"
+            ? "Create a new variant of an existing product"
+            : type === "bundle"
+            ? "Create a new bundle of products"
+            : "Create a new product in your inventory"
+        }
+        backButtonHref={
+          type === "variant"
+            ? "/h/products/variants"
+            : type === "bundle"
+            ? "/h/products/bundles"
+            : "/h/products"
+        }
       />
 
       <div className="rounded-lg border p-6">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Input
-              {...form.register("name")}
-              label="Product Name"
-              placeholder="Enter product name"
-              error={form.formState.errors.name?.message}
-              required
-            />
-
-            <Input
-              {...form.register("sku")}
-              label="SKU"
-              placeholder="Enter SKU"
-              error={form.formState.errors.sku?.message}
-              required
-            />
-
-            <Selector
-              label="Category"
-              value={form.watch("category")}
-              onChange={(value) => form.setValue("category", value)}
-              options={categories}
-              placeholder="Select a category"
-              error={form.formState.errors.category?.message}
-              required
-            />
-
-            <Input
-              {...form.register("supplier")}
-              label="Supplier"
-              placeholder="Enter supplier name"
-              error={form.formState.errors.supplier?.message}
-              required
-            />
-
-            <Input
-              {...form.register("price")}
-              type="number"
-              label="Price"
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-              error={form.formState.errors.price?.message}
-              required
-            />
-
-            <Input
-              {...form.register("cost")}
-              type="number"
-              label="Cost"
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-              error={form.formState.errors.cost?.message}
-              required
-            />
-
-            <Input
-              {...form.register("quantity")}
-              type="number"
-              label="Quantity"
-              placeholder="0"
-              min="0"
-              error={form.formState.errors.quantity?.message}
-              required
-            />
-
-            <Input
-              {...form.register("reorderPoint")}
-              type="number"
-              label="Reorder Point"
-              placeholder="10"
-              min="0"
-              info="The quantity at which to reorder this product"
-              error={form.formState.errors.reorderPoint?.message}
-              required
-            />
-
-            <Input
-              {...form.register("location")}
-              label="Location"
-              placeholder="Enter storage location"
-              error={form.formState.errors.location?.message}
-              required
-            />
-          </div>
-
-          <Textarea
-            {...form.register("description")}
-            label="Description"
-            placeholder="Enter product description"
-            className="min-h-[100px]"
-            error={form.formState.errors.description?.message}
-            required
+        {type === "variant" ? (
+          <VariantForm
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            submitButtonText="Create Variant"
           />
-
-          <div className="flex justify-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.push("/h/products")}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" loading={isSubmitting}>
-              <IconCheck />
-              Save Product
-            </Button>
-          </div>
-        </form>
+        ) : type === "bundle" ? (
+          <BundleForm
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            submitButtonText="Create Bundle"
+          />
+        ) : (
+          <ProductForm
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            isSubmitting={isSubmitting}
+            submitButtonText="Create Product"
+          />
+        )}
       </div>
     </div>
   );

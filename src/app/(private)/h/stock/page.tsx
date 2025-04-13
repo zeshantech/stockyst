@@ -2,35 +2,11 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import {
-  IconBox,
-  IconFilter,
-  IconPlus,
-  IconSearch,
-  IconTrendingDown,
-  IconTrendingUp,
-} from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { StockTable } from "@/components/(private)/dashboard/stock/stock-table";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { IStock } from "@/types/stock";
 import StatsCard from "@/components/ui/stats-card";
 import { useStock } from "@/hooks/use-stock";
 

@@ -134,7 +134,7 @@ export default function LocationDetailsPage({
 
         {!isEditing && (
           <Button variant="outline" onClick={() => setIsEditing(true)}>
-            <IconEdit className="mr-2 h-4 w-4" />
+            <IconEdit />
             Edit Location
           </Button>
         )}
@@ -291,10 +291,10 @@ export default function LocationDetailsPage({
                   </div>
                   <Button
                     variant="outline"
-                    className="text-red-500 border-red-500 hover:bg-red-50"
+                    color="error"
                     onClick={() => setDeleteDialogOpen(true)}
                   >
-                    <IconTrash className="mr-2 h-4 w-4" />
+                    <IconTrash />
                     Delete Location
                   </Button>
                 </div>

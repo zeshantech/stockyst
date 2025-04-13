@@ -28,7 +28,7 @@ export default function EmptyNotifications({
       </p>
       {hasFilters && (
         <Button variant="outline" className="mt-6" onClick={resetFilters}>
-          <IconFilter className="mr-2 h-4 w-4" />
+          <IconFilter />
           Clear Filters
         </Button>
       )}

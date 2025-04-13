@@ -46,11 +46,11 @@ export function NotificationPopup() {
           className="relative"
           data-testid="notification-button"
         >
-          <IconBell className="size-5" />
+          <IconBell />
           {hasUnread && (
             <Badge
               className={cn(
-                "absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs",
+                "absolute -top-1 -right-1 flex size-5 items-center justify-center rounded-full p-0 text-xs",
                 unreadCount > 9 ? "min-w-5" : ""
               )}
             >
