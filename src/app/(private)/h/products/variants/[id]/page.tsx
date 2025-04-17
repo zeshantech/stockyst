@@ -158,7 +158,7 @@ export default function VariantDetailsPage({
         <PageHeader
           title="Edit Variant"
           description="Modify the variant details and attributes"
-          backButtonHref={`/h/products/variants/${params.id}`}
+          backButton
         />
 
         <div className="rounded-lg border p-6">
@@ -180,7 +180,7 @@ export default function VariantDetailsPage({
       <PageHeader
         title="Variant Details"
         description="View and manage this product variant"
-        backButtonHref="/h/products/variants"
+        backButton
         action={
           <div className="flex gap-2">
             <Button

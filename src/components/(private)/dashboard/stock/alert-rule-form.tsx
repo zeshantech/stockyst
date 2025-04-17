@@ -10,7 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Selector } from "@/components/ui/selector";
-import { AlertRuleFormData, NotificationChannel } from "@/types/stock-alerts";
+import {
+  AlertRule,
+  AlertRuleFormData,
+  NotificationChannel,
+} from "@/types/stock-alerts";
 import { TestAlertRuleDialog } from "./test-alert-rule-dialog";
 
 const formSchema = z.object({
@@ -33,7 +37,7 @@ const formSchema = z.object({
 });
 
 interface AlertRuleFormProps {
-  initialData?: AlertRuleFormData;
+  initialData?: AlertRuleFormData & { id?: string };
   onSubmit: (data: AlertRuleFormData) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
@@ -61,6 +65,28 @@ export function AlertRuleForm({
       notificationChannels: ["email", "browser"],
     },
   });
+
+  // Create a derived AlertRule object for testing
+  const testRule: AlertRule = React.useMemo(() => {
+    return {
+      id: initialData?.id || "new-rule",
+      name: form.watch("name") || "New Rule",
+      description: form.watch("description") || "",
+      condition: form.watch("condition"),
+      products: form.watch("products"),
+      notificationChannels: form.watch("notificationChannels"),
+      isActive: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }, [
+    form.watch("name"),
+    form.watch("description"),
+    form.watch("condition"),
+    form.watch("products"),
+    form.watch("notificationChannels"),
+    initialData?.id,
+  ]);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -98,7 +124,9 @@ export function AlertRuleForm({
                 label="Condition Type"
                 placeholder="Select condition type"
                 value={form.watch("condition.type")}
-                onChange={(value) => form.setValue("condition.type", value)}
+                onChange={(value) =>
+                  form.setValue("condition.type", value as any)
+                }
                 options={[
                   { value: "stock_level", label: "Stock Level" },
                   { value: "stock_value", label: "Stock Value" },
@@ -114,7 +142,9 @@ export function AlertRuleForm({
                 label="Operator"
                 placeholder="Select operator"
                 value={form.watch("condition.operator")}
-                onChange={(value) => form.setValue("condition.operator", value)}
+                onChange={(value) =>
+                  form.setValue("condition.operator", value as any)
+                }
                 options={[
                   { value: "less_than", label: "Less Than" },
                   { value: "greater_than", label: "Greater Than" },
@@ -161,7 +191,7 @@ export function AlertRuleForm({
               label="Apply To"
               placeholder="Select products to apply to"
               value={form.watch("products.type")}
-              onChange={(value) => form.setValue("products.type", value)}
+              onChange={(value) => form.setValue("products.type", value as any)}
               options={[
                 { value: "all", label: "All Products" },
                 { value: "category", label: "Selected Categories" },
@@ -227,7 +257,8 @@ export function AlertRuleForm({
 
       <div className="flex justify-end gap-4">
         <TestAlertRuleDialog
-          alertRuleId={initialData?.id || ""}
+          rule={testRule}
+          alertRuleId={initialData?.id || "new-rule"}
           conditionType={form.watch("condition.type")}
         >
           <Button type="button" variant="outline">

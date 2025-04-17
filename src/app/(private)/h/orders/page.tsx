@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { OrdersTable } from "@/components/(private)/dashboard/orders/orders-table";
 import { useOrders } from "@/hooks/use-orders";
-import StatsCard from "@/components/ui/stats-card";
+import { StatsCard } from "@/components/ui/stats-card";
 
 export default function OrdersPage() {
   const router = useRouter();

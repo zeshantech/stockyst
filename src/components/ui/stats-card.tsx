@@ -22,7 +22,7 @@ interface StatsCardProps {
   subtitle: string;
 }
 
-export default function StatsCard({
+export function StatsCard({
   title,
   value,
   trend,

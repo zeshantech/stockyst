@@ -2,6 +2,17 @@
 
 import * as React from "react";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
+import { Selector, type Option } from "@/components/ui/selector";
+
 import { cn } from "@/lib/utils";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
@@ -104,7 +115,122 @@ function TableCaption({
   );
 }
 
+interface TablePaginationProps {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  pageSize: number;
+  pageSizeOptions?: number[];
+  onPageChange: (page: number) => void;
+  onPageSizeChange?: (pageSize: string) => void;
+  className?: string;
+}
+
+function TablePagination({
+  currentPage,
+  totalPages,
+  totalItems,
+  pageSize,
+  pageSizeOptions = [10, 20, 30, 50, 100],
+  onPageChange,
+  onPageSizeChange,
+  className,
+}: TablePaginationProps) {
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, totalItems);
+
+  return (
+    <div
+      className={cn(
+        "flex flex-col sm:flex-row items-center justify-between gap-4",
+        className
+      )}
+    >
+      <div className="text-sm text-muted-foreground">
+        Showing <span className="font-medium">{startItem}</span> to{" "}
+        <span className="font-medium">{endItem}</span> of{" "}
+        <span className="font-medium">{totalItems}</span> items
+      </div>
+
+      <div className="flex items-center gap-4">
+        {onPageSizeChange && (
+          <Selector
+            value={pageSize.toString()}
+            options={pageSizeOptions.map((item) => ({
+              label: item.toString(),
+              value: item.toString(),
+            }))}
+            onChange={onPageSizeChange}
+            containerClass="min-w-[130px]"
+          />
+        )}
+
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+                aria-disabled={currentPage <= 1}
+                tabIndex={currentPage <= 1 ? -1 : undefined}
+                className={cn(
+                  currentPage <= 1 && "pointer-events-none opacity-50"
+                )}
+              />
+            </PaginationItem>
+
+            {Array.from({ length: totalPages }).map((_, i) => {
+              const page = i + 1;
+              // Show first page, last page, and pages around current page
+              if (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 1 && page <= currentPage + 1)
+              ) {
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      isActive={page === currentPage}
+                      onClick={() => onPageChange(page)}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              }
+
+              // Add ellipsis if there's a gap
+              if (page === 2 || page === totalPages - 1) {
+                return (
+                  <PaginationItem key={`ellipsis-${page}`}>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                );
+              }
+
+              return null;
+            })}
+
+            <PaginationItem>
+              <PaginationNext
+                onClick={() =>
+                  onPageChange(Math.min(totalPages, currentPage + 1))
+                }
+                aria-disabled={currentPage >= totalPages}
+                tabIndex={currentPage >= totalPages ? -1 : undefined}
+                className={cn(
+                  currentPage >= totalPages && "pointer-events-none opacity-50"
+                )}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </div>
+  );
+}
+
 export {
+  TablePagination,
   Table,
   TableHeader,
   TableBody,

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ColumnDef,
@@ -12,10 +12,10 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  noop,
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
@@ -32,72 +32,46 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { DropdownMenuCheckboxComponent } from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
+  TablePagination,
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { IStock } from "@/types/stock";
-import { useStockActions } from "@/hooks/use-stock-actions";
 import { BulkUpload } from "@/components/ui/bulk-upload";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { DropdownMenuComponent } from "@/components/ui/dropdown-menu";
+import { AlertDialogComponent } from "@/components/ui/alert-dialog";
+import { useStocks } from "@/hooks/use-stock";
+import { Selector } from "@/components/ui/selector";
+import { SearchInput } from "@/components/ui/search-input";
+import { EyeIcon, Upload } from "lucide-react";
 
-interface StockTableProps {
-  data: IStock[];
-}
-
-export function StockTable({ data }: StockTableProps) {
+export function StockTable() {
   const router = useRouter();
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [stockToDelete, setStockToDelete] = React.useState<IStock | null>(null);
-  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = React.useState(false);
-  const [bulkUploadSheetOpen, setBulkUploadSheetOpen] = React.useState(false);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [stockToDelete, setStockToDelete] = useState<IStock | null>(null);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
 
   const {
+    stocks,
+    isLoadingStock,
     deleteStock,
     bulkDeleteStock,
     bulkUploadStock,
     updateStockQuantity,
     updateStockLocation,
-  } = useStockActions();
+  } = useStocks();
 
   const columns: ColumnDef<IStock>[] = [
     {
@@ -187,19 +161,6 @@ export function StockTable({ data }: StockTableProps) {
           >
             Quantity
           </Button>
-        );
-      },
-      cell: ({ row }) => {
-        const quantity = row.getValue("quantity") as number;
-        const reorderPoint = row.original.reorderPoint;
-        return (
-          <div className="flex items-center gap-2">
-            <span>{quantity}</span>
-            {quantity <= reorderPoint && (
-              <Badge variant="warning">Low Stock</Badge>
-            )}
-            {quantity === 0 && <Badge variant="error">Out of Stock</Badge>}
-          </div>
         );
       },
     },
@@ -303,75 +264,85 @@ export function StockTable({ data }: StockTableProps) {
         const stock = row.original;
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
+          <DropdownMenuComponent
+            trigger={
+              <Button size={"icon"} variant={"ghost"}>
                 <IconDotsVertical />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => router.push(`/h/stock/${stock.id}`)}
-              >
-                <IconEye />
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
+            }
+            items={[
+              {
+                content: (
+                  <>
+                    <IconEye />
+                    <span>View Details</span>
+                  </>
+                ),
+                onClick: () => router.push(`/h/stock/${stock.id}`),
+              },
+              {
+                content: (
+                  <>
+                    <IconPlus />
+                    <span>Update Quantity</span>
+                  </>
+                ),
+                onClick: () => {
                   const newQuantity = prompt(
                     "Enter new quantity:",
                     stock.quantity.toString()
                   );
                   if (newQuantity && !isNaN(Number(newQuantity))) {
-                    updateStockQuantity.mutate({
+                    updateStockQuantity({
                       id: stock.id,
                       quantity: Number(newQuantity),
                     });
                   }
-                }}
-              >
-                <IconPlus />
-                Update Quantity
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
+                },
+              },
+              {
+                content: (
+                  <>
+                    <IconPlus />
+                    <span>Update Location</span>
+                  </>
+                ),
+                onClick: () => {
                   const newLocation = prompt(
                     "Enter new location:",
                     stock.location
                   );
                   if (newLocation) {
-                    updateStockLocation.mutate({
+                    updateStockLocation({
                       id: stock.id,
                       location: newLocation,
                     });
                   }
-                }}
-              >
-                <IconPlus />
-                Update Location
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-error"
-                onClick={() => {
+                },
+                separator: true,
+              },
+              {
+                content: (
+                  <>
+                    <IconTrash />
+                    <span>Delete Stock</span>
+                  </>
+                ),
+                className: "text-error",
+                onClick: () => {
                   setStockToDelete(stock);
                   setDeleteDialogOpen(true);
-                }}
-              >
-                <IconTrash />
-                Delete Stock
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                },
+              },
+            ]}
+          />
         );
       },
     },
   ];
 
   const table = useReactTable({
-    data,
+    data: stocks,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -402,7 +373,7 @@ export function StockTable({ data }: StockTableProps) {
     if (!stockToDelete) return;
 
     try {
-      await deleteStock.mutateAsync({ id: stockToDelete.id });
+      await deleteStock({ id: stockToDelete.id });
       toast.success("Stock deleted successfully");
       setDeleteDialogOpen(false);
       setStockToDelete(null);
@@ -418,7 +389,7 @@ export function StockTable({ data }: StockTableProps) {
 
     try {
       const ids = selectedRows.map((row) => row.original.id);
-      await bulkDeleteStock.mutateAsync({ ids });
+      await bulkDeleteStock({ ids });
       toast.success(`${ids.length} stock items deleted successfully`);
       setBulkDeleteDialogOpen(false);
       table.resetRowSelection();
@@ -429,7 +400,7 @@ export function StockTable({ data }: StockTableProps) {
   };
 
   const handleBulkUpload = async (formData: FormData) => {
-    await bulkUploadStock.mutateAsync({ formData });
+    await bulkUploadStock({ formData });
   };
 
   const handleExport = (format: "csv" | "excel" | "json") => {
@@ -439,102 +410,98 @@ export function StockTable({ data }: StockTableProps) {
 
   return (
     <div className="space-y-4 w-full overflow-x-auto">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-1 items-center gap-2">
-          <Input
-            placeholder="Search stock..."
-            value={globalFilter ?? ""}
-            onChange={(event) => setGlobalFilter(event.target.value)}
-            className="max-w-sm"
-          />
-          <Select
-            value={
-              (table.getColumn("status")?.getFilterValue() as string) ?? "all"
-            }
-            onValueChange={(value) =>
-              table.getColumn("status")?.setFilterValue(value)
-            }
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="in-stock">In Stock</SelectItem>
-              <SelectItem value="low-stock">Low Stock</SelectItem>
-              <SelectItem value="out-of-stock">Out of Stock</SelectItem>
-            </SelectContent>
-          </Select>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                <IconEye />
-                View
-                <IconChevronDown className="ml-2 size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="flex items-center gap-2">
-          {table.getFilteredSelectedRowModel().rows.length > 0 && (
-            <Button
-              color="error"
-              size="sm"
-              onClick={() => setBulkDeleteDialogOpen(true)}
-            >
-              <IconTrash />
-              Delete Selected ({table.getFilteredSelectedRowModel().rows.length}
-              )
+      <div className="flex flex-1 items-center gap-2">
+        <SearchInput
+          placeholder="Search stock..."
+          value={globalFilter ?? ""}
+          onChange={(event) => setGlobalFilter(event.target.value)}
+        />
+        <Selector
+          value={
+            (table.getColumn("status")?.getFilterValue() as string) ?? "all"
+          }
+          onChange={(value) => table.getColumn("status")?.setFilterValue(value)}
+          placeholder="Filter by status"
+          options={[
+            { label: "All", value: "all" },
+            { label: "In Stock", value: "in-stock" },
+            { label: "Low Stock", value: "low-stock" },
+            { label: "Out of Stock", value: "out-of-stock" },
+          ]}
+        />
+
+        <div className="ml-auto" />
+
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <Button color="error" onClick={() => setBulkDeleteDialogOpen(true)}>
+            <IconTrash />
+            Delete Selected ({table.getFilteredSelectedRowModel().rows.length})
+          </Button>
+        )}
+        <DropdownMenuComponent
+          trigger={
+            <Button variant="outline">
+              <IconDownload />
+              Export
             </Button>
-          )}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <IconDownload />
-                Export
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleExport("csv")}>
-                <IconFileText />
-                Export as CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport("excel")}>
-                <IconFileSpreadsheet />
-                Export as Excel
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleExport("json")}>
-                <IconFileText />
-                Export as JSON
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <BulkUpload
-            title="Stock"
-            description="Upload multiple stock items at once using CSV, Excel, or JSON files."
-            onUpload={handleBulkUpload}
-            onExport={handleExport}
-          />
-        </div>
+          }
+          items={[
+            {
+              content: (
+                <>
+                  <IconFileText />
+                  <span>Export as CSV</span>
+                </>
+              ),
+              onClick: () => handleExport("csv"),
+            },
+            {
+              content: (
+                <>
+                  <IconFileSpreadsheet />
+                  <span>Export as Excel</span>
+                </>
+              ),
+              onClick: () => handleExport("excel"),
+            },
+            {
+              content: (
+                <>
+                  <IconFileText />
+                  <span>Export as JSON</span>
+                </>
+              ),
+              onClick: () => handleExport("json"),
+            },
+          ]}
+        />
+        <BulkUpload
+          trigger={
+            <Button variant={"outline"}>
+              <Upload /> Import
+            </Button>
+          }
+          title="Stock"
+          description="Upload multiple stock items at once using CSV, Excel, or JSON files."
+          onUpload={handleBulkUpload}
+          onExport={handleExport}
+        />
+        <DropdownMenuCheckboxComponent
+          type="checkbox"
+          trigger={
+            <Button variant="outline" size={"icon"}>
+              <EyeIcon />
+            </Button>
+          }
+          items={table
+            .getAllColumns()
+            .filter((column) => column.getCanHide())
+            .map((column) => ({
+              label: column.id,
+              checked: column.getIsVisible(),
+              onCheckedChange: (value) => column.toggleVisibility(!!value),
+            }))}
+        />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -557,7 +524,16 @@ export function StockTable({ data }: StockTableProps) {
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoadingStock ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Loading stock data...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -581,95 +557,45 @@ export function StockTable({ data }: StockTableProps) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No stock items found.
+                  No stock items found
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <IconChevronsLeft />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <IconChevronLeft />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <IconChevronRight />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <IconChevronsRight />
-          </Button>
-        </div>
-      </div>
+      <TablePagination
+        currentPage={1}
+        pageSize={10}
+        totalItems={100}
+        totalPages={10}
+        pageSizeOptions={[10, 20, 30, 40, 50]}
+        onPageChange={noop}
+      />
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Stock</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete the stock item for "
-              {stockToDelete?.productName}"? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteStock}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialogComponent
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete Stock"
+        description={`Are you sure you want to delete the stock item for "${stockToDelete?.productName}"? This action cannot be undone.`}
+        cancelButton="Cancel"
+        confirmButton="Delete"
+        onConfirm={handleDeleteStock}
+      />
 
       {/* Bulk Delete Confirmation Dialog */}
-      <AlertDialog
+      <AlertDialogComponent
         open={bulkDeleteDialogOpen}
         onOpenChange={setBulkDeleteDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Selected Stock Items</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete{" "}
-              {table.getFilteredSelectedRowModel().rows.length} selected stock
-              items? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleBulkDelete}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title="Delete Selected Stock Items"
+        description={`Are you sure you want to delete ${
+          table.getFilteredSelectedRowModel().rows.length
+        } selected stock items? This action cannot be undone.`}
+        cancelButton="Cancel"
+        confirmButton="Delete"
+        onConfirm={handleBulkDelete}
+      />
     </div>
   );
 }

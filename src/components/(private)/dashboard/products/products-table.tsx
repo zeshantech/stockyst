@@ -313,52 +313,42 @@ export function ProductsTable({ data }: ProductsTableProps) {
               </Button>
             }
             align="end"
-            options={[
-              [
-                {
-                  label: "View Details",
-                  value: "view",
-                  onClick: () => router.push(`/h/products/${product.id}`),
+            items={[
+              {
+                content: "View Details",
+                separator: true,
+                onClick: () => router.push(`/h/products/${product.id}`),
+              },
+              {
+                content: "Mark as Active",
+                onClick: () =>
+                  updateProductStatus({ id: product.id, status: "active" }),
+                disabled: product.status === "active" || isUpdatingStatus,
+              },
+              {
+                content: "Mark as Inactive",
+                onClick: () =>
+                  updateProductStatus({ id: product.id, status: "inactive" }),
+                disabled: product.status === "inactive" || isUpdatingStatus,
+              },
+              {
+                content: "Mark as Discontinued",
+                onClick: () =>
+                  updateProductStatus({
+                    id: product.id,
+                    status: "discontinued",
+                  }),
+                separator: true,
+                disabled: product.status === "discontinued" || isUpdatingStatus,
+              },
+              {
+                content: "Delete Product",
+                onClick: () => {
+                  setProductToDelete(product.id);
+                  setDeleteProductDialogOpen(true);
                 },
-              ],
-              [
-                {
-                  label: "Mark as Active",
-                  value: "active",
-                  onClick: () =>
-                    updateProductStatus({ id: product.id, status: "active" }),
-                  disabled: product.status === "active" || isUpdatingStatus,
-                },
-                {
-                  label: "Mark as Inactive",
-                  value: "inactive",
-                  onClick: () =>
-                    updateProductStatus({ id: product.id, status: "inactive" }),
-                  disabled: product.status === "inactive" || isUpdatingStatus,
-                },
-                {
-                  label: "Mark as Discontinued",
-                  value: "discontinued",
-                  onClick: () =>
-                    updateProductStatus({
-                      id: product.id,
-                      status: "discontinued",
-                    }),
-                  disabled:
-                    product.status === "discontinued" || isUpdatingStatus,
-                },
-              ],
-              [
-                {
-                  label: "Delete Product",
-                  value: "delete",
-                  onClick: () => {
-                    setProductToDelete(product.id);
-                    setDeleteProductDialogOpen(true);
-                  },
-                  className: "text-error",
-                },
-              ],
+                className: "text-error",
+              },
             ]}
           />
         );

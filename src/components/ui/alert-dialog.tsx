@@ -155,7 +155,6 @@ function AlertDialogCancel({
     />
   );
 }
-
 interface AlertDialogComponentProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -166,6 +165,7 @@ interface AlertDialogComponentProps {
   cancelButton?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  onConfirm?: () => void;
 }
 
 function AlertDialogComponent({
@@ -178,6 +178,7 @@ function AlertDialogComponent({
   cancelButton = "Cancel",
   children,
   className,
+  onConfirm,
 }: AlertDialogComponentProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -200,7 +201,9 @@ function AlertDialogComponent({
               <AlertDialogCancel>{cancelButton}</AlertDialogCancel>
             )}
             {confirmButton && (
-              <AlertDialogAction>{confirmButton}</AlertDialogAction>
+              <AlertDialogAction onClick={onConfirm}>
+                {confirmButton}
+              </AlertDialogAction>
             )}
           </AlertDialogFooter>
         )}

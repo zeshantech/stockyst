@@ -95,13 +95,7 @@ export default function AddProductPage() {
             ? "Create a new bundle of products"
             : "Create a new product in your inventory"
         }
-        backButtonHref={
-          type === "variant"
-            ? "/h/products/variants"
-            : type === "bundle"
-            ? "/h/products/bundles"
-            : "/h/products"
-        }
+        backButton
       />
 
       <div className="rounded-lg border p-6">

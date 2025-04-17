@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   ColumnDef,
@@ -12,40 +12,35 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  noop,
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
   IconDotsVertical,
   IconEye,
   IconTrash,
   IconCheck,
   IconX,
+  IconBell,
+  IconBox,
+  IconCalendarDue,
+  IconExclamationCircle,
+  IconRefresh,
+  IconCheckbox,
 } from "@tabler/icons-react";
+import { format } from "date-fns";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxComponent,
+  DropdownMenuComponent,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -53,40 +48,43 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TablePagination,
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { IStockAlert } from "@/types/stock";
+import { AlertDialogComponent } from "@/components/ui/alert-dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SearchInput } from "@/components/ui/search-input";
 import { useStockAlerts } from "@/hooks/use-stock-alerts";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Selector } from "@/components/ui/selector";
+import { EyeIcon } from "lucide-react";
 
 interface StockAlertsProps {
-  data: IStockAlert[];
+  alerts: IStockAlert[];
+  isLoading?: boolean;
 }
 
-export function StockAlerts({ data }: StockAlertsProps) {
+export function StockAlerts({ alerts, isLoading = false }: StockAlertsProps) {
   const router = useRouter();
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [alertToDelete, setAlertToDelete] = React.useState<IStockAlert | null>(
-    null
-  );
-  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = React.useState(false);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedSeverity, setSelectedSeverity] = useState<string>("all");
+
+  // Combined dialog state
+  const [dialog, setDialog] = useState<{
+    type: "delete" | "bulkDelete" | "resolve" | "dismiss" | null;
+    open: boolean;
+    alert: IStockAlert | null;
+  }>({
+    type: null,
+    open: false,
+    alert: null,
+  });
 
   const { updateStockAlert, deleteStockAlert, bulkDeleteStockAlerts } =
     useStockAlerts();
@@ -159,32 +157,6 @@ export function StockAlerts({ data }: StockAlertsProps) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             Location
-          </Button>
-        );
-      },
-    },
-    {
-      accessorKey: "currentQuantity",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Current Quantity
-          </Button>
-        );
-      },
-    },
-    {
-      accessorKey: "reorderPoint",
-      header: ({ column }) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Reorder Point
           </Button>
         );
       },
@@ -292,67 +264,80 @@ export function StockAlerts({ data }: StockAlertsProps) {
         const alert = row.original;
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
+          <DropdownMenuComponent
+            trigger={
+              <Button variant={"outline"} size={"icon"}>
                 <IconDotsVertical />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => router.push(`/h/stock/${alert.stockId}`)}
-              >
-                <IconEye />
-                View Stock
-              </DropdownMenuItem>
-              {alert.status === "active" && (
-                <>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      updateStockAlert.mutate({
-                        id: alert.id,
-                        status: "resolved",
-                      });
-                    }}
-                  >
-                    <IconCheck />
-                    Mark as Resolved
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      updateStockAlert.mutate({
-                        id: alert.id,
-                        status: "dismissed",
-                      });
-                    }}
-                  >
-                    <IconX />
-                    Dismiss Alert
-                  </DropdownMenuItem>
-                </>
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-error"
-                onClick={() => {
-                  setAlertToDelete(alert);
-                  setDeleteDialogOpen(true);
-                }}
-              >
-                <IconTrash />
-                Delete Alert
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            }
+            items={[
+              {
+                content: (
+                  <>
+                    View Stock <IconEye />
+                  </>
+                ),
+                onClick: () => router.push(`/h/stock/${alert.stockId}`),
+              },
+              ...(alert.status === "active"
+                ? [
+                    {
+                      content: (
+                        <>
+                          Resolve
+                          <IconCheck />
+                        </>
+                      ),
+                      onClick: () => {
+                        setDialog({
+                          type: "resolve",
+                          open: true,
+                          alert,
+                        });
+                      },
+                    },
+                    {
+                      content: (
+                        <>
+                          Dismiss
+                          <IconX />
+                        </>
+                      ),
+                      onClick: () => {
+                        setDialog({
+                          type: "dismiss",
+                          open: true,
+                          alert,
+                        });
+                      },
+                    },
+                  ]
+                : []),
+              {
+                content: (
+                  <>
+                    Delete
+                    <IconTrash />
+                  </>
+                ),
+                onClick: () => {
+                  setDialog({
+                    type: "delete",
+                    open: true,
+                    alert,
+                  });
+                },
+                className: "text-error",
+              },
+            ]}
+          />
         );
       },
     },
   ];
 
   const table = useReactTable({
-    data,
+    data: alerts,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -379,13 +364,35 @@ export function StockAlerts({ data }: StockAlertsProps) {
     onGlobalFilterChange: setGlobalFilter,
   });
 
+  const filteredAlerts = useMemo(() => {
+    return alerts.filter((alert) => {
+      const matchesSearch =
+        alert.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        alert.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        alert.location.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesStatus =
+        selectedStatus === "all" || alert.status === selectedStatus;
+
+      const matchesSeverity =
+        selectedSeverity === "all" || alert.severity === selectedSeverity;
+
+      return matchesSearch && matchesStatus && matchesSeverity;
+    });
+  }, [alerts, searchQuery, selectedStatus, selectedSeverity]);
+
+  // Get selected alerts from table selection
+  const selectedAlerts = useMemo(() => {
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+    return selectedRows.map((row) => row.original.id);
+  }, [table]);
+
   const handleDeleteAlert = async () => {
-    if (!alertToDelete) return;
+    if (!dialog.alert) return;
 
     try {
-      await deleteStockAlert.mutateAsync({ id: alertToDelete.id });
-      setDeleteDialogOpen(false);
-      setAlertToDelete(null);
+      await deleteStockAlert({ id: dialog.alert.id });
+      setDialog({ type: null, open: false, alert: null });
     } catch (error) {
       console.error("Error deleting alert:", error);
     }
@@ -397,72 +404,134 @@ export function StockAlerts({ data }: StockAlertsProps) {
 
     try {
       const ids = selectedRows.map((row) => row.original.id);
-      await bulkDeleteStockAlerts.mutateAsync({ ids });
-      setBulkDeleteDialogOpen(false);
+      await bulkDeleteStockAlerts({ ids });
+      setDialog({ type: null, open: false, alert: null });
       table.resetRowSelection();
     } catch (error) {
       console.error("Error deleting alerts:", error);
     }
   };
 
+  // Filter alerts based on search, status, and severity
+
+  // Handle resolving an alert
+  const handleResolveAlert = () => {
+    if (dialog.alert) {
+      updateStockAlert({
+        id: dialog.alert.id,
+        status: "resolved",
+        notes: "Resolved manually by user",
+      });
+      setDialog({ type: null, open: false, alert: null });
+    }
+  };
+
+  // Handle dismissing an alert
+  const handleDismissAlert = () => {
+    if (dialog.alert) {
+      updateStockAlert({
+        id: dialog.alert.id,
+        status: "dismissed",
+        notes: "Dismissed by user",
+      });
+      setDialog({ type: null, open: false, alert: null });
+    }
+  };
+
+  // Handle bulk actions
+  const handleBulkResolve = () => {
+    if (selectedAlerts.length > 0) {
+      selectedAlerts.forEach((alertId) => {
+        updateStockAlert({
+          id: alertId,
+          status: "resolved",
+          notes: "Bulk resolved",
+        });
+      });
+      table.resetRowSelection();
+      toast.success(`${selectedAlerts.length} alerts resolved successfully`);
+    }
+  };
+
+  const handleBulkDismiss = () => {
+    if (selectedAlerts.length > 0) {
+      selectedAlerts.forEach((alertId) => {
+        updateStockAlert({
+          id: alertId,
+          status: "dismissed",
+          notes: "Bulk dismissed",
+        });
+      });
+      table.resetRowSelection();
+      toast.success(`${selectedAlerts.length} alerts dismissed successfully`);
+    }
+  };
+
   return (
     <div className="space-y-4 w-full overflow-x-auto">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-1 items-center gap-2">
-          <Input
-            placeholder="Search alerts..."
-            value={globalFilter ?? ""}
-            onChange={(event) => setGlobalFilter(event.target.value)}
-            className="max-w-sm"
-          />
-          <Select
-            value={
-              (table.getColumn("status")?.getFilterValue() as string) ?? "all"
-            }
-            onValueChange={(value) =>
-              table.getColumn("status")?.setFilterValue(value)
-            }
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="resolved">Resolved</SelectItem>
-              <SelectItem value="dismissed">Dismissed</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={
-              (table.getColumn("alertType")?.getFilterValue() as string) ??
-              "all"
-            }
-            onValueChange={(value) =>
-              table.getColumn("alertType")?.setFilterValue(value)
-            }
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="low-stock">Low Stock</SelectItem>
-              <SelectItem value="out-of-stock">Out of Stock</SelectItem>
-              <SelectItem value="reorder-point">Reorder Point</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="flex items-center gap-2">
+        <SearchInput
+          placeholder="Search alerts..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="min-w-80"
+        />
+        <Selector
+          value={selectedStatus}
+          onChange={setSelectedStatus}
+          placeholder="Filter by status"
+          options={[
+            { label: "All Status", value: "all" },
+            { label: "Active", value: "active" },
+            { label: "Resolved", value: "resolved" },
+            { label: "Dismissed", value: "dismissed" },
+          ]}
+        />
+        <Selector
+          value={selectedSeverity}
+          onChange={setSelectedSeverity}
+          placeholder="Filter by severity"
+          options={[
+            { label: "All Severity", value: "all" },
+            { label: "Low", value: "low" },
+            { label: "Medium", value: "medium" },
+            { label: "High", value: "high" },
+          ]}
+        />
+
+        <div className="ml-auto" />
+
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <Button
-            color="error"
-            size="sm"
-            onClick={() => setBulkDeleteDialogOpen(true)}
-          >
-            <IconTrash />
-            Delete Selected ({table.getFilteredSelectedRowModel().rows.length})
-          </Button>
+          <>
+            <Button variant="outline" onClick={handleBulkResolve}>
+              <IconCheck />
+              Resolve All{" "}
+              {`(${table.getFilteredSelectedRowModel().rows.length})`}
+            </Button>
+            <Button variant="outline" onClick={handleBulkDismiss}>
+              <IconX />
+              Dismiss All{" "}
+              {`(${table.getFilteredSelectedRowModel().rows.length})`}
+            </Button>
+          </>
         )}
+
+        <DropdownMenuCheckboxComponent
+          type="checkbox"
+          trigger={
+            <Button variant="outline" size={"icon"}>
+              <EyeIcon />
+            </Button>
+          }
+          items={table
+            .getAllColumns()
+            .filter((column) => column.getCanHide())
+            .map((column) => ({
+              label: column.id,
+              checked: column.getIsVisible(),
+              onCheckedChange: (value) => column.toggleVisibility(!!value),
+            }))}
+        />
       </div>
       <div className="rounded-md border">
         <Table>
@@ -484,12 +553,24 @@ export function StockAlerts({ data }: StockAlertsProps) {
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Loading Alerts...
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/h/stock/${row.original.id}`)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -507,95 +588,76 @@ export function StockAlerts({ data }: StockAlertsProps) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No stock alerts found.
+                  No alerts found
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <IconChevronsLeft />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <IconChevronLeft />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            <IconChevronRight />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <IconChevronsRight />
-          </Button>
-        </div>
-      </div>
+      <TablePagination
+        currentPage={1}
+        pageSize={10}
+        totalItems={100}
+        totalPages={10}
+        pageSizeOptions={[10, 20, 30, 40, 50]}
+        onPageChange={noop}
+      />
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Stock Alert</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete the stock alert for "
-              {alertToDelete?.productName}"? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteAlert}>
+      {/* Combined Dialog Component */}
+      <AlertDialogComponent
+        open={dialog.open}
+        onOpenChange={(open) => {
+          if (!open) setDialog({ ...dialog, open: false });
+        }}
+        title={
+          dialog.type === "resolve"
+            ? "Resolve Alert"
+            : dialog.type === "dismiss"
+            ? "Dismiss Alert"
+            : dialog.type === "delete"
+            ? "Delete Alert"
+            : dialog.type === "bulkDelete"
+            ? "Delete Multiple Alerts"
+            : ""
+        }
+        description={
+          dialog.type === "resolve"
+            ? "Are you sure you want to mark this alert as resolved? This will indicate that the issue has been addressed."
+            : dialog.type === "dismiss"
+            ? "Are you sure you want to dismiss this alert? This will ignore the alert without resolving the underlying issue."
+            : dialog.type === "delete"
+            ? "Are you sure you want to delete this alert? This action cannot be undone."
+            : dialog.type === "bulkDelete"
+            ? "Are you sure you want to delete these alerts? This action cannot be undone."
+            : ""
+        }
+        confirmButton={
+          dialog.type === "delete" || dialog.type === "bulkDelete" ? (
+            <span className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Bulk Delete Confirmation Dialog */}
-      <AlertDialog
-        open={bulkDeleteDialogOpen}
-        onOpenChange={setBulkDeleteDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Selected Stock Alerts</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete{" "}
-              {table.getFilteredSelectedRowModel().rows.length} selected stock
-              alerts? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleBulkDelete}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </span>
+          ) : dialog.type === "resolve" ? (
+            "Resolve"
+          ) : dialog.type === "dismiss" ? (
+            "Dismiss"
+          ) : (
+            "Confirm"
+          )
+        }
+        cancelButton="Cancel"
+        onConfirm={
+          dialog.type === "resolve"
+            ? handleResolveAlert
+            : dialog.type === "dismiss"
+            ? handleDismissAlert
+            : dialog.type === "delete"
+            ? handleDeleteAlert
+            : dialog.type === "bulkDelete"
+            ? handleBulkDelete
+            : undefined
+        }
+      />
     </div>
   );
 }

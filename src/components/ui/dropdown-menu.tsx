@@ -240,22 +240,13 @@ function DropdownMenuSubContent({
 
 interface DropdownMenuComponentProps {
   trigger: React.ReactNode;
-  options: Array<
-    | {
-        label: string;
-        value: string;
-        onClick?: () => void;
-        disabled?: boolean;
-        className?: string;
-      }[]
-    | {
-        label: string;
-        value: string;
-        onClick?: () => void;
-        disabled?: boolean;
-        className?: string;
-      }
-  >;
+  items: {
+    content: React.ReactNode;
+    onClick?: () => void;
+    disabled?: boolean;
+    className?: string;
+    separator?: boolean;
+  }[];
   label?: string;
   align?: "start" | "center" | "end";
   triggerClassName?: string;
@@ -264,7 +255,7 @@ interface DropdownMenuComponentProps {
 
 function DropdownMenuComponent({
   trigger,
-  options,
+  items,
   label,
   align = "end",
   triggerClassName,
@@ -277,45 +268,106 @@ function DropdownMenuComponent({
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} className={cn(contentClassName)}>
         {label && <DropdownMenuLabel>{label}</DropdownMenuLabel>}
-        {options.map((optionGroup, groupIndex) => {
-          // If optionGroup is an array, render it as a group with separator
-          if (Array.isArray(optionGroup)) {
-            return (
-              <React.Fragment key={`group-${groupIndex}`}>
-                {groupIndex > 0 && <DropdownMenuSeparator />}
-                {optionGroup.map((option, index) => (
-                  <DropdownMenuItem
-                    key={`${option.value}-${groupIndex}-${index}`}
-                    onClick={option.onClick}
-                    disabled={option.disabled}
-                    className={option.className}
-                  >
-                    {option.label}
-                  </DropdownMenuItem>
-                ))}
+        {items.map((optionGroup, groupIndex) => (
+          <React.Fragment key={`${groupIndex}`}>
+            {groupIndex > 0 && optionGroup.separator && (
+              <DropdownMenuSeparator />
+            )}
+            <DropdownMenuItem
+              onClick={optionGroup.onClick}
+              disabled={optionGroup.disabled}
+              className={optionGroup.className}
+            >
+              {optionGroup.content}
+            </DropdownMenuItem>
+          </React.Fragment>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+interface DropdownMenuItemOption {
+  label: string;
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
+  disabled?: boolean;
+  className?: string;
+  value?: string;
+  separator?: boolean;
+}
+
+interface DropdownMenuSelectionComponentProps {
+  type: "checkbox" | "radio";
+  trigger: React.ReactNode;
+  items: DropdownMenuItemOption[];
+  label?: string;
+  align?: "start" | "center" | "end";
+  triggerClassName?: string;
+  contentClassName?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
+}
+
+function DropdownMenuSelectionComponent({
+  trigger,
+  items,
+  label,
+  align = "end",
+  triggerClassName,
+  type,
+  contentClassName,
+  value,
+  onValueChange,
+}: DropdownMenuSelectionComponentProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild className={triggerClassName}>
+        {trigger}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align={align} className={cn(contentClassName)}>
+        {label && <DropdownMenuLabel>{label}</DropdownMenuLabel>}
+        {type === "radio" && (
+          <DropdownMenuRadioGroup value={value} onValueChange={onValueChange}>
+            {items.map((option, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && option.separator && <DropdownMenuSeparator />}
+                <DropdownMenuRadioItem
+                  value={option.value || option.label}
+                  disabled={option.disabled}
+                  className={option.className}
+                >
+                  {option.label}
+                </DropdownMenuRadioItem>
               </React.Fragment>
-            );
-          } else {
-            // If optionGroup is a single option, render it directly
-            return (
-              <DropdownMenuItem
-                key={`${optionGroup.value}-${groupIndex}`}
-                onClick={optionGroup.onClick}
-                disabled={optionGroup.disabled}
-                className={optionGroup.className}
+            ))}
+          </DropdownMenuRadioGroup>
+        )}
+        {type === "checkbox" &&
+          items.map((option, index) => (
+            <React.Fragment key={index}>
+              {index > 0 && option.separator && <DropdownMenuSeparator />}
+              <DropdownMenuCheckboxItem
+                checked={option.checked}
+                onCheckedChange={option.onCheckedChange}
+                disabled={option.disabled}
+                className={option.className}
               >
-                {optionGroup.label}
-              </DropdownMenuItem>
-            );
-          }
-        })}
+                {option.label}
+              </DropdownMenuCheckboxItem>
+            </React.Fragment>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
 
+// For backward compatibility
+const DropdownMenuCheckboxComponent = DropdownMenuSelectionComponent;
+
 export {
   DropdownMenuComponent,
+  DropdownMenuCheckboxComponent,
+  DropdownMenuSelectionComponent,
   DropdownMenu,
   DropdownMenuPortal,
   DropdownMenuTrigger,

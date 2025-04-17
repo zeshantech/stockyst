@@ -1,33 +1,33 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { XIcon } from "lucide-react"
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { XIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
 function DialogTrigger({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
 function DialogClose({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
 function DialogOverlay({
@@ -43,7 +43,7 @@ function DialogOverlay({
       )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogContent({
@@ -69,7 +69,7 @@ function DialogContent({
         </DialogPrimitive.Close>
       </DialogPrimitive.Content>
     </DialogPortal>
-  )
+  );
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
@@ -79,7 +79,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
@@ -92,7 +92,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
       )}
       {...props}
     />
-  )
+  );
 }
 
 function DialogTitle({
@@ -105,7 +105,7 @@ function DialogTitle({
       className={cn("text-lg leading-none font-semibold", className)}
       {...props}
     />
-  )
+  );
 }
 
 function DialogDescription({
@@ -118,10 +118,53 @@ function DialogDescription({
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
-  )
+  );
+}
+
+interface DialogComponentProps {
+  trigger?: React.ReactNode;
+  title?: string;
+  description?: string;
+  children?: React.ReactNode;
+  footer?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  className?: string;
+  contentClassName?: string;
+}
+
+function DialogComponent({
+  trigger,
+  title,
+  description,
+  children,
+  footer,
+  open,
+  onOpenChange,
+  className,
+  contentClassName,
+}: DialogComponentProps) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+      <DialogContent className={cn("max-w-2xl", contentClassName)}>
+        {(title || description) && (
+          <DialogHeader>
+            {title && <DialogTitle>{title}</DialogTitle>}
+            {description && (
+              <DialogDescription>{description}</DialogDescription>
+            )}
+          </DialogHeader>
+        )}
+        <div className={cn("py-4", className)}>{children}</div>
+        {footer && <DialogFooter>{footer}</DialogFooter>}
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export {
+  DialogComponent,
   Dialog,
   DialogClose,
   DialogContent,
@@ -132,4 +175,4 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-}
+};

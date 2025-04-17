@@ -171,7 +171,7 @@ export default function BundleDetailsPage({
         <PageHeader
           title="Edit Bundle"
           description="Modify the bundle details and contents"
-          backButtonHref={`/h/products/bundles/${params.id}`}
+          backButton
         />
 
         <div className="rounded-lg border p-6">
@@ -210,7 +210,7 @@ export default function BundleDetailsPage({
       <PageHeader
         title="Bundle Details"
         description="View and manage this product bundle"
-        backButtonHref="/h/products/bundles"
+        backButton
         action={
           <div className="flex gap-2">
             <Button

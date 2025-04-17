@@ -1,4 +1,20 @@
 import React from "react";
-export default function page() {
-  return <div>Welcome Page</div>;
+import { Metadata } from "next";
+import AdjustmentsHeader from "@/components/(private)/dashboard/stock/adjustments/adjustments-header";
+import AdjustmentsTable from "@/components/(private)/dashboard/stock/adjustments/adjustments-table";
+import AdjustmentsFilters from "@/components/(private)/dashboard/stock/adjustments/adjustments-filters";
+
+export const metadata: Metadata = {
+  title: "Stock Adjustments | InvenTree",
+  description: "Manage stock adjustments and inventory reconciliation",
+};
+
+export default function AdjustmentsPage() {
+  return (
+    <div className="space-y-6">
+      <AdjustmentsHeader />
+      <AdjustmentsFilters />
+      <AdjustmentsTable />
+    </div>
+  );
 }

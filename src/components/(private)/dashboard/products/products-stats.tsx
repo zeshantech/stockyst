@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import StatsCard from "@/components/ui/stats-card";
+import { StatsCard } from "@/components/ui/stats-card";
 import { useProductStatistics } from "@/hooks/use-products";
 import { Skeleton } from "@/components/ui/skeleton";
 

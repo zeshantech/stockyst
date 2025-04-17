@@ -2,31 +2,9 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import {
-  IconBuilding,
-  IconFilter,
-  IconPlus,
-  IconSearch,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconBuilding, IconPlus, IconUsers } from "@tabler/icons-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { SuppliersTable } from "@/components/(private)/dashboard/suppliers/suppliers-table";
 import { useSuppliers } from "@/hooks/use-suppliers";
 import StatsCard from "@/components/(private)/dashboard/suppliers/stats-card";

@@ -138,7 +138,7 @@ export default function ProductVariantsPage() {
       <PageHeader
         title="Product Variants"
         description="Manage product variations like size, color, and style"
-        backButtonHref="/h/products"
+        backButton
         action={
           <Button onClick={() => router.push("/h/products/add?type=variant")}>
             <IconPlus />

@@ -4,33 +4,35 @@ import * as React from "react";
 import { IconDownload, IconUpload } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { toast } from "sonner";
+import { Selector } from "./selector";
 
-export interface BulkUploadProps {
+export interface BulkUploadProps<T extends string> {
   title: string;
   description: string;
   onUpload: (formData: FormData) => Promise<void>;
-  onExport: (format: "csv" | "excel" | "json") => void;
+  onExport: (format: T) => void;
   buttonText?: string;
   isUploading?: boolean;
   allowedTypes?: string[];
+  exportFormats?: Array<{
+    value: T;
+    label: string;
+  }>;
+  defaultFormat?: T;
+  trigger?: React.ReactNode;
 }
 
-export function BulkUpload({
+export function BulkUpload<T extends string = "csv" | "excel" | "json">({
   title,
   description,
   onUpload,
@@ -38,10 +40,17 @@ export function BulkUpload({
   buttonText = "Bulk Upload",
   isUploading = false,
   allowedTypes = [".csv", ".xlsx", ".xls"],
-}: BulkUploadProps) {
-  const [uploadMethod, setUploadMethod] = React.useState<
-    "csv" | "excel" | "json"
-  >("csv");
+  exportFormats = [
+    { value: "csv" as T, label: "CSV File" },
+    { value: "excel" as T, label: "Excel File" },
+    { value: "json" as T, label: "JSON File" },
+  ],
+  defaultFormat,
+  trigger,
+}: BulkUploadProps<T>) {
+  const [uploadMethod, setUploadMethod] = React.useState<T>(
+    defaultFormat || (exportFormats[0]?.value as T)
+  );
   const [uploadFile, setUploadFile] = React.useState<File | null>(null);
   const [dragActive, setDragActive] = React.useState(false);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -94,7 +103,7 @@ export function BulkUpload({
 
     const formData = new FormData();
     formData.append("file", uploadFile);
-    formData.append("method", uploadMethod);
+    formData.append("method", uploadMethod as string);
 
     try {
       await onUpload(formData);
@@ -107,90 +116,79 @@ export function BulkUpload({
   };
 
   return (
-    <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline" size="sm">
-          <IconUpload />
-          {buttonText}
-        </Button>
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Bulk Upload {title}</SheetTitle>
-          <SheetDescription>{description}</SheetDescription>
-        </SheetHeader>
-        <div className="grid gap-4 p-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Upload Method</label>
-            <Select
-              value={uploadMethod}
-              onValueChange={(value: "csv" | "excel" | "json") =>
-                setUploadMethod(value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select upload method" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="csv">CSV File</SelectItem>
-                <SelectItem value="excel">Excel File</SelectItem>
-                <SelectItem value="json">JSON File</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">File</label>
-            <div
-              className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors 
+    <Drawer direction="right">
+      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Bulk Upload {title}</DrawerTitle>
+          <DrawerDescription>{description}</DrawerDescription>
+        </DrawerHeader>
+        <div className="p-4">
+          <Selector
+            label="Upload Method"
+            value={uploadMethod as string}
+            onChange={(value) => setUploadMethod(value as T)}
+            placeholder="Select upload method"
+            options={exportFormats.map((format) => ({
+              label: format.label,
+              value: format.value as string,
+            }))}
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">File</label>
+          <div
+            className={`flex flex-col items-center justify-center rounded-lg border-2 border-dashed p-6 transition-colors 
                 ${
                   dragActive
                     ? "border-primary bg-secondary/20"
                     : "border-border hover:border-primary/50"
                 }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              <div className="flex flex-col items-center justify-center space-y-2 text-center">
-                <div className="rounded-full bg-secondary p-2">
-                  <IconUpload className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold">Drag & drop your file</h3>
-                <p className="text-sm text-muted-foreground">
-                  or click to browse your computer
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Supported formats: {allowedTypes.join(", ")}
-                </p>
-                <input
-                  type="file"
-                  ref={inputRef}
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  accept={allowedTypes.join(",")}
-                />
-                <Button
-                  variant="outline"
-                  onClick={() => inputRef.current?.click()}
-                  disabled={isUploading}
-                >
-                  Browse Files
-                </Button>
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <div className="flex flex-col items-center justify-center space-y-2 text-center">
+              <div className="rounded-full bg-secondary p-2">
+                <IconUpload className="h-6 w-6 text-primary" />
               </div>
+              <h3 className="text-lg font-semibold">Drag & drop your file</h3>
+              <p className="text-sm text-muted-foreground">
+                or click to browse your computer
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Supported formats: {allowedTypes.join(", ")}
+              </p>
+              <input
+                type="file"
+                ref={inputRef}
+                onChange={handleFileSelect}
+                className="hidden"
+                accept={allowedTypes.join(",")}
+              />
+              <Button
+                variant="outline"
+                onClick={() => inputRef.current?.click()}
+                disabled={isUploading}
+              >
+                Browse Files
+              </Button>
             </div>
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Template</label>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => onExport(uploadMethod)}
-            >
-              <IconDownload />
-              Download Template
-            </Button>
-          </div>
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Template</label>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => onExport(uploadMethod)}
+          >
+            <IconDownload />
+            Download Template
+          </Button>
+        </div>
+        <DrawerFooter>
           <Button
             className="w-full"
             onClick={handleSubmit}
@@ -199,8 +197,11 @@ export function BulkUpload({
           >
             {isUploading ? "Uploading..." : `Upload ${title}`}
           </Button>
-        </div>
-      </SheetContent>
-    </Sheet>
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }

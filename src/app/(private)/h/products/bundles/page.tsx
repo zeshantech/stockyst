@@ -123,7 +123,7 @@ export default function ProductBundlesPage() {
       <PageHeader
         title="Product Bundles"
         description="Manage your product bundles and kits"
-        backButtonHref="/h/products"
+        backButton
         action={
           <Button onClick={() => router.push("/h/products/add?type=bundle")}>
             <IconPlus />

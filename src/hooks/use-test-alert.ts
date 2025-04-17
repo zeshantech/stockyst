@@ -2,26 +2,44 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 interface TestAlertParams {
-  alertRuleId: string;
+  ruleId: string;
+  productId: string;
+  value: string;
+  notes?: string;
 }
 
 export function useTestAlert() {
   const testAlert = useMutation({
-    mutationFn: async ({ alertRuleId }: TestAlertParams) => {
-      // TODO: Replace with actual API call
+    mutationFn: async (params: TestAlertParams) => {
+      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      return { success: true };
+
+      // This would be replaced with an actual API call in a real application
+      return {
+        success: true,
+        triggered: Math.random() > 0.5, // Randomly determine if the alert is triggered for demo purposes
+        message: "Alert rule test completed successfully",
+      };
     },
-    onSuccess: () => {
-      toast.success("Alert tested successfully");
+    onSuccess: (data) => {
+      if (data.triggered) {
+        toast.success(
+          "Alert rule test was successful - would trigger in production"
+        );
+      } else {
+        toast.info(
+          "Alert rule test was successful - would not trigger in production"
+        );
+      }
     },
     onError: (error) => {
-      console.error("Failed to test alert:", error);
-      toast.error("Failed to test alert");
+      console.error("Error testing alert rule:", error);
+      toast.error("Failed to test alert rule");
     },
   });
 
   return {
-    testAlert,
+    testAlert: testAlert.mutate,
+    isTestingAlert: testAlert.isPending,
   };
 }

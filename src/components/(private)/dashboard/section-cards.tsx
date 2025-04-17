@@ -1,4 +1,4 @@
-import StatsCard from "../../ui/stats-card";
+import { StatsCard } from "@/components/ui/stats-card";
 
 export function SectionCards() {
   return (

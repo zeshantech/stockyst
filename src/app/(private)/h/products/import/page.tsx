@@ -51,7 +51,7 @@ export default function ProductImportPage() {
       <PageHeader
         title="Import Products"
         description="Bulk import products from CSV, Excel or JSON files"
-        backButtonHref="/h/products"
+        backButton
       />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

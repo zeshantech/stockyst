@@ -20,6 +20,7 @@ interface Option {
 interface SelectorProps {
   options: Option[];
   value?: string;
+  defaultValue?: string;
   onChange?: (value: string) => void;
   label?: string;
   info?: string;
@@ -34,6 +35,7 @@ interface SelectorProps {
 function Selector({
   options,
   value,
+  defaultValue,
   onChange,
   label,
   info,
@@ -45,7 +47,7 @@ function Selector({
   required,
 }: SelectorProps) {
   return (
-    <div className={cn("space-y-2", containerClass)}>
+    <div className={cn("space-y-2 min-w-32", containerClass)}>
       {label && (
         <Label className="flex gap-1 items-center">
           {label} {required && <span className="text-destructive">*</span>}
@@ -54,6 +56,7 @@ function Selector({
       )}
       <Select
         value={value}
+        defaultValue={defaultValue}
         onValueChange={onChange}
         disabled={disabled}
         required={required}
