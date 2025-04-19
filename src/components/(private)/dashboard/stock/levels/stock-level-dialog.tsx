@@ -7,8 +7,12 @@ import * as z from "zod";
 import { DialogComponent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Selector } from "@/components/ui/selector";
 import { IStockLevel } from "@/types/stock";
 import { toast } from "sonner";
+import { ProductSelector } from "../../product-selector";
+import { BundleProductSelector } from "../../bundle-product-selector";
 
 // Define form schema with zod
 const stockLevelSchema = z.object({
@@ -71,6 +75,12 @@ export function StockLevelDialog({
     }
   };
 
+  const productOptions = [
+    { label: "Laptop Pro X1", value: "product-1" },
+    { label: "Office Chair Ergo", value: "product-2" },
+    { label: "Wireless Mouse", value: "product-3" },
+  ];
+
   return (
     <DialogComponent
       trigger={trigger}
@@ -83,129 +93,81 @@ export function StockLevelDialog({
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {!isEditing && (
-          <div className="space-y-2">
-            <label htmlFor="productId" className="text-sm font-medium">
-              Product
-            </label>
-            <select
-              id="productId"
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              {...form.register("productId")}
-            >
-              <option value="">Select a product</option>
-              <option value="product-1">Laptop Pro X1</option>
-              <option value="product-2">Office Chair Ergo</option>
-              <option value="product-3">Wireless Mouse</option>
-            </select>
-            {form.formState.errors.productId && (
-              <p className="text-sm text-error">
-                {form.formState.errors.productId.message}
-              </p>
-            )}
-          </div>
+          <ProductSelector
+            selectedProductIds={[form.watch("productId")]}
+            onSelect={(ids) => {
+              if (ids.length > 0) {
+                form.setValue("productId", ids[0], { shouldValidate: true });
+              } else {
+                form.setValue("productId", "", { shouldValidate: true });
+              }
+            }}
+            placeholder="Select a product"
+            error={form.formState.errors.productId?.message}
+            // required
+          />
         )}
 
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label htmlFor="minLevel" className="text-sm font-medium">
-              Min Level
-            </label>
-            <Input
-              id="minLevel"
-              type="number"
-              min="0"
-              {...form.register("minLevel")}
-            />
-            {form.formState.errors.minLevel && (
-              <p className="text-sm text-error">
-                {form.formState.errors.minLevel.message}
-              </p>
-            )}
-          </div>
+          <Input
+            label="Min Level"
+            id="minLevel"
+            type="number"
+            min="0"
+            {...form.register("minLevel")}
+            error={form.formState.errors.minLevel?.message}
+            required
+          />
 
-          <div className="space-y-2">
-            <label htmlFor="maxLevel" className="text-sm font-medium">
-              Max Level
-            </label>
-            <Input
-              id="maxLevel"
-              type="number"
-              min="0"
-              {...form.register("maxLevel")}
-            />
-            {form.formState.errors.maxLevel && (
-              <p className="text-sm text-error">
-                {form.formState.errors.maxLevel.message}
-              </p>
-            )}
-          </div>
+          <Input
+            label="Max Level"
+            id="maxLevel"
+            type="number"
+            min="0"
+            {...form.register("maxLevel")}
+            error={form.formState.errors.maxLevel?.message}
+            required
+          />
 
-          <div className="space-y-2">
-            <label htmlFor="reorderPoint" className="text-sm font-medium">
-              Reorder Point
-            </label>
-            <Input
-              id="reorderPoint"
-              type="number"
-              min="0"
-              {...form.register("reorderPoint")}
-            />
-            {form.formState.errors.reorderPoint && (
-              <p className="text-sm text-error">
-                {form.formState.errors.reorderPoint.message}
-              </p>
-            )}
-          </div>
+          <Input
+            label="Reorder Point"
+            id="reorderPoint"
+            type="number"
+            min="0"
+            {...form.register("reorderPoint")}
+            error={form.formState.errors.reorderPoint?.message}
+            required
+          />
 
-          <div className="space-y-2">
-            <label htmlFor="safetyStock" className="text-sm font-medium">
-              Safety Stock
-            </label>
-            <Input
-              id="safetyStock"
-              type="number"
-              min="0"
-              {...form.register("safetyStock")}
-            />
-            {form.formState.errors.safetyStock && (
-              <p className="text-sm text-error">
-                {form.formState.errors.safetyStock.message}
-              </p>
-            )}
-          </div>
+          <Input
+            label="Safety Stock"
+            id="safetyStock"
+            type="number"
+            min="0"
+            {...form.register("safetyStock")}
+            error={form.formState.errors.safetyStock?.message}
+            required
+          />
 
-          <div className="space-y-2 col-span-2">
-            <label
-              htmlFor="preferredStockLevel"
-              className="text-sm font-medium"
-            >
-              Preferred Stock Level
-            </label>
-            <Input
-              id="preferredStockLevel"
-              type="number"
-              min="0"
-              {...form.register("preferredStockLevel")}
-            />
-            {form.formState.errors.preferredStockLevel && (
-              <p className="text-sm text-error">
-                {form.formState.errors.preferredStockLevel.message}
-              </p>
-            )}
-          </div>
+          <Input
+            label="Preferred Stock Level"
+            id="preferredStockLevel"
+            type="number"
+            min="0"
+            {...form.register("preferredStockLevel")}
+            error={form.formState.errors.preferredStockLevel?.message}
+            required
+            container={{ className: "col-span-2" }}
+          />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="notes" className="text-sm font-medium">
-            Notes
-          </label>
-          <textarea
-            id="notes"
-            className="flex h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            placeholder="Add any notes about this stock level"
-            {...form.register("notes")}
-          ></textarea>
-        </div>
+        <Textarea
+          label="Notes"
+          id="notes"
+          placeholder="Add any notes about this stock level"
+          {...form.register("notes")}
+          error={form.formState.errors.notes?.message}
+        />
 
         <div className="flex justify-end space-x-2 pt-4">
           <Button type="submit">{isEditing ? "Update" : "Create"}</Button>

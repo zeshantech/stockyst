@@ -18,25 +18,17 @@ export default function StockLevelsPage() {
         description="Set and monitor min/max levels and reorder points for your inventory"
         action={
           <div className="space-x-2">
-            <Button variant="outline">
-              <DownloadIcon className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-            <Button variant="outline">
-              <UploadIcon className="mr-2 h-4 w-4" />
-              Import
-            </Button>
-            <Button variant="outline" size="icon">
-              <SettingsIcon className="h-4 w-4" />
-            </Button>
             <StockLevelDialog
               trigger={
                 <Button>
-                  <PlusIcon className="mr-2 h-4 w-4" />
+                  <PlusIcon />
                   Add Level
                 </Button>
               }
             />
+            <Button variant="outline" size="icon">
+              <SettingsIcon />
+            </Button>
           </div>
         }
       />

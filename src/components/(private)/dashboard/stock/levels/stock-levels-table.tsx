@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ColumnDef,
@@ -19,12 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  DropdownMenu,
+  DropdownMenuCheckboxComponent,
   DropdownMenuComponent,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Table,
@@ -32,17 +28,19 @@ import {
   TableCell,
   TableHead,
   TableHeader,
+  TablePagination,
   TableRow,
 } from "@/components/ui/table";
 import { IStockLevel } from "@/types/stock";
 import { useStocks } from "@/hooks/use-stock";
 import { toast } from "sonner";
-import { Edit, MoreVertical, Trash } from "lucide-react";
+import { Edit, EyeIcon, MoreVertical, Trash, Upload } from "lucide-react";
 import { StockLevelDialog } from "./stock-level-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
+  AlertDialogComponent,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -50,6 +48,12 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { StockLevelsFilters } from "./stock-levels-filters";
+import { BulkUpload } from "@/components/ui/bulk-upload";
+import {
+  IconDownload,
+  IconFileSpreadsheet,
+  IconFileText,
+} from "@tabler/icons-react";
 
 // Extended stock level interface to include location
 interface ExtendedStockLevel extends IStockLevel {
@@ -224,6 +228,14 @@ export function StockLevelsTable() {
       setRowSelection({});
       toast.success(`${selectedRows.length} stock level settings deleted`);
     }
+  };
+
+  const handleExport = (type: string) => {
+    alert("export");
+  };
+
+  const handleBulkUpload = (formData: FormData) => {
+    alert("import");
   };
 
   const columns: ColumnDef<ExtendedStockLevel>[] = [
@@ -434,23 +446,85 @@ export function StockLevelsTable() {
   }
 
   return (
-    <>
-      <div className="rounded-md border">
+    <div className="space-y-4 w-full overflow-x-auto">
+      <div className="flex justify-between">
         <StockLevelsFilters />
-        {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <div className="p-2 border-b">
-            <Button
-              variant="outline"
-              color="error"
-              size="sm"
-              onClick={handleBulkDelete}
-            >
-              <Trash className="h-4 w-4 mr-2" />
+        <div className="flex gap-2 items-center">
+          {table.getFilteredSelectedRowModel().rows.length > 0 && (
+            <Button variant="outline" color="error" onClick={handleBulkDelete}>
+              <Trash />
               Delete Selected ({table.getFilteredSelectedRowModel().rows.length}
               )
             </Button>
-          </div>
-        )}
+          )}
+
+          <DropdownMenuComponent
+            trigger={
+              <Button variant="outline">
+                <IconDownload />
+                Export
+              </Button>
+            }
+            items={[
+              {
+                content: (
+                  <>
+                    <IconFileText />
+                    <span>Export as CSV</span>
+                  </>
+                ),
+                onClick: () => handleExport("csv"),
+              },
+              {
+                content: (
+                  <>
+                    <IconFileSpreadsheet />
+                    <span>Export as Excel</span>
+                  </>
+                ),
+                onClick: () => handleExport("excel"),
+              },
+              {
+                content: (
+                  <>
+                    <IconFileText />
+                    <span>Export as JSON</span>
+                  </>
+                ),
+                onClick: () => handleExport("json"),
+              },
+            ]}
+          />
+          <BulkUpload
+            trigger={
+              <Button variant={"outline"}>
+                <Upload /> Import
+              </Button>
+            }
+            title="Stock"
+            description="Upload multiple stock items at once using CSV, Excel, or JSON files."
+            onUpload={handleBulkUpload}
+            onExport={handleExport}
+          />
+          <DropdownMenuCheckboxComponent
+            type="checkbox"
+            trigger={
+              <Button variant="outline" size={"icon"}>
+                <EyeIcon />
+              </Button>
+            }
+            items={table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => ({
+                label: column.id,
+                checked: column.getIsVisible(),
+                onCheckedChange: (value) => column.toggleVisibility(!!value),
+              }))}
+          />
+        </div>
+      </div>
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -499,48 +573,28 @@ export function StockLevelsTable() {
             )}
           </TableBody>
         </Table>
-        <div className="flex items-center justify-end p-4 border-t">
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
       </div>
 
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action will delete the stock level settings for{" "}
-              {selectedStockLevel?.productName}.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+      <TablePagination
+        currentPage={table.getState().pagination.pageIndex + 1}
+        totalPages={table.getPageCount()}
+        totalItems={filteredStockLevels.length}
+        pageSize={table.getState().pagination.pageSize}
+        onPageChange={(page) => table.setPageIndex(page - 1)}
+        onPageSizeChange={(size) => table.setPageSize(parseInt(size))}
+        pageSizeOptions={[10, 20, 30, 50, 100]}
+      />
+
+      <AlertDialogComponent
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Are you absolutely sure?"
+        description={`This action will delete the stock level settings for ${selectedStockLevel?.productName}.`}
+        cancelButton="Cancel"
+        confirmButton="Delete"
+        onConfirm={confirmDelete}
+        className="sm:max-w-lg"
+      />
+    </div>
   );
 }

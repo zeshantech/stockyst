@@ -105,10 +105,7 @@ const data = {
           title: "Stock Transfers",
           url: "/h/stock/transfers",
         },
-        {
-          title: "Stock Adjustments",
-          url: "/h/stock/adjustments",
-        },
+
         {
           title: "Stock Alerts",
           url: "/h/stock/alerts",

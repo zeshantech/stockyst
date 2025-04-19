@@ -71,14 +71,14 @@
   --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --success: oklch(0.55 0.2 150.0); /* Green */
-  --success-background: oklch(0.55 0.2 150.0 / 10%);
-  --warning: oklch(0.75 0.2 80.0); /* Amber/Yellow */
-  --warning-background: oklch(0.75 0.2 80.0 / 10%);
+  --success: oklch(0.55 0.2 150); /* Green */
+  --success-background: oklch(0.55 0.2 150 / 10%);
+  --warning: oklch(0.75 0.2 80); /* Amber/Yellow */
+  --warning-background: oklch(0.75 0.2 80 / 10%);
   --error: oklch(0.577 0.245 27.325); /* Red */
   --error-background: oklch(0.577 0.245 27.325 / 10%);
-  --info: oklch(0.6 0.18 230.0); /* Blue */
-  --info-background: oklch(0.6 0.18 230.0 / 10%);
+  --info: oklch(0.6 0.18 230); /* Blue */
+  --info-background: oklch(0.6 0.18 230 / 10%);
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.705 0.015 286.067);
@@ -114,14 +114,14 @@
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.985 0 0);
-  --success: oklch(0.5 0.2 150.0); /* Darker green for dark mode */
-  --success-background: oklch(0.5 0.2 150.0 / 10%);
-  --warning: oklch(0.7 0.2 80.0); /* Slightly darker amber for dark mode */
-  --warning-background: oklch(0.7 0.2 80.0 / 10%);
+  --success: oklch(0.5 0.2 150); /* Darker green for dark mode */
+  --success-background: oklch(0.5 0.2 150 / 10%);
+  --warning: oklch(0.7 0.2 80); /* Slightly darker amber for dark mode */
+  --warning-background: oklch(0.7 0.2 80 / 10%);
   --error: oklch(0.704 0.191 22.216); /* Red for dark mode */
   --error-background: oklch(0.704 0.191 22.216 / 10%);
-  --info: oklch(0.65 0.18 230.0); /* Brighter blue for dark mode */
-  --info-background: oklch(0.65 0.18 230.0 / 10%);
+  --info: oklch(0.65 0.18 230); /* Brighter blue for dark mode */
+  --info-background: oklch(0.65 0.18 230 / 10%);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.552 0.016 285.938);
@@ -156,6 +156,6 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

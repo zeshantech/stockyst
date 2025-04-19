@@ -14,7 +14,7 @@ interface AdjustmentFormProps {
 
 const AdjustmentForm = ({ adjustmentId, onSuccess }: AdjustmentFormProps) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  const { locations, stock, createStockAdjustment, updateStockAdjustment } =
+  const { locations, stocks, createStockAdjustment, updateStockAdjustment } =
     useStocks();
 
   // Form state
@@ -100,7 +100,7 @@ const AdjustmentForm = ({ adjustmentId, onSuccess }: AdjustmentFormProps) => {
     setIsLoading(true);
 
     // Get the selected stock item
-    const stockItem = stock.find((item) => item.id === formData.stockId);
+    const stockItem = stocks.find((item) => item.id === formData.stockId);
     if (!stockItem) {
       setErrors((prev) => ({
         ...prev,
@@ -189,11 +189,11 @@ const AdjustmentForm = ({ adjustmentId, onSuccess }: AdjustmentFormProps) => {
   // Get stock options for selector
   const stockOptions = React.useMemo(
     () =>
-      stock.map((item) => ({
+      stocks.map((item) => ({
         label: `${item.productName} (${item.sku}) - ${item.quantity} units`,
         value: item.id,
       })),
-    [stock]
+    [stocks]
   );
 
   // Type options
@@ -206,7 +206,7 @@ const AdjustmentForm = ({ adjustmentId, onSuccess }: AdjustmentFormProps) => {
 
   // Get selected stock item
   const selectedStock = formData.stockId
-    ? stock.find((item) => item.id === formData.stockId)
+    ? stocks.find((item) => item.id === formData.stockId)
     : null;
 
   // Calculate preview of new quantity
