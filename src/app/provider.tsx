@@ -1,6 +1,6 @@
 "use client";
 
-import { KeycloakAuthProvider } from "@/contexts/KeycloakProvider";
+import { KeycloakProvider } from "@/contexts/keycloak-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import React, { ReactNode } from "react";
@@ -10,11 +10,12 @@ export default function Provider({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <KeycloakAuthProvider>
+      <KeycloakProvider>
+
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
-      </KeycloakAuthProvider>
+      </KeycloakProvider>
     </QueryClientProvider>
   );
 }

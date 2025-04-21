@@ -13,13 +13,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { useKeycloak } from "@/contexts/KeycloakProvider";
+import { useKeycloak } from "@/contexts/keycloak-provider";
 import { useState, useEffect } from "react";
 import { IconCamera } from "@tabler/icons-react";
 import { toast } from "sonner";
 
 export function ProfileSettings() {
-  const { keycloak } = useKeycloak();
+  const { keycloak, profile } = useKeycloak();
   const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -35,11 +35,11 @@ export function ProfileSettings() {
 
   useEffect(() => {
     // In a real implementation, we would fetch this from Keycloak
-    if (keycloak?.authenticated) {
+    if (keycloak?.tokenParsed) {
       setProfileData({
-        firstName: keycloak.tokenParsed?.given_name || "",
-        lastName: keycloak.tokenParsed?.family_name || "",
-        email: keycloak.tokenParsed?.email || "",
+        firstName: keycloak.tokenParsed.firstName || "",
+        lastName: keycloak.tokenParsed.lastName || "",
+        email: keycloak.tokenParsed.email || "",
         phone: keycloak.tokenParsed?.phone_number || "",
         jobTitle: "Inventory Manager",
         department: "Operations",
@@ -111,73 +111,73 @@ export function ProfileSettings() {
               <div className="grid w-full gap-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
                     <Input
                       id="firstName"
                       name="firstName"
                       value={profileData.firstName}
                       onChange={handleChange}
+                      label="First Name"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
                     <Input
                       id="lastName"
                       name="lastName"
                       value={profileData.lastName}
                       onChange={handleChange}
+                      label="Last Name"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
                       value={profileData.email}
                       onChange={handleChange}
+                      label="Email"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
                     <Input
                       id="phone"
                       name="phone"
                       value={profileData.phone}
                       onChange={handleChange}
+                      label="Phone Number"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="jobTitle">Job Title</Label>
                     <Input
                       id="jobTitle"
                       name="jobTitle"
                       value={profileData.jobTitle}
                       onChange={handleChange}
+                      label="Job Title"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="department">Department</Label>
                     <Input
                       id="department"
                       name="department"
                       value={profileData.department}
                       onChange={handleChange}
+                      label="Department"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="company">Company</Label>
                     <Input
                       id="company"
                       name="company"
                       value={profileData.company}
                       onChange={handleChange}
+                      label="Company"
                     />
                   </div>
                 </div>
