@@ -117,7 +117,7 @@ export default function BundleProductSelectorExample() {
             <div>
               <h3 className="text-lg font-medium mb-2">Props</h3>
               <ul className="list-disc pl-5 space-y-1">
-                <li><span className="font-medium">onChange:</span> (products: BundleProduct[]) => void - Callback when products change</li>
+                <li><span className="font-medium">onChange:</span> (products: BundleProduct[]) {"=>"} void - Callback when products change</li>
                 <li><span className="font-medium">initialProducts:</span> BundleProduct[] - Initial list of products (optional)</li>
                 <li><span className="font-medium">disabled:</span> boolean - Whether the selector is disabled (optional)</li>
               </ul>
@@ -142,7 +142,7 @@ export default function BundleProductSelectorExample() {
               <div className="bg-muted p-4 rounded-md">
                 <p>import {'{ BundleProductSelector, BundleProduct }'} from '@/components/(private)/dashboard/bundle-product-selector';</p>
                 <p>const [products, setProducts] = useState&lt;BundleProduct[]&gt;([]);</p>
-                <p>&lt;BundleProductSelector onChange={setProducts} /&gt;</p>
+                <p>&lt;BundleProductSelector onChange={"setProducts"} /&gt;</p>
               </div>
             </div>
           </CardContent>

@@ -15,17 +15,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  IconChevronDown,
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
   IconDotsVertical,
   IconDownload,
-  IconEye,
   IconFileSpreadsheet,
   IconFileText,
-  IconPlus,
   IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
@@ -40,10 +37,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -51,14 +46,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
@@ -73,17 +60,9 @@ import {
   useBulkUploadProducts,
   useUpdateProductStatus,
 } from "@/hooks/use-products";
-import { BulkUpload } from "@/components/ui/bulk-upload";
 import {
-  AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogComponent,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { EyeIcon } from "lucide-react";
 import { SearchInput } from "@/components/ui/search-input";
@@ -435,7 +414,7 @@ export function ProductsTable({ data }: ProductsTableProps) {
         ...data.map((row) => {
           return headers
             .map((header) => {
-              let value = row[header as keyof IProduct];
+              const value = row[header as keyof IProduct];
               if (typeof value === "string" && value.includes(",")) {
                 return `"${value}"`;
               }

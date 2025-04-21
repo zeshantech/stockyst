@@ -48,7 +48,6 @@ import { IStockAlert } from "@/types/stock";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,

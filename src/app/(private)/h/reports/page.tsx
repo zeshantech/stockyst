@@ -47,7 +47,6 @@ export default function ReportsPage() {
 
   // Inventory Valuation Query
   const {
-    data: fetchedValuationData,
     refetch: fetchValuationReport,
     isLoading: isValuationLoading,
     isFetching: isValuationFetching,

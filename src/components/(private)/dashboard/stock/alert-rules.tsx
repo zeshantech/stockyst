@@ -17,7 +17,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -37,13 +36,6 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { TestAlertRuleDialog } from "./test-alert-rule-dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
 // Sample alert rule data

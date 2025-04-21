@@ -11,20 +11,13 @@ import {
 } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { CategoriesTable } from "@/components/(private)/dashboard/categories/categories-table";
 import { useCategories } from "@/hooks/use-categories";
 import StatsCard from "@/components/(private)/dashboard/categories/stats-card";
 
 export default function CategoriesPage() {
   const router = useRouter();
-  const { data: categories, isLoading } = useCategories();
+  const { data: categories } = useCategories();
 
   // Calculate statistics
   const totalCategories = categories?.length || 0;

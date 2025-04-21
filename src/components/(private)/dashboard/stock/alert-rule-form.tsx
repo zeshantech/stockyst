@@ -38,7 +38,7 @@ const formSchema = z.object({
 
 interface AlertRuleFormProps {
   initialData?: AlertRuleFormData & { id?: string };
-  onSubmit: (data: AlertRuleFormData) => void;
+  onSubmit: (formData: AlertRuleFormData) => void;
   onCancel: () => void;
   isSubmitting?: boolean;
 }
@@ -67,26 +67,25 @@ export function AlertRuleForm({
   });
 
   // Create a derived AlertRule object for testing
+  const name = form.watch("name");
+  const description = form.watch("description");
+  const condition = form.watch("condition");
+  const products = form.watch("products");
+  const notificationChannels = form.watch("notificationChannels");
+
   const testRule: AlertRule = React.useMemo(() => {
     return {
       id: initialData?.id || "new-rule",
-      name: form.watch("name") || "New Rule",
-      description: form.watch("description") || "",
-      condition: form.watch("condition"),
-      products: form.watch("products"),
-      notificationChannels: form.watch("notificationChannels"),
+      name: name || "New Rule",
+      description: description || "",
+      condition,
+      products,
+      notificationChannels,
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-  }, [
-    form.watch("name"),
-    form.watch("description"),
-    form.watch("condition"),
-    form.watch("products"),
-    form.watch("notificationChannels"),
-    initialData?.id,
-  ]);
+  }, [name, description, condition, products, notificationChannels, initialData?.id, form]);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -62,9 +61,9 @@ export function Invoices() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => window.open(invoice.downloadUrl, "_blank")}
+                    onClick={() => window.open(invoice.invoiceUrl, "_blank")}
                   >
-                    <IconDownload className="h-4 w-4" />
+                    <IconDownload />
                   </Button>
                 </div>
               </div>

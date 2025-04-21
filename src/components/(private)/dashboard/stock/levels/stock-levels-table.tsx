@@ -37,15 +37,7 @@ import { toast } from "sonner";
 import { Edit, EyeIcon, MoreVertical, Trash, Upload } from "lucide-react";
 import { StockLevelDialog } from "./stock-level-dialog";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogComponent,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { StockLevelsFilters } from "./stock-levels-filters";
 import { BulkUpload } from "@/components/ui/bulk-upload";

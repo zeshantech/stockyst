@@ -23,16 +23,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-  useSidebar,
 } from "../../ui/sidebar";
 import Link from "next/link";
 import { Separator } from "../../ui/separator";
 import { ComposeEmailDialog } from "./compose-email-dialog";
 
 export function MailSidebar() {
-  const { open } = useSidebar();
   return (
-    <>
       <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader>
           <ComposeEmailDialog />
@@ -70,7 +67,6 @@ export function MailSidebar() {
         </SidebarContent>
         <SidebarTrigger className="absolute bottom-4 right-4" />
       </Sidebar>
-    </>
   );
 }
 

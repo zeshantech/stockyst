@@ -13,10 +13,7 @@ import { Page } from "@/components/(private)/dashboard/page";
 
 export default function StockPage() {
   const {
-    stocks,
-    stockAlerts,
     statistics,
-    isLoadingStock,
     isLoadingStatistics,
   } = useStocks();
 

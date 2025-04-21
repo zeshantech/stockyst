@@ -4,7 +4,6 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import {
-  IconArchive,
   IconCheck,
   IconClipboardCheck,
   IconClipboardList,
@@ -18,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -34,11 +32,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { SearchInput } from "@/components/ui/search-input";
 import {
   Select,
@@ -76,8 +72,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { IStockCount } from "@/types/stock";
-import { useStock } from "@/hooks/use-stocsssk";
-import { useStockActions } from "@/hooks/use-stock-actions";
 import { toast } from "sonner";
 
 // Sample stock count data
@@ -116,8 +110,8 @@ const sampleStockCounts: IStockCount[] = [
         notes: "Found in different location",
       },
     ],
-    createdAt: new Date("2024-03-01").toISOString(),
-    updatedAt: new Date("2024-03-02").toISOString(),
+    createdAt: new Date("2024-03-01"),
+    updatedAt: new Date("2024-03-02"),
   },
   {
     id: "2",
@@ -129,8 +123,8 @@ const sampleStockCounts: IStockCount[] = [
     countedBy: "Jane Smith",
     notes: "Quarterly audit",
     items: [],
-    createdAt: new Date("2024-03-25").toISOString(),
-    updatedAt: new Date("2024-03-25").toISOString(),
+    createdAt: new Date("2024-03-25"),
+    updatedAt: new Date("2024-03-25"),
   },
   {
     id: "3",
@@ -142,8 +136,8 @@ const sampleStockCounts: IStockCount[] = [
     countedBy: "Alex Johnson",
     notes: "End of month verification",
     items: [],
-    createdAt: new Date("2024-03-28").toISOString(),
-    updatedAt: new Date("2024-03-28").toISOString(),
+    createdAt: new Date("2024-03-28"),
+    updatedAt: new Date("2024-03-28"),
   },
 ];
 
@@ -214,8 +208,8 @@ export default function StockCountsPage() {
       countedBy: "Current User", // This would be the current user in a real app
       notes: data.notes,
       items: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     setStockCounts([...stockCounts, newCount]);
@@ -234,7 +228,7 @@ export default function StockCountsPage() {
       case "completed":
         return <Badge variant="success">Completed</Badge>;
       case "cancelled":
-        return <Badge variant="destructive">Cancelled</Badge>;
+        return <Badge variant="error">Cancelled</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }

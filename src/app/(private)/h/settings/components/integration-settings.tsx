@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
@@ -20,17 +19,14 @@ import {
   IconBrandGoogle,
   IconBrandAmazon,
   IconBrandZapier,
-  IconCheck,
   IconLink,
   IconRefresh,
   IconX,
-  IconShoppingCartPin,
-  IconShoppingCart,
   IconBrandShopee,
   IconBrandBooking,
 } from "@tabler/icons-react";
 import { toast } from "sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -78,7 +74,7 @@ export function IntegrationSettings() {
       name: "Amazon",
       icon: <IconBrandAmazon className="h-8 w-8 text-[#FF9900]" />,
       status: "disconnected",
-      description: "Manage your Amazon marketplace inventory from InvenTree.",
+      description: "Manage your Amazon marketplace inventory from Stockyst.",
     },
   ];
 
@@ -217,7 +213,7 @@ export function IntegrationSettings() {
         <CardHeader>
           <CardTitle>External Integrations</CardTitle>
           <CardDescription>
-            Connect InvenTree with your favorite services and platforms.
+            Connect Stockyst with your favorite services and platforms.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -335,7 +331,7 @@ export function IntegrationSettings() {
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              How often InvenTree should automatically sync with integrated
+              How often Stockyst should automatically sync with integrated
               platforms.
             </p>
           </div>
@@ -384,7 +380,7 @@ export function IntegrationSettings() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="newest">Use newest data</SelectItem>
-                <SelectItem value="inventree">InvenTree is master</SelectItem>
+                <SelectItem value="stockyst">Stockyst is master</SelectItem>
                 <SelectItem value="external">
                   External system is master
                 </SelectItem>

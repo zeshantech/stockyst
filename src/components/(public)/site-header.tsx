@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { IconBox, IconMenu2 } from "@tabler/icons-react";
+import { IconBox, IconMenu2, IconUser } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
+import { useKeycloak } from "@/contexts/KeycloakProvider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function SiteHeader() {
   const { theme, setTheme } = useTheme();
+  const { isAuthenticated, login, logout, profile } = useKeycloak();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -17,7 +25,7 @@ export function SiteHeader() {
             <Link href="/" className="flex items-center">
               <IconBox className="h-8 w-8 text-primary" />
               <span className="ml-2 text-xl font-bold text-foreground">
-                InvenTree
+                Stockyst
               </span>
             </Link>
           </div>
@@ -55,14 +63,46 @@ export function SiteHeader() {
                 <MoonIcon className="size-5" />
               )}
             </Button>
-            <Link href="/h" className="hidden md:inline-flex">
-              <Button variant="outline" size="sm">
-                Log In
-              </Button>
-            </Link>
-            <Link href="/h" className="hidden md:inline-flex">
-              <Button size="sm">Sign Up</Button>
-            </Link>
+            {isAuthenticated ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <IconUser className="size-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link href="/h">Dashboard</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/h/settings">Settings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => logout()}>
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href="/h" className="hidden md:inline-flex">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => login(window.location.origin + "/h")}
+                  >
+                    Log In
+                  </Button>
+                </Link>
+                <Link href="/h" className="hidden md:inline-flex">
+                  <Button
+                    size="sm"
+                    onClick={() => login(window.location.origin + "/h")}
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
             <button className="md:hidden text-foreground">
               <IconMenu2 className="w-6 h-6" />
             </button>

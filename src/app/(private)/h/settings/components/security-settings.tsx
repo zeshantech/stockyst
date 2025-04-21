@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -25,10 +24,8 @@ import {
 } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 
 export function SecuritySettings() {
-  const { keycloak } = useKeycloak();
   const [isLoading, setIsLoading] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -36,7 +33,6 @@ export function SecuritySettings() {
     confirmPassword: "",
   });
   const [mfaEnabled, setMfaEnabled] = useState(false);
-  const [sessionCount, setSessionCount] = useState(2);
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -38,8 +38,8 @@ const mockLocations: ILocation[] = [
       saturday: "Closed",
       sunday: "Closed",
     },
-    createdAt: "2024-01-01T00:00:00Z",
-    updatedAt: "2024-01-01T00:00:00Z",
+    createdAt: new Date("2024-01-01T00:00:00Z"),
+    updatedAt: new Date("2024-01-01T00:00:00Z"),
   },
   {
     id: "2",
@@ -67,8 +67,8 @@ const mockLocations: ILocation[] = [
       saturday: "10:00 AM - 9:00 PM",
       sunday: "11:00 AM - 6:00 PM",
     },
-    createdAt: "2024-01-02T00:00:00Z",
-    updatedAt: "2024-01-02T00:00:00Z",
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
@@ -85,10 +85,6 @@ export default function LocationsPage() {
       return mockLocations;
     },
   });
-
-  const handleCreateLocation = () => {
-    router.push("/h/locations/new");
-  };
 
   return (
     <div className="flex flex-col gap-6 p-6">

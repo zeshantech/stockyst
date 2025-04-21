@@ -11,7 +11,7 @@ import BatchTrackingForm from "@/components/(private)/dashboard/stock/batch-trac
 import { DialogComponent } from "@/components/ui/dialog";
 
 export const metadata: Metadata = {
-  title: "Batch Tracking | InvenTree",
+  title: "Batch Tracking | Stockyst",
   description: "Track stock items by batch number",
 };
 

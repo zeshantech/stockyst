@@ -15,7 +15,6 @@ import {
   IconTrash,
   IconPlus,
 } from "@tabler/icons-react";
-import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
@@ -105,8 +104,7 @@ export function PaymentMethods() {
       await addPaymentMethod({
         cardNumber: data.cardNumber,
         cardholderName: data.cardholderName,
-        expiryMonth: data.expiryMonth,
-        expiryYear: data.expiryYear,
+        expiryDate: `${data.expiryMonth}/${data.expiryYear}`,
         cvc: data.cvc,
       });
       setIsAddingPaymentMethod(false);

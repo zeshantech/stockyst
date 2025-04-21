@@ -1,4 +1,3 @@
-import { ComponentProps } from "react";
 import { formatDistanceToNow } from "date-fns";
 
 import { cn } from "@/lib/utils";

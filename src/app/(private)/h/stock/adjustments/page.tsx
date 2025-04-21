@@ -5,7 +5,7 @@ import AdjustmentsTable from "@/components/(private)/dashboard/stock/adjustments
 import AdjustmentsFilters from "@/components/(private)/dashboard/stock/adjustments/adjustments-filters";
 
 export const metadata: Metadata = {
-  title: "Stock Adjustments | InvenTree",
+  title: "Stock Adjustments | Stockyst",
   description: "Manage stock adjustments and inventory reconciliation",
 };
 

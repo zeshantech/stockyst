@@ -9,14 +9,11 @@ import { Button } from "@/components/ui/button";
 import {
   IconPlus,
   IconLayoutGrid,
-  IconChevronDown,
   IconListDetails,
   IconEdit,
-  IconSearch,
   IconFilter,
   IconX,
 } from "@tabler/icons-react";
-import { IProduct, IVariant } from "@/types/product";
 import {
   Card,
   CardContent,
@@ -39,14 +36,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useProducts, findVariantGroups } from "@/hooks/use-products";
 import { SearchInput } from "@/components/ui/search-input";
 import { Selector } from "@/components/ui/selector";

@@ -21,3 +21,10 @@ export interface IResponse<T> {
   message: string;
   status: string;
 }
+
+
+export interface IError {
+  message: string;
+  status: number;
+  errors?: string[];
+}

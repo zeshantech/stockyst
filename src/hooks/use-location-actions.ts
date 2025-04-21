@@ -1,22 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ILocation } from "@/types/location";
 
 // Mock API functions - Replace with actual API calls
-const mockDeleteLocation = async ({ id }: { id: string }) => {
+const mockDeleteLocation = async (_: { id: string }) => {
   // Simulate API call
   await new Promise((resolve) => setTimeout(resolve, 500));
   return { success: true };
 };
 
-const mockBulkDeleteLocations = async ({ ids }: { ids: string[] }) => {
+const mockBulkDeleteLocations = async (_: { ids: string[] }) => {
   // Simulate API call
   await new Promise((resolve) => setTimeout(resolve, 500));
   return { success: true };
 };
 
-const mockBulkUploadLocations = async ({
-  formData,
-}: {
+const mockBulkUploadLocations = async (_: {
   formData: FormData;
 }) => {
   // Simulate API call

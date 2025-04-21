@@ -132,7 +132,7 @@ export default function AddOrderPage() {
                 { value: "cancelled", label: "Cancelled" },
               ]}
               value={form.watch("status")}
-              onChange={(value) => form.setValue("status", value)}
+              onChange={(value) => form.setValue("status", value as any)}
               error={form.formState.errors.status?.message}
               required
             />
@@ -145,7 +145,7 @@ export default function AddOrderPage() {
                 { value: "failed", label: "Failed" },
               ]}
               value={form.watch("paymentStatus")}
-              onChange={(value) => form.setValue("paymentStatus", value)}
+              onChange={(value) => form.setValue("paymentStatus", value as any)}
               error={form.formState.errors.paymentStatus?.message}
               required
             />

@@ -10,7 +10,6 @@ import {
   IconX,
   IconLayoutCards,
   IconLayoutList,
-  IconPlus,
 } from "@tabler/icons-react";
 import { Selector } from "@/components/ui/selector";
 import { SearchInput } from "@/components/ui/search-input";
@@ -35,7 +34,7 @@ export default function NotificationsPage() {
   const [activeTab, setActiveTab] = React.useState("all");
 
   React.useEffect(() => {
-    document.title = "Notifications | InvenTree";
+    document.title = "Notifications | Stockyst";
   }, []);
 
   // Filter logic

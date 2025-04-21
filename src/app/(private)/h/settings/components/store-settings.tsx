@@ -19,7 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useStores } from "@/hooks/use-stores";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   IconBuilding,
   IconBuildingStore,
@@ -92,7 +92,7 @@ export function StoreSettings() {
       setSelectedStore(storeId);
       reset({
         name: store.name,
-        type: store.type || "warehouse",
+        type: (store.type as any) || "warehouse",
         address: store.address || "",
         city: store.city || "",
         country: store.country || "",

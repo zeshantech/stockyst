@@ -13,7 +13,7 @@ const MOCK_NOTIFICATIONS: INotification[] = [
     priority: "high",
     type: "warning",
     link: "/order",
-    createdAt: new Date(Date.now() - 1000 * 60 * 15).toString(), // 15 minutes ago
+    createdAt: new Date(Date.now() - 1000 * 60 * 15) // 15 minutes ago
   },
   {
     id: "n2",
@@ -23,7 +23,7 @@ const MOCK_NOTIFICATIONS: INotification[] = [
     priority: "medium",
     type: "info",
     link: "/orders/12345",
-    createdAt: new Date(Date.now() - 1000 * 60 * 45).toString(), // 45 minutes ago
+    createdAt: new Date(Date.now() - 1000 * 60 * 45) // 45 minutes ago
   },
   {
     id: "n3",
@@ -33,7 +33,7 @@ const MOCK_NOTIFICATIONS: INotification[] = [
     priority: "low",
     type: "success",
     link: "/orders/10982",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toString(), // 3 hours ago
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3) // 3 hours ago
   },
   {
     id: "n4",
@@ -42,7 +42,7 @@ const MOCK_NOTIFICATIONS: INotification[] = [
     read: true,
     priority: "low",
     type: "success",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toString(), // 5 hours ago
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5) // 5 hours ago
   },
   {
     id: "n5",
@@ -51,7 +51,7 @@ const MOCK_NOTIFICATIONS: INotification[] = [
     read: true,
     priority: "medium",
     type: "info",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toString(), // 1 day ago
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24) // 1 day ago
   },
 ];
 
@@ -95,7 +95,7 @@ export function useNotifications() {
     const newNotification: INotification = {
       ...notification,
       id: `n${Date.now()}`,
-      createdAt: notification.createdAt || new Date().toString(),
+      createdAt: notification.createdAt || new Date(),
       read: false,
     };
 

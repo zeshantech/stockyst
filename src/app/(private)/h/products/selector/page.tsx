@@ -6,7 +6,6 @@ import { Page } from "@/components/(private)/dashboard/page";
 import { ProductSelector } from "@/components/(private)/dashboard/product-selector";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { useProducts } from "@/hooks/use-products";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -151,7 +150,7 @@ export default function ProductSelectorPage() {
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-medium">onSelect</TableCell>
-                    <TableCell>(productIds: string[]) => void</TableCell>
+                    <TableCell>(productIds: string[]) {"=>"} void</TableCell>
                     <TableCell>required</TableCell>
                     <TableCell>Callback when selection changes</TableCell>
                   </TableRow>

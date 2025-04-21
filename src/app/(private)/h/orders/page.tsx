@@ -12,8 +12,8 @@ import { StatsCard } from "@/components/ui/stats-card";
 
 export default function OrdersPage() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedStatus, setSelectedStatus] = React.useState<string>("all");
+  const [searchQuery] = React.useState("");
+  const [selectedStatus] = React.useState<string>("all");
   const { data: orders = [] } = useOrders();
 
   // Filter orders based on status and search query
@@ -68,16 +68,6 @@ export default function OrdersPage() {
       cancelledOrders,
     };
   }, [orders]);
-
-  // Handle search
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  // Handle status filter change
-  const handleStatusChange = (value: string) => {
-    setSelectedStatus(value);
-  };
 
   // Handle add order
   const handleAddOrder = () => {

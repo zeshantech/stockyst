@@ -11,8 +11,8 @@ import StatsCard from "@/components/(private)/dashboard/suppliers/stats-card";
 
 export default function SuppliersPage() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedStatus, setSelectedStatus] = React.useState("all");
+  const [searchQuery] = React.useState("");
+  const [selectedStatus] = React.useState("all");
   const { data: suppliers = [], isLoading } = useSuppliers();
 
   const filteredSuppliers = React.useMemo(() => {

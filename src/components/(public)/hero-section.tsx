@@ -148,7 +148,7 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
                 {/* Placeholder for dashboard screenshot or video */}
                 <img
                   src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
-                  alt="InvenTree Dashboard"
+                  alt="Stockyst Dashboard"
                   className={`w-full h-full object-cover opacity-90 ${
                     isVideoPlaying ? "hidden" : "block"
                   }`}
@@ -181,7 +181,7 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
                 {isVideoPlaying && (
                   <iframe
                     src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-                    title="InvenTree Demo"
+                    title="Stockyst Demo"
                     className="absolute inset-0 w-full h-full"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

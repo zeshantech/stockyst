@@ -74,7 +74,7 @@ export function StockTransfersTable() {
   const { isLoadingStock } = useStocks();
 
   // Mock stock transfer data
-  const transferData: IStockTransfer[] = [
+  const transferData = useMemo<IStockTransfer[]>(() => [
     {
       id: "1",
       transferNumber: "TR-001",
@@ -164,7 +164,7 @@ export function StockTransfersTable() {
       createdAt: new Date("2023-06-10"),
       updatedAt: new Date("2023-06-10"),
     },
-  ];
+  ], []);
 
   // Filter transfers based on URL parameters
   const filteredTransfers = useMemo(() => {
@@ -305,9 +305,7 @@ export function StockTransfersTable() {
   const handleBulkDelete = () => {
     const selectedRows = table.getFilteredSelectedRowModel().rows;
     if (selectedRows.length > 0) {
-      const transferNumbers = selectedRows.map(
-        (row) => row.original.transferNumber
-      );
+      // Perform bulk delete logic here
       // In a real application, this would call the bulkDeleteStockTransfer function from useStocks
       toast.success(`${selectedRows.length} transfers deleted successfully`);
       setRowSelection({});

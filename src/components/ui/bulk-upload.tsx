@@ -19,7 +19,7 @@ import { Selector } from "./selector";
 export interface BulkUploadProps<T extends string> {
   title: string;
   description: string;
-  onUpload: (formData: FormData) => Promise<void>;
+  onUpload: (formData: FormData) => void;
   onExport: (format: T) => void;
   buttonText?: string;
   isUploading?: boolean;

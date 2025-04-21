@@ -171,7 +171,7 @@ export function TestimonialSection() {
   const testimonials = [
     {
       quote:
-        "InvenTree has revolutionized how we manage our warehouse. Stock levels are always accurate, and we've reduced order processing time by 35%.",
+        "Stockyst has revolutionized how we manage our warehouse. Stock levels are always accurate, and we've reduced order processing time by 35%.",
       author: "Sarah Johnson",
       role: "Operations Manager",
       company: "TechSupply Co.",
@@ -188,7 +188,7 @@ export function TestimonialSection() {
     },
     {
       quote:
-        "We've eliminated stockouts completely since implementing InvenTree. The automated reordering has been a game-changer for our business.",
+        "We've eliminated stockouts completely since implementing Stockyst. The automated reordering has been a game-changer for our business.",
       author: "Jessica Williams",
       role: "Supply Chain Director",
       company: "GreenPath Manufacturing",
@@ -213,7 +213,7 @@ export function TestimonialSection() {
     },
     {
       quote:
-        "Customer support is outstanding. Any question we've had has been answered quickly, making our transition to InvenTree smooth.",
+        "Customer support is outstanding. Any question we've had has been answered quickly, making our transition to Stockyst smooth.",
       author: "Thomas Clark",
       role: "IT Director",
       company: "Pinnacle Solutions",
@@ -250,7 +250,7 @@ export function TestimonialSection() {
             viewport={{ once: true }}
             className="text-lg text-muted-foreground"
           >
-            See how companies of all sizes use InvenTree to transform their
+            See how companies of all sizes use Stockyst to transform their
             inventory management
           </motion.p>
         </div>

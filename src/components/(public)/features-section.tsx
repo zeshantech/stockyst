@@ -110,8 +110,8 @@ export function FeaturesSection({ className }: FeaturesSectionProps) {
               </span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              InvenTree combines powerful features and intuitive design to
-              create the most effective inventory management system available.
+              Stockyst combines powerful features and intuitive design to create
+              the most effective inventory management system available.
             </p>
           </motion.div>
         </div>

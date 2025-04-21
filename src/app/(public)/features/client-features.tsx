@@ -306,7 +306,7 @@ export function ClientFeatures() {
             Everything You Need for Modern Inventory Management
           </h1>
           <p className="text-xl text-muted-foreground">
-            InvenTree combines powerful features with intuitive design to create
+            Stockyst combines powerful features with intuitive design to create
             the most effective inventory management system available.
           </p>
         </motion.div>
@@ -348,8 +348,8 @@ export function ClientFeatures() {
               Powerful Features for Every Need
             </h2>
             <p className="text-lg text-muted-foreground">
-              Discover all the tools and features that make InvenTree the
-              perfect solution for your inventory management needs.
+              Discover all the tools and features that make Stockyst the perfect
+              solution for your inventory management needs.
             </p>
           </div>
 

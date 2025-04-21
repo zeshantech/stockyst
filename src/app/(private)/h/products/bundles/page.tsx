@@ -12,7 +12,6 @@ import {
   IconPackage,
   IconPackageOff,
   IconSettings,
-  IconSearch,
   IconFilter,
   IconX,
 } from "@tabler/icons-react";
@@ -27,14 +26,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { SearchInput } from "@/components/ui/search-input";
 import { Selector } from "@/components/ui/selector";
 

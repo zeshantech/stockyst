@@ -22,7 +22,7 @@ export function useProductActions() {
   const queryClient = useQueryClient();
 
   const deleteProduct = useMutation({
-    mutationFn: async ({ id }: DeleteProductParams) => {
+    mutationFn: async (_: DeleteProductParams) => {
       // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return { success: true };
@@ -37,7 +37,7 @@ export function useProductActions() {
   });
 
   const bulkDeleteProducts = useMutation({
-    mutationFn: async ({ ids }: BulkDeleteProductsParams) => {
+    mutationFn: async (_: BulkDeleteProductsParams) => {
       // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return { success: true };
@@ -52,7 +52,7 @@ export function useProductActions() {
   });
 
   const bulkUploadProducts = useMutation({
-    mutationFn: async ({ formData }: BulkUploadProductsParams) => {
+    mutationFn: async (_: BulkUploadProductsParams) => {
       // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       return { success: true };
@@ -67,7 +67,7 @@ export function useProductActions() {
   });
 
   const updateProductStatus = useMutation({
-    mutationFn: async ({ id, status }: UpdateProductStatusParams) => {
+    mutationFn: async (_: UpdateProductStatusParams) => {
       // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return { success: true };

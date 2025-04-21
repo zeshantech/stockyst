@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Selector } from "@/components/ui/selector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LocationPickerMap } from "@/components/(private)/dashboard/locations/location-picker-map";
-import { CreateLocationParams, ILocation } from "@/types/location";
+import { ILocation } from "@/types/location";
 
 // Zod schema for form validation
 const locationFormSchema = z.object({

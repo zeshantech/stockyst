@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useKeycloak } from "@/contexts/KeycloakProvider";
 import { useState, useEffect } from "react";
-import { IconEdit, IconCamera, IconCheck } from "@tabler/icons-react";
+import { IconCamera } from "@tabler/icons-react";
 import { toast } from "sonner";
 
 export function ProfileSettings() {
@@ -44,7 +43,7 @@ export function ProfileSettings() {
         phone: keycloak.tokenParsed?.phone_number || "",
         jobTitle: "Inventory Manager",
         department: "Operations",
-        company: "InvenTree Inc.",
+        company: "Stockyst Inc.",
         bio: "Inventory management specialist with 5+ years of experience in retail and warehouse operations.",
         isPublicProfile: false,
       });
@@ -103,10 +102,9 @@ export function ProfileSettings() {
                 </Avatar>
                 <Button
                   size="icon"
-                  variant="secondary"
                   className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                 >
-                  <IconCamera  />
+                  <IconCamera />
                 </Button>
               </div>
 

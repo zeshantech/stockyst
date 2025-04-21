@@ -2,17 +2,14 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { Selector } from "@/components/ui/selector"; // Assuming Selector is imported here
 import { useStocks } from "@/hooks/use-stock";
 import { SearchInput } from "@/components/ui/search-input";
 import { DateRange } from "react-day-picker";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import {
-  SearchIcon,
   FilterIcon,
   ChevronDownIcon,
-  CalendarIcon,
 } from "lucide-react";
 
 export function ExpiryTrackingFilters() {
@@ -58,84 +55,69 @@ export function ExpiryTrackingFilters() {
       {showFilters && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-md">
           <div className="space-y-2">
-            <label htmlFor="location" className="text-sm font-medium">
-              Location
-            </label>
-            <Select onValueChange={() => {}}>
-              <Select.Trigger id="location">
-                <Select.Value placeholder="All Locations" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="all">All Locations</Select.Item>
-                {locations.map((location) => (
-                  <Select.Item key={location.id} value={location.id}>
-                    {location.name}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select>
+            <Selector
+              label="Location"
+              placeholder="All Locations"
+              onChange={() => {}}
+              options={[
+                { value: "all", label: "All Locations" },
+                ...locations.map((location) => ({
+                  value: location.id,
+                  label: location.name,
+                })),
+              ]}
+            />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="status" className="text-sm font-medium">
-              Status
-            </label>
-            <Select
-              onValueChange={(value) => setStatusFilter(value)}
+            <Selector
+              label="Status"
+              placeholder="All Statuses"
               value={statusFilter}
-            >
-              <Select.Trigger id="status">
-                <Select.Value placeholder="All Statuses" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="all">All Statuses</Select.Item>
-                <Select.Item value="upcoming">Upcoming</Select.Item>
-                <Select.Item value="imminent">Imminent</Select.Item>
-                <Select.Item value="expired">Expired</Select.Item>
-              </Select.Content>
-            </Select>
+              onChange={(value) => setStatusFilter(value)}
+              options={[
+                { value: "all", label: "All Statuses" },
+                { value: "upcoming", label: "Upcoming" },
+                { value: "imminent", label: "Imminent" },
+                { value: "expired", label: "Expired" },
+              ]}
+            />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Expiry Date Range</label>
-            <DateRangePicker value={dateRange} onChange={setDateRange} />
+            <DatePickerWithRange date={dateRange} setDate={setDateRange} />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="daysToExpiry" className="text-sm font-medium">
-              Days to Expiry
-            </label>
-            <Select onValueChange={() => {}}>
-              <Select.Trigger id="daysToExpiry">
-                <Select.Value placeholder="Any" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="any">Any</Select.Item>
-                <Select.Item value="expired">Expired</Select.Item>
-                <Select.Item value="0-30">0-30 days</Select.Item>
-                <Select.Item value="31-60">31-60 days</Select.Item>
-                <Select.Item value="61-90">61-90 days</Select.Item>
-                <Select.Item value="90+">90+ days</Select.Item>
-              </Select.Content>
-            </Select>
+            <Selector
+              label="Days to Expiry"
+              placeholder="Any"
+              onChange={() => {}}
+              options={[
+                { value: "any", label: "Any" },
+                { value: "expired", label: "Expired" },
+                { value: "0-30", label: "0-30 days" },
+                { value: "31-60", label: "31-60 days" },
+                { value: "61-90", label: "61-90 days" },
+                { value: "90+", label: "90+ days" },
+              ]}
+            />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="sort" className="text-sm font-medium">
-              Sort By
-            </label>
-            <Select onValueChange={() => {}}>
-              <Select.Trigger id="sort">
-                <Select.Value placeholder="Expiry Date" />
-              </Select.Trigger>
-              <Select.Content>
-                <Select.Item value="expiryDate">Expiry Date</Select.Item>
-                <Select.Item value="daysToExpiry">Days to Expiry</Select.Item>
-                <Select.Item value="productName">Product Name</Select.Item>
-                <Select.Item value="quantity">Quantity</Select.Item>
-                <Select.Item value="status">Status</Select.Item>
-              </Select.Content>
-            </Select>
+            <Selector
+              label="Sort By"
+              placeholder="Expiry Date"
+              onChange={() => {}}
+              options={[
+                { value: "expiryDate", label: "Expiry Date" },
+                { value: "daysToExpiry", label: "Days to Expiry" },
+                { value: "productName", label: "Product Name" },
+                { value: "quantity", label: "Quantity" },
+                { value: "status", label: "Status" },
+              ]}
+            />
           </div>
 
           <div className="col-span-1 md:col-span-3 flex justify-end gap-2">

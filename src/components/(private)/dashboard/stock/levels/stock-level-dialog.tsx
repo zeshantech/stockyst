@@ -8,11 +8,9 @@ import { DialogComponent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Selector } from "@/components/ui/selector";
 import { IStockLevel } from "@/types/stock";
 import { toast } from "sonner";
 import { ProductSelector } from "../../product-selector";
-import { BundleProductSelector } from "../../bundle-product-selector";
 
 // Define form schema with zod
 const stockLevelSchema = z.object({
@@ -74,12 +72,6 @@ export function StockLevelDialog({
       toast.success("Stock level created successfully");
     }
   };
-
-  const productOptions = [
-    { label: "Laptop Pro X1", value: "product-1" },
-    { label: "Office Chair Ergo", value: "product-2" },
-    { label: "Wireless Mouse", value: "product-3" },
-  ];
 
   return (
     <DialogComponent

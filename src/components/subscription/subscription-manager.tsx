@@ -87,7 +87,7 @@ export function SubscriptionManager({
       setShowPaymentForm(false);
       setSelectedPlanId(null);
       toast.success("Subscription updated successfully!");
-    } catch (error) {
+    } catch (_) {
       toast.error("Failed to update subscription. Please try again.");
     }
   };
@@ -96,7 +96,7 @@ export function SubscriptionManager({
     try {
       await cancelSubscription();
       toast.success("Subscription cancelled successfully!");
-    } catch (error) {
+    } catch (_) {
       toast.error("Failed to cancel subscription. Please try again.");
     }
   };

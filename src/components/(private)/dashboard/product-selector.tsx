@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useProducts } from "@/hooks/use-products";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, X, Check, ChevronDown } from "lucide-react";
+import { X, Check, ChevronDown } from "lucide-react";
 import {
   Command,
   CommandEmpty,

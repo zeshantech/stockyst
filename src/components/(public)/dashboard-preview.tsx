@@ -8,11 +8,8 @@ import {
   IconUsers,
   IconChartBar,
   IconAlertCircle,
-  IconSearch,
   IconBell,
   IconSettings,
-  IconMenu2,
-  IconPlus,
   IconFilter,
   IconArrowUpRight,
   IconArrowDownRight,
@@ -20,7 +17,6 @@ import {
   IconClipboardList,
   IconRefresh,
 } from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
@@ -48,7 +44,7 @@ export function DashboardPreview() {
           <div className="flex-grow flex justify-center">
             <div className="inline-flex items-center gap-2 px-4 py-1 bg-background rounded-md text-xs text-muted-foreground border border-border">
               <IconBox className="h-3.5 w-3.5" />
-              app.inventree.com/dashboard
+              app.stockyst.com/dashboard
             </div>
           </div>
         </div>
@@ -59,7 +55,7 @@ export function DashboardPreview() {
           <div className="col-span-2 border-r border-border p-4 flex flex-col gap-4">
             <div className="flex items-center gap-2 px-3 py-2">
               <IconBox className="size-6 text-primary" />
-              <span className="font-semibold">InvenTree</span>
+              <span className="font-semibold">Stockyst</span>
             </div>
 
             <div className="space-y-1">

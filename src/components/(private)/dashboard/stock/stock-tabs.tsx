@@ -8,7 +8,7 @@ import { useStocks } from "@/hooks/use-stock";
 export function StockTabs() {
   const [activeTab, setActiveTab] = React.useState("inventory");
 
-  const { stocks, stockAlerts, isLoadingStock } = useStocks();
+  const { stockAlerts } = useStocks();
 
   return (
     <Tabs

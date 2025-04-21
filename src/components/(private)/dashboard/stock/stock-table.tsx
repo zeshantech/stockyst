@@ -16,10 +16,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
   IconDotsVertical,
   IconDownload,
   IconEye,

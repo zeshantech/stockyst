@@ -24,8 +24,8 @@ const mockAlertRules: AlertRule[] = [
     },
     notificationChannels: ["email", "browser"],
     isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: "2",
@@ -41,8 +41,8 @@ const mockAlertRules: AlertRule[] = [
     },
     notificationChannels: ["email", "browser", "slack"],
     isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: "3",
@@ -59,12 +59,10 @@ const mockAlertRules: AlertRule[] = [
     },
     notificationChannels: ["email", "browser"],
     isActive: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
-
-interface CreateAlertRuleParams extends AlertRuleFormData {}
 
 interface UpdateAlertRuleParams {
   id: string;
@@ -99,15 +97,15 @@ export function useAlertRules() {
   };
 
   const createAlertRule = useMutation({
-    mutationFn: async (params: CreateAlertRuleParams) => {
+    mutationFn: async (params: AlertRuleFormData) => {
       // TODO: Replace with actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const newRule: AlertRule = {
         id: `rule-${Date.now()}`,
         ...params,
         isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       return newRule;
     },
@@ -133,8 +131,8 @@ export function useAlertRules() {
           true,
         createdAt:
           mockAlertRules.find((rule) => rule.id === params.id)?.createdAt ||
-          new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+          new Date(),
+        updatedAt: new Date(),
       };
       return updatedRule;
     },

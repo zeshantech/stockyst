@@ -10,7 +10,7 @@ interface TestAlertParams {
 
 export function useTestAlert() {
   const testAlert = useMutation({
-    mutationFn: async (params: TestAlertParams) => {
+    mutationFn: async (_: TestAlertParams) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 

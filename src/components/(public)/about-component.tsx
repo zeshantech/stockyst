@@ -68,7 +68,7 @@ interface AboutComponentProps {
 
 export function AboutComponent({
   title = "Simplifying inventory management since 2021",
-  subtitle = "InvenTree is built to make inventory management accessible to businesses of all sizes, helping them optimize operations and drive growth without complexity.",
+  subtitle = "Stockyst is built to make inventory management accessible to businesses of all sizes, helping them optimize operations and drive growth without complexity.",
   yearFounded = 2021,
   teamMembers = defaultTeamMembers,
   companyValues = defaultCompanyValues,
@@ -159,7 +159,7 @@ export function AboutComponent({
                 </h2>
                 <div className="space-y-4 text-lg text-muted-foreground">
                   <p>
-                    InvenTree was founded in {yearFounded} by Zeshan Shakil, who
+                    Stockyst was founded in {yearFounded} by Zeshan Shakil, who
                     experienced firsthand the challenges of inventory management
                     while working with businesses of various sizes.
                   </p>
@@ -172,12 +172,12 @@ export function AboutComponent({
                   </p>
                   <p>
                     Starting with a passion for solving real-world problems,
-                    InvenTree was developed to create an intuitive user
+                    Stockyst was developed to create an intuitive user
                     experience without sacrificing powerful functionality.
                   </p>
                   <p>
                     Today, after {yearsInBusiness} years of continuous
-                    development and improvement, InvenTree helps businesses
+                    development and improvement, Stockyst helps businesses
                     worldwide streamline their inventory processes with a focus
                     on simplicity, power, and flexibility.
                   </p>
@@ -239,10 +239,10 @@ export function AboutComponent({
             <div className="text-center max-w-3xl mx-auto mb-16">
               <Badge className="mb-4">Meet the Creator</Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-                The Mind Behind InvenTree
+                The Mind Behind Stockyst
               </h2>
               <p className="text-lg text-muted-foreground">
-                InvenTree was created with passion to solve real-world inventory
+                Stockyst was created with passion to solve real-world inventory
                 management challenges.
               </p>
             </div>

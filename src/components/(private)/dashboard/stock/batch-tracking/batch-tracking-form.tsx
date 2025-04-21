@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Selector } from "@/components/ui/selector";
 import { DialogFooter } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
 
 interface BatchTrackingFormProps {
   batchId?: string;

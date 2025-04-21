@@ -7,7 +7,6 @@ import { Page } from "@/components/(private)/dashboard/page";
 import { PlusIcon, DownloadIcon } from "lucide-react";
 import { StockTransfersTable } from "@/components/(private)/dashboard/stock/transfers/stock-transfers-table";
 import { StockTransfersStats } from "@/components/(private)/dashboard/stock/transfers/stock-transfers-stats";
-import Link from "next/link";
 
 export default function StockTransfersPage() {
   return (

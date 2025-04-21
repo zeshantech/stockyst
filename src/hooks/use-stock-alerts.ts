@@ -55,7 +55,7 @@ const mockStockAlerts: IStockAlert[] = [
     alertType: "reorder-point",
     severity: "low",
     status: "resolved",
-    resolvedAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+    resolvedAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toString(),
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48),
     notes: "Stock replenished.",
   },

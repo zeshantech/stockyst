@@ -170,7 +170,7 @@ export function APISettings() {
           <div className="space-y-1">
             <CardTitle>API Keys</CardTitle>
             <CardDescription>
-              Manage your API keys for programmatic access to the InvenTree
+              Manage your API keys for programmatic access to the Stockyst
               platform.
             </CardDescription>
           </div>
@@ -383,7 +383,7 @@ export function APISettings() {
               </div>
               <h3 className="mt-4 text-lg font-medium">No API keys yet</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Create an API key to start integrating with InvenTree.
+                Create an API key to start integrating with Stockyst.
               </p>
               <Button className="mt-4" onClick={() => setIsCreatingKey(true)}>
                 Generate API Key
@@ -397,7 +397,7 @@ export function APISettings() {
         <CardHeader>
           <CardTitle>API Documentation</CardTitle>
           <CardDescription>
-            Reference materials and guides for using the InvenTree API.
+            Reference materials and guides for using the Stockyst API.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -412,7 +412,7 @@ export function APISettings() {
                   All API requests should be sent to the following base URL:
                 </p>
                 <code className="mt-2 inline-block px-3 py-1 rounded-md bg-primary-foreground text-sm font-mono">
-                  https://api.inventree.com/v1
+                  https://api.stockyst.com/v1
                 </code>
               </div>
             </div>
@@ -454,7 +454,7 @@ Content-Type: application/json`}
                 Here's an example of how to fetch all products:
               </p>
               <pre className="mt-2 bg-primary-foreground p-3 rounded-md overflow-x-auto text-xs font-mono">
-                {`curl -X GET "https://api.inventree.com/v1/products" \\
+                {`curl -X GET "https://api.stockyst.com/v1/products" \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json"`}
               </pre>

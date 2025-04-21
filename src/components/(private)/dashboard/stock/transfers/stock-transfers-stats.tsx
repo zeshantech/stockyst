@@ -4,11 +4,8 @@ import React from "react";
 import { StatsCard } from "@/components/ui/stats-card";
 import { useStocks } from "@/hooks/use-stock";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeftRight, AlertCircle, CheckCircle, Clock } from "lucide-react";
 
 export function StockTransfersStats() {
-  // In a real app, we would get this from the useStocks hook
-  // For now, we'll use sample data
   const { stocks, isLoadingStock } = useStocks();
 
   // Calculate mock stats for demonstration

@@ -13,7 +13,6 @@ import { useAllProducts } from "@/hooks/use-products";
 import { Loader } from "@/components/ui/loader";
 
 export default function ProductsPage() {
-  const router = useRouter();
   const { data: products, isLoading } = useAllProducts();
 
   return (

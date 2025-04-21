@@ -52,6 +52,15 @@ export interface IActiveSubscription {
   trialEndsAt?: Date;
 }
 
+export interface IPaymentMethodInput {
+  cardNumber: string;
+  expiryDate: string;
+  cardholderName: string;
+  cvc: string;
+  isDefault: boolean;
+  cardType: string;
+}
+
 export interface IPaymentMethod {
   id: string;
   type: string;

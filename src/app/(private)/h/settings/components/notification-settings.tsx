@@ -84,7 +84,7 @@ export function NotificationSettings() {
         <CardHeader>
           <CardTitle>Notification Methods</CardTitle>
           <CardDescription>
-            Configure how you want to receive notifications from InvenTree.
+            Configure how you want to receive notifications from Stockyst.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -118,7 +118,7 @@ export function NotificationSettings() {
                 <div>
                   <div className="font-medium">In-App Notifications</div>
                   <div className="text-sm text-muted-foreground">
-                    Receive notifications within the InvenTree platform.
+                    Receive notifications within the Stockyst platform.
                   </div>
                 </div>
               </div>

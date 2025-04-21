@@ -9,12 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Page } from "@/components/(private)/dashboard/page";
 import { useStocks } from "@/hooks/use-stock";
 import { toast } from "sonner";
-import { Trash, Plus, ArrowLeft } from "lucide-react";
+import { Trash, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Selector } from "@/components/ui/selector";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { ProductSelector } from "@/components/(private)/dashboard/product-selector";
 

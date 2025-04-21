@@ -73,6 +73,9 @@ export const KeycloakAuthProvider = ({ children }: { children: ReactNode }) => {
           try {
             const userProfile = await authInstance.loadUserProfile();
             setProfile(userProfile);
+
+            // Store token in cookie
+            document.cookie = `keycloak_token=${authInstance.token}; path=/; secure; samesite=strict`;
           } catch (profileError) {
             console.error("Failed to load user profile:", profileError);
           }
@@ -116,9 +119,12 @@ export const KeycloakAuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(
     (redirectUri?: string, options?: Keycloak.KeycloakLogoutOptions) => {
       if (keycloak) {
+        // Clear token cookie
+        document.cookie =
+          "keycloak_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         keycloak.logout({
           ...options,
-          redirectUri: redirectUri ?? window.location.origin + "/h",
+          redirectUri: redirectUri ?? window.location.origin + "/",
         });
       }
     },
@@ -194,5 +200,5 @@ export function useKeycloak() {
 const keycloakSetting = {
   url: "http://localhost:8080",
   realm: "sysmox",
-  clientId: "inventree",
+  clientId: "stockyst",
 };

@@ -21,25 +21,14 @@ import {
   IconTrash,
   IconCheck,
   IconX,
-  IconBell,
-  IconBox,
-  IconCalendarDue,
-  IconExclamationCircle,
-  IconRefresh,
-  IconCheckbox,
 } from "@tabler/icons-react";
-import { format } from "date-fns";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-  DropdownMenu,
   DropdownMenuCheckboxComponent,
   DropdownMenuComponent,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
   Table,
@@ -53,7 +42,6 @@ import {
 import { toast } from "sonner";
 import { IStockAlert } from "@/types/stock";
 import { AlertDialogComponent } from "@/components/ui/alert-dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SearchInput } from "@/components/ui/search-input";
 import { useStockAlerts } from "@/hooks/use-stock-alerts";
 import { Selector } from "@/components/ui/selector";

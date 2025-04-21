@@ -33,7 +33,7 @@ export function PageHeader({ showBackToHome = true }: PageHeaderProps) {
             <Link href="/" className="flex items-center">
               <IconBox className="h-8 w-8 text-primary" />
               <span className="ml-2 text-xl font-bold text-foreground">
-                InvenTree
+                Stockyst
               </span>
             </Link>
 

@@ -74,8 +74,8 @@ const sampleOrder: IOrder = {
     country: "USA",
   },
   notes: "Please deliver during business hours",
-  createdAt: "2024-03-15T10:00:00Z",
-  updatedAt: "2024-03-15T10:00:00Z",
+  createdAt: new Date("2024-03-15T10:00:00Z"),
+  updatedAt: new Date("2024-03-15T10:00:00Z"),
 };
 
 const formSchema = z.object({
@@ -127,7 +127,7 @@ export default function OrderDetailsPage() {
       setOrder({
         ...order,
         ...values,
-        updatedAt: new Date().toISOString(),
+        updatedAt: new Date(),
       });
       setIsEditing(false);
       toast.success("Order updated successfully");

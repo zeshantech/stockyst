@@ -57,7 +57,7 @@ export function SiteFooter() {
         <div className="py-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2 lg:col-span-1">
             <Link href="/" className="inline-block mb-4">
-              <div className="font-bold text-xl text-foreground">InvenTree</div>
+              <div className="font-bold text-xl text-foreground">Stockyst</div>
             </Link>
             <p className="text-sm text-muted-foreground">
               Powerful inventory management solution for businesses of all
@@ -216,7 +216,7 @@ export function SiteFooter() {
         {/* Bottom Footer */}
         <div className="py-6 flex flex-col md:flex-row justify-between items-center">
           <div className="text-sm text-muted-foreground mb-4 md:mb-0">
-            © {currentYear} InvenTree. All rights reserved.
+            © {currentYear} Stockyst. All rights reserved.
           </div>
 
           <div className="flex space-x-4 items-center">

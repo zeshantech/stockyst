@@ -1,5 +1,4 @@
 import { ISchema } from "./generic";
-import { IProduct } from "./product";
 
 // Base stock interface
 export interface IStock extends ISchema {

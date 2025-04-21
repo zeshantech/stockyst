@@ -76,7 +76,7 @@ const generateAvailableDates = () => {
 
 export function RequestDemoComponent({
   title = "Schedule Your Personalized Demo",
-  subtitle = "See how InvenTree can transform your inventory management with a personalized walkthrough.",
+  subtitle = "See how Stockyst can transform your inventory management with a personalized walkthrough.",
   className = "",
 }: RequestDemoComponentProps) {
   const [formData, setFormData] = React.useState({
@@ -298,7 +298,7 @@ export function RequestDemoComponent({
 
                       <div className="space-y-2">
                         <Label htmlFor="message">
-                          What are you looking to achieve with InvenTree?
+                          What are you looking to achieve with Stockyst?
                         </Label>
                         <Textarea
                           id="message"
@@ -489,7 +489,7 @@ export function RequestDemoComponent({
                     <div>
                       <p className="font-medium">Personalized Walkthrough</p>
                       <p className="text-sm text-muted-foreground">
-                        A guided tour of InvenTree tailored to your specific
+                        A guided tour of Stockyst tailored to your specific
                         needs
                       </p>
                     </div>
@@ -559,7 +559,7 @@ export function RequestDemoComponent({
                   <div className="space-y-2">
                     <div className="flex items-center">
                       <IconDeviceDesktop className="size-4 mr-2 text-primary" />
-                      <span>support@inventree.com</span>
+                      <span>support@stockyst.com</span>
                     </div>
                     <div className="flex items-center">
                       <IconHeadset className="size-4 mr-2 text-primary" />

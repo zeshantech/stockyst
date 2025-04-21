@@ -40,9 +40,7 @@ export default function EditStockTransferPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const {
-    stocks,
     locations,
-    isLoadingStock,
     isLoadingLocations,
     updateStockTransfer,
     isUpdatingStockTransfer,

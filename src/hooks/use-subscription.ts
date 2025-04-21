@@ -14,20 +14,8 @@ import {
   IActiveSubscription,
   IPaymentMethod,
   IBillingInfo,
+  IPaymentMethodInput,
 } from "@/types/subscription";
-
-// API endpoints (to be implemented with actual backend)
-const API_ENDPOINTS = {
-  SUBSCRIPTION: "/api/subscription",
-  PAYMENT_METHODS: "/api/payment-methods",
-  BILLING_INFO: "/api/billing-info",
-  INVOICES: "/api/invoices",
-  STRIPE_SETUP_INTENT: "/api/stripe/setup-intent",
-  STRIPE_CREATE_SUBSCRIPTION: "/api/stripe/create-subscription",
-  STRIPE_CANCEL_SUBSCRIPTION: "/api/stripe/cancel-subscription",
-  STRIPE_UPDATE_SUBSCRIPTION: "/api/stripe/update-subscription",
-  USAGE_STATS: "/api/usage-stats",
-};
 
 // Query keys
 export const SUBSCRIPTION_QUERY_KEYS = {
@@ -100,13 +88,9 @@ export function useSubscription() {
 
   // Mutations
   const addPaymentMethodMutation = useMutation({
-    mutationFn: async (paymentMethod: Partial<IPaymentMethod>) => {
+    mutationFn: async (paymentMethod: Partial<IPaymentMethodInput>) => {
       // Mock successful response instead of API call
-      return {
-        ...MOCK_PAYMENT_METHODS[0],
-        ...paymentMethod,
-        id: `card-${Date.now()}`,
-      } as IPaymentMethod;
+      return paymentMethod;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

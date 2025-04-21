@@ -9,7 +9,7 @@ export function FAQSection() {
             Frequently asked questions
           </h2>
           <p className="text-lg text-muted-foreground">
-            Get answers to common questions about InvenTree's platform and
+            Get answers to common questions about Stockyst's platform and
             services.
           </p>
         </div>
@@ -20,7 +20,7 @@ export function FAQSection() {
               How easy is it to get started?
             </h3>
             <p className="text-muted-foreground">
-              Getting started with InvenTree is simple. Our guided setup process
+              Getting started with Stockyst is simple. Our guided setup process
               will have you up and running in minutes, with optional data import
               tools to bring in your existing inventory records.
             </p>
@@ -30,7 +30,7 @@ export function FAQSection() {
               Can I integrate with my existing tools?
             </h3>
             <p className="text-muted-foreground">
-              Yes! InvenTree integrates with popular e-commerce platforms,
+              Yes! Stockyst integrates with popular e-commerce platforms,
               accounting software, and shipping providers. Our API also allows
               for custom integrations with your unique tech stack.
             </p>
@@ -48,7 +48,7 @@ export function FAQSection() {
           <div className="space-y-2">
             <h3 className="text-xl font-medium">How secure is my data?</h3>
             <p className="text-muted-foreground">
-              We take security seriously. InvenTree uses enterprise-grade
+              We take security seriously. Stockyst uses enterprise-grade
               encryption, regular security audits, and follows industry best
               practices to keep your data safe and secure.
             </p>

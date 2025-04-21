@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   ColumnFiltersState,
   FilterFn,
@@ -11,7 +11,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-// Custom filter function that checks if a value contains a string
 const containsString: FilterFn<any> = (row, columnId, filterValue) => {
   const value = row.getValue(columnId);
   if (value == null) return false;

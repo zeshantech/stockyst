@@ -23,7 +23,7 @@ interface CTASectionProps {
 export function CTASection({
   className,
   title = "Ready to transform your inventory management?",
-  description = "Join thousands of businesses that trust InvenTree to streamline their inventory processes. Get started today with our risk-free trial.",
+  description = "Join thousands of businesses that trust Stockyst to streamline their inventory processes. Get started today with our risk-free trial.",
   primaryButtonText = "Start Free Trial",
   secondaryButtonText = "Schedule Demo",
   primaryButtonLink = "/signup",
@@ -141,7 +141,7 @@ export function CTASection({
                 </div>
                 <blockquote className="relative z-10 px-2">
                   <p className="text-muted-foreground italic mb-4">
-                    InvenTree has transformed our warehouse operations, reducing
+                    Stockyst has transformed our warehouse operations, reducing
                     errors by 78% and saving us countless hours of manual work.
                   </p>
                   <footer className="flex items-center gap-3">

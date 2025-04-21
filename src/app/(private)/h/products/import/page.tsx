@@ -67,8 +67,9 @@ export default function ProductImportPage() {
               <BulkUpload
                 onUpload={handleUpload}
                 isUploading={isUploading}
-                allowedTypes={[".csv", ".xlsx", ".xls", ".json"]}
-              />
+                allowedTypes={[".csv", ".xlsx", ".xls", ".json"]} title={""} description={""} onExport={function (format: "csv" | "excel" | "json"): void {
+                  throw new Error("Function not implemented.");
+                } }              />
             </CardContent>
             <CardFooter className="border-t bg-muted/50 px-6 py-4">
               <div className="text-xs text-muted-foreground">

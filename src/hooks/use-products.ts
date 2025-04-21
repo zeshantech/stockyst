@@ -47,15 +47,6 @@ export const findVariantGroups = (
     });
 };
 
-// API endpoints (to be implemented with actual backend)
-const API_ENDPOINTS = {
-  PRODUCTS: "/api/products",
-  PRODUCT: (id: string) => `/api/products/${id}`,
-  BULK_DELETE: "/api/products/bulk-delete",
-  BULK_UPLOAD: "/api/products/bulk-upload",
-  UPDATE_STATUS: (id: string) => `/api/products/${id}/status`,
-};
-
 // Query keys
 export const PRODUCTS_QUERY_KEYS = {
   ALL: ["products"],
@@ -794,7 +785,7 @@ export function useProducts() {
 
   // Delete product mutation
   const deleteProductMutation = useMutation({
-    mutationFn: async ({ id }: DeleteProductParams) => {
+    mutationFn: async (_: DeleteProductParams) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return { success: true };
@@ -814,7 +805,7 @@ export function useProducts() {
 
   // Delete variant mutation
   const deleteVariantMutation = useMutation({
-    mutationFn: async ({ id }: { id: string }) => {
+    mutationFn: async (_: { id: string }) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return { success: true };
@@ -834,7 +825,7 @@ export function useProducts() {
 
   // Delete bundle mutation
   const deleteBundleMutation = useMutation({
-    mutationFn: async ({ id }: { id: string }) => {
+    mutationFn: async (_: { id: string }) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return { success: true };
@@ -874,7 +865,7 @@ export function useProducts() {
 
   // Bulk upload products mutation
   const bulkUploadProductsMutation = useMutation({
-    mutationFn: async ({ formData }: BulkUploadProductsParams) => {
+    mutationFn: async (_: BulkUploadProductsParams) => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       return { success: true, count: 5 }; // Assume 5 products were uploaded

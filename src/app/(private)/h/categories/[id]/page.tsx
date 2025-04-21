@@ -53,11 +53,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function CategoryDetailsPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function CategoryDetailsPage() {
   const router = useRouter();
   const [isEditing, setIsEditing] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);

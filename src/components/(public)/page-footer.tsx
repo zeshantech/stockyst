@@ -17,7 +17,7 @@ export function PageFooter() {
             <Link href="/" className="flex items-center">
               <IconBox className="size-6 text-primary" />
               <span className="ml-2 text-lg font-bold text-foreground">
-                InvenTree
+                Stockyst
               </span>
             </Link>
           </div>

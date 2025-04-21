@@ -1,3 +1,5 @@
+import { ISchema } from "./generic";
+
 export type NotificationChannel =
   | "email"
   | "whatsapp"
@@ -5,8 +7,7 @@ export type NotificationChannel =
   | "slack"
   | "browser";
 
-export interface AlertRule {
-  id: string;
+export interface AlertRule extends ISchema {
   name: string;
   description: string;
   condition: {
@@ -22,8 +23,6 @@ export interface AlertRule {
   };
   notificationChannels: NotificationChannel[];
   isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface NotificationPreference {
