@@ -31,28 +31,35 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
 
   useEffect(() => {
     const keycloakInstance = new Keycloak({
-      url: process.env.NEXT_PUBLIC_KEYCLOAK_URL || "http://localhost:8080",
-      realm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM || "sysmox",
-      clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID || "stockyst",
+      url: process.env.KEYCLOAK_URL,
+      realm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM,
+      clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID,
     });
 
-    keycloakInstance.init().then((authenticated) => {
-      setKeycloak(keycloakInstance);
+    keycloakInstance
+      .init()
+      .then((authenticated) => {
+        setKeycloak(keycloakInstance);
 
-      if (authenticated) {
-        keycloakInstance
-          .loadUserProfile()
-          .then((userProfile) => {
-            setProfile(userProfile);
-          })
-          .catch((error) => {
-            console.error("Failed to load user profile:", error);
-          });
-      }
-    });
+        if (authenticated) {
+          keycloakInstance
+            .loadUserProfile()
+            .then((userProfile) => {
+              setProfile(userProfile);
+            })
+            .catch((error) => {
+              console.error("Failed to load user profile:", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log("-------------", error);
+      });
   }, []);
 
   const login = (redirectUri?: string) => {
+    console.log(keycloak, "--------------------");
+
     if (keycloak) {
       keycloak.login({
         redirectUri: redirectUri ?? window.location.origin,
