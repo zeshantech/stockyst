@@ -31,9 +31,9 @@ export const KeycloakProvider: React.FC<KeycloakProviderProps> = ({
 
   useEffect(() => {
     const keycloakInstance = new Keycloak({
-      url: "http://localhost:8080",
-      realm: "sysmox",
-      clientId: "stockyst",
+      url: process.env.NEXT_PUBLIC_KEYCLOAK_URL || "http://localhost:8080",
+      realm: process.env.NEXT_PUBLIC_KEYCLOAK_REALM || "sysmox",
+      clientId: process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID || "stockyst",
     });
 
     keycloakInstance.init().then((authenticated) => {
