@@ -6,11 +6,10 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useKeycloak } from "@/contexts/keycloak-provider";
-import { DropdownMenuComponent } from "@/components/ui/dropdown-menu";
 
 export function SiteHeader() {
   const { theme, setTheme } = useTheme();
-  const { keycloak, login, logout } = useKeycloak();
+  const { keycloak, login } = useKeycloak();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -55,25 +54,11 @@ export function SiteHeader() {
               {theme === "dark" ? <SunIcon /> : <MoonIcon />}
             </Button>
             {keycloak?.authenticated ? (
-              <DropdownMenuComponent
-                trigger={
-                  <Button variant="ghost" size="icon">
-                    <IconUser />
-                  </Button>
-                }
-                items={[
-                  {
-                    content: <Link href="/h">Dashboard</Link>,
-                  },
-                  {
-                    content: "Logout",
-                    onClick: () => logout(),
-                  },
-                ]}
-                align="end"
-              />
+              <Button size="sm" href="/h">
+                Go t Dashboard
+              </Button>
             ) : (
-              <Button variant="outline" size="sm" onClick={() => login()}>
+              <Button size="sm" onClick={() => login()}>
                 Log In
               </Button>
             )}

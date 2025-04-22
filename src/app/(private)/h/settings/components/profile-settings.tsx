@@ -35,12 +35,12 @@ export function ProfileSettings() {
 
   useEffect(() => {
     // In a real implementation, we would fetch this from Keycloak
-    if (keycloak?.tokenParsed) {
+    if (profile) {
       setProfileData({
-        firstName: keycloak.tokenParsed.firstName || "",
-        lastName: keycloak.tokenParsed.lastName || "",
-        email: keycloak.tokenParsed.email || "",
-        phone: keycloak.tokenParsed?.phone_number || "",
+        firstName: profile.firstName || "",
+        lastName: profile.lastName || "",
+        email: profile.email || "",
+        phone: keycloak?.tokenParsed?.phone_number || "",
         jobTitle: "Inventory Manager",
         department: "Operations",
         company: "Stockyst Inc.",
@@ -48,7 +48,7 @@ export function ProfileSettings() {
         isPublicProfile: false,
       });
     }
-  }, [keycloak]);
+  }, [keycloak, profile]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

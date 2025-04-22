@@ -48,7 +48,7 @@ const features: FeatureTabProps[] = [
       "Streamline your supply chain with automated ordering, supplier management, and fulfillment tracking.",
     icon: IconTruckDelivery,
     image:
-      "https://images.unsplash.com/photo-1566232392379-b3af689e08ed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1553413077-190dd305871c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
     benefits: [
       "Automated purchase orders when stock runs low",
       "Supplier management and performance tracking",
@@ -62,7 +62,7 @@ const features: FeatureTabProps[] = [
       "Scan and track items with ease using integrated barcode and RFID technology on any device.",
     icon: IconBarcode,
     image:
-      "https://images.unsplash.com/photo-1515630278258-407f66498ffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1616004655123-818cbd4b3143?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80",
     benefits: [
       "Instant scanning with mobile device cameras",
       "Support for 1D/2D barcodes and QR codes",
