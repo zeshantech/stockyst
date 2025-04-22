@@ -31,8 +31,6 @@ export function NavUser() {
   const { isMobile } = useSidebar();
   const { profile, logout } = useKeycloak();
 
-  if (!profile) return <></>;
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -44,15 +42,15 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarFallback className="rounded-lg">
-                  {profile.firstName?.[0] + profile.lastName?.[0]}
+                  {profile?.firstName?.[0] + profile?.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {profile.firstName + " " + profile.lastName}
+                  {profile?.firstName + " " + profile?.lastName}
                 </span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {profile.email}
+                  {profile?.email}
                 </span>
               </div>
               <IconDotsVertical className="ml-auto size-4" />
@@ -68,15 +66,15 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarFallback className="rounded-lg">
-                    {profile.firstName?.[0] + profile.lastName?.[0]}
+                    {profile?.firstName?.[0] + profile?.lastName?.[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {profile.firstName + " " + profile.lastName}
+                    {profile?.firstName + " " + profile?.lastName}
                   </span>
                   <span className="text-muted-foreground truncate text-xs">
-                    {profile.email}
+                    {profile?.email}
                   </span>
                 </div>
               </div>
