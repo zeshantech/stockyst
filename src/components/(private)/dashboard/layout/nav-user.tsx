@@ -29,7 +29,9 @@ import { useKeycloak } from "@/contexts/keycloak-provider";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { profile,logout } = useKeycloak();
+  const { profile, logout } = useKeycloak();
+
+  if (!profile) return <></>;
 
   return (
     <SidebarMenu>
@@ -42,8 +44,7 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg grayscale">
                 <AvatarFallback className="rounded-lg">
-                  {(profile.firstName?.[0]) +
-                    (profile.lastName?.[0])}
+                  {profile.firstName?.[0] + profile.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -67,8 +68,7 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarFallback className="rounded-lg">
-                    {(profile.firstName?.[0]) +
-                      (profile.lastName?.[0])}
+                    {profile.firstName?.[0] + profile.lastName?.[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -84,10 +84,10 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Link href={"/h/settings?tab=profile"}>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Account
-              </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <IconUserCircle />
+                  Account
+                </DropdownMenuItem>
               </Link>
               <Link href={"/h/settings?tab=billing"}>
                 <DropdownMenuItem>
