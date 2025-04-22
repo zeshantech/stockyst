@@ -18,13 +18,7 @@ export interface ISubscriptionPlan extends Omit<ISchema, "createdAt"> {
   limitations?: string[];
   isPopular: boolean;
   buttonText: string;
-  buttonVariant:
-    | "default"
-    | "outline"
-    | "secondary"
-    | "destructive"
-    | "ghost"
-    | "link";
+  buttonColor: "success" | "secondary" | "default";
   stripePriceId: {
     monthly: string;
     yearly: string;

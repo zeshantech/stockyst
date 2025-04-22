@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useWarehousing } from "@/hooks/use-warehousing";
+import { useWarehousing, useFloorPlanItems } from "@/hooks/use-warehousing";
 import { toast } from "sonner";
 import {
   IconArrowsMaximize,
@@ -36,162 +36,7 @@ import {
   IconZoomOut,
 } from "@tabler/icons-react";
 import { EquipmentEditor } from "./equipment-editor";
-
-// Mock data for floor plan elements
-const floorPlanItems = [
-  {
-    id: "zone-a",
-    type: "zone",
-    name: "Zone A",
-    x: 50,
-    y: 50,
-    width: 300,
-    height: 200,
-    utilization: 75,
-    status: "active",
-  },
-  {
-    id: "zone-b",
-    type: "zone",
-    name: "Zone B",
-    x: 400,
-    y: 50,
-    width: 250,
-    height: 200,
-    utilization: 90,
-    status: "active",
-  },
-  {
-    id: "zone-c",
-    type: "zone",
-    name: "Zone C",
-    x: 50,
-    y: 300,
-    width: 300,
-    height: 150,
-    utilization: 60,
-    status: "maintenance",
-  },
-  {
-    id: "zone-d",
-    type: "zone",
-    name: "Zone D",
-    x: 400,
-    y: 300,
-    width: 250,
-    height: 150,
-    utilization: 40,
-    status: "active",
-  },
-  {
-    id: "receiving",
-    type: "receiving",
-    name: "Receiving Area",
-    x: 700,
-    y: 50,
-    width: 150,
-    height: 150,
-    status: "active",
-  },
-  {
-    id: "shipping",
-    type: "shipping",
-    name: "Shipping Area",
-    x: 700,
-    y: 300,
-    width: 150,
-    height: 150,
-    status: "active",
-  },
-  {
-    id: "rack-a1",
-    type: "rack",
-    name: "Rack A1",
-    x: 75,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 80,
-    status: "active",
-  },
-  {
-    id: "rack-a2",
-    type: "rack",
-    name: "Rack A2",
-    x: 125,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 85,
-    status: "active",
-  },
-  {
-    id: "rack-a3",
-    type: "rack",
-    name: "Rack A3",
-    x: 175,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 65,
-    status: "active",
-  },
-  {
-    id: "rack-a4",
-    type: "rack",
-    name: "Rack A4",
-    x: 225,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 75,
-    status: "active",
-  },
-  {
-    id: "rack-b1",
-    type: "rack",
-    name: "Rack B1",
-    x: 425,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 95,
-    status: "active",
-  },
-  {
-    id: "rack-b2",
-    type: "rack",
-    name: "Rack B2",
-    x: 475,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 90,
-    status: "active",
-  },
-  {
-    id: "rack-b3",
-    type: "rack",
-    name: "Rack B3",
-    x: 525,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 85,
-    status: "active",
-  },
-  {
-    id: "rack-b4",
-    type: "rack",
-    name: "Rack B4",
-    x: 575,
-    y: 75,
-    width: 40,
-    height: 150,
-    utilization: 90,
-    status: "active",
-  },
-];
+import { EquipmentType } from "@/types/warehouse";
 
 // Function to get fill color based on utilization
 const getUtilizationColor = (utilization: number) => {
@@ -216,7 +61,7 @@ const getStatusColor = (status: string) => {
 };
 
 export function WarehouseFloorPlan() {
-  const [selectedWarehouse, setSelectedWarehouse] = useState<string>("1");
+  const [selectedWarehouse, setSelectedWarehouse] = useState<string>("");
   const [selectedFloor, setSelectedFloor] = useState<string>("ground");
   const [zoom, setZoom] = useState<number>(1);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
@@ -230,8 +75,26 @@ export function WarehouseFloorPlan() {
   // New zone/rack form data
   const [newZoneName, setNewZoneName] = useState<string>("");
   const [newRackName, setNewRackName] = useState<string>("");
+  const [newItemPosition, setNewItemPosition] = useState({ x: 100, y: 100 });
 
-  const { warehouses } = useWarehousing();
+  const {
+    warehouses,
+    isLoadingWarehouses,
+    createFloorPlanItem,
+    isCreatingFloorPlanItem,
+    updateFloorPlanItem,
+  } = useWarehousing();
+
+  // Set default selected warehouse when warehouses are loaded
+  useEffect(() => {
+    if (warehouses.length > 0 && !selectedWarehouse) {
+      setSelectedWarehouse(warehouses[0].id);
+    }
+  }, [warehouses, selectedWarehouse]);
+
+  // Get floor plan items for selected warehouse
+  const { data: floorPlanItems, isLoading: isLoadingFloorPlan } =
+    useFloorPlanItems(selectedWarehouse);
 
   const [showEquipmentEditor, setShowEquipmentEditor] =
     useState<boolean>(false);
@@ -262,8 +125,19 @@ export function WarehouseFloorPlan() {
       return;
     }
 
-    // Simulating adding a new zone
-    toast.success(`Zone "${newZoneName}" added successfully`);
+    const newZone = {
+      type: "zone",
+      name: newZoneName,
+      warehouseId: selectedWarehouse,
+      x: newItemPosition.x,
+      y: newItemPosition.y,
+      width: 250,
+      height: 150,
+      utilization: 0,
+      status: "active",
+    };
+
+    createFloorPlanItem(newZone);
     setAddZoneOpen(false);
     setNewZoneName("");
   };
@@ -275,8 +149,19 @@ export function WarehouseFloorPlan() {
       return;
     }
 
-    // Simulating adding a new rack
-    toast.success(`Rack "${newRackName}" added successfully`);
+    const newRack = {
+      type: "rack",
+      name: newRackName,
+      warehouseId: selectedWarehouse,
+      x: newItemPosition.x,
+      y: newItemPosition.y,
+      width: 40,
+      height: 150,
+      utilization: 0,
+      status: "active",
+    };
+
+    createFloorPlanItem(newRack);
     setAddRackOpen(false);
     setNewRackName("");
   };
@@ -288,7 +173,28 @@ export function WarehouseFloorPlan() {
     }
   };
 
+  // Handle status change
+  const handleStatusChange = (status: string) => {
+    if (selectedItem) {
+      const selectedItemDetails = getSelectedItemDetails();
+      if (selectedItemDetails) {
+        updateFloorPlanItem({
+          id: selectedItem,
+          status,
+        });
+      }
+    }
+  };
+
   const selectedItemDetails = getSelectedItemDetails();
+
+  if (isLoadingWarehouses) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        Loading warehouses...
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -374,61 +280,83 @@ export function WarehouseFloorPlan() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="col-span-1 md:col-span-3 bg-muted rounded-lg overflow-hidden relative">
               <div className="h-[500px] overflow-auto relative">
-                <div
-                  className="relative bg-white"
-                  style={{
-                    width: "900px",
-                    height: "500px",
-                    transform: `scale(${zoom})`,
-                    transformOrigin: "top left",
-                    transition: "transform 0.2s ease-out",
-                  }}
-                >
-                  {/* Render floor plan elements */}
-                  {floorPlanItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className={`absolute border-2 flex flex-col justify-center items-center cursor-pointer transition-all duration-200 ${
-                        selectedItem === item.id
-                          ? "border-primary shadow-md z-10"
-                          : `border-gray-300`
-                      }`}
-                      style={{
-                        left: `${item.x}px`,
-                        top: `${item.y}px`,
-                        width: `${item.width}px`,
-                        height: `${item.height}px`,
-                        backgroundColor:
-                          showUtilization && item.utilization
-                            ? getUtilizationColor(item.utilization)
-                            : "white",
-                        borderColor: getStatusColor(item.status),
-                        opacity: item.status === "inactive" ? 0.6 : 1,
-                      }}
-                      onClick={() =>
-                        setSelectedItem(
-                          item.id === selectedItem ? null : item.id
-                        )
-                      }
-                    >
-                      <div className="text-xs font-medium text-center p-1 pointer-events-none">
-                        {item.name}
-                      </div>
-                      {item.utilization && showUtilization && (
-                        <div className="text-xs text-center p-1 pointer-events-none">
-                          {item.utilization}%
+                {isLoadingFloorPlan ? (
+                  <div className="flex items-center justify-center h-full">
+                    Loading floor plan...
+                  </div>
+                ) : floorPlanItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <IconBuildingWarehouse className="h-12 w-12 text-muted-foreground mb-4" />
+                    <p className="text-center text-muted-foreground">
+                      No floor plan items for this warehouse. Add zones and
+                      racks to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <div
+                    className="relative bg-white"
+                    style={{
+                      width: "900px",
+                      height: "500px",
+                      transform: `scale(${zoom})`,
+                      transformOrigin: "top left",
+                      transition: "transform 0.2s ease-out",
+                    }}
+                    onClick={(e) => {
+                      // Set position for new items based on click
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = (e.clientX - rect.left) / zoom;
+                      const y = (e.clientY - rect.top) / zoom;
+                      setNewItemPosition({ x, y });
+                    }}
+                  >
+                    {/* Render floor plan elements */}
+                    {floorPlanItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className={`absolute border-2 flex flex-col justify-center items-center cursor-pointer transition-all duration-200 ${
+                          selectedItem === item.id
+                            ? "border-primary shadow-md z-10"
+                            : `border-gray-300`
+                        }`}
+                        style={{
+                          left: `${item.x}px`,
+                          top: `${item.y}px`,
+                          width: `${item.width}px`,
+                          height: `${item.height}px`,
+                          backgroundColor:
+                            showUtilization && item.utilization
+                              ? getUtilizationColor(item.utilization)
+                              : "white",
+                          borderColor: getStatusColor(item.status),
+                          opacity: item.status === "inactive" ? 0.6 : 1,
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedItem(
+                            item.id === selectedItem ? null : item.id
+                          );
+                        }}
+                      >
+                        <div className="text-xs font-medium text-center p-1 pointer-events-none">
+                          {item.name}
                         </div>
-                      )}
+                        {item.utilization && showUtilization && (
+                          <div className="text-xs text-center p-1 pointer-events-none">
+                            {item.utilization}%
+                          </div>
+                        )}
 
-                      {item.type === "receiving" && (
-                        <IconPackageImport className="h-5 w-5 text-gray-700" />
-                      )}
-                      {item.type === "shipping" && (
-                        <IconPackageExport className="h-5 w-5 text-gray-700" />
-                      )}
-                    </div>
-                  ))}
-                </div>
+                        {item.type === "receiving" && (
+                          <IconPackageImport className="h-5 w-5 text-gray-700" />
+                        )}
+                        {item.type === "shipping" && (
+                          <IconPackageExport className="h-5 w-5 text-gray-700" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="absolute bottom-4 left-4 flex gap-2">
@@ -436,6 +364,7 @@ export function WarehouseFloorPlan() {
                   size="sm"
                   variant="outline"
                   onClick={() => setAddZoneOpen(true)}
+                  disabled={!selectedWarehouse}
                 >
                   <IconPlus className="h-4 w-4 mr-1" />
                   Add Zone
@@ -444,6 +373,7 @@ export function WarehouseFloorPlan() {
                   size="sm"
                   variant="outline"
                   onClick={() => setAddRackOpen(true)}
+                  disabled={!selectedWarehouse}
                 >
                   <IconPlus className="h-4 w-4 mr-1" />
                   Add Rack
@@ -472,18 +402,21 @@ export function WarehouseFloorPlan() {
                       <span className="text-sm text-muted-foreground">
                         Status:
                       </span>
-                      <Badge
-                        variant={
-                          selectedItemDetails.status === "active"
-                            ? "success"
-                            : selectedItemDetails.status === "maintenance"
-                            ? "warning"
-                            : "secondary"
-                        }
-                        className="capitalize"
+                      <Select
+                        value={selectedItemDetails.status}
+                        onValueChange={handleStatusChange}
                       >
-                        {selectedItemDetails.status}
-                      </Badge>
+                        <SelectTrigger className="w-32 h-7">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="maintenance">
+                            Maintenance
+                          </SelectItem>
+                          <SelectItem value="inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                     {selectedItemDetails.utilization !== undefined && (
                       <div className="flex justify-between items-center">
@@ -495,8 +428,8 @@ export function WarehouseFloorPlan() {
                             selectedItemDetails.utilization > 90
                               ? "error"
                               : selectedItemDetails.utilization > 75
-                              ? "warning"
-                              : "success"
+                              ? "default"
+                              : "secondary"
                           }
                         >
                           {selectedItemDetails.utilization}%
@@ -513,6 +446,10 @@ export function WarehouseFloorPlan() {
                         variant="outline"
                         className="w-full"
                         onClick={handleEditEquipment}
+                        disabled={
+                          selectedItemDetails.type !== "rack" &&
+                          selectedItemDetails.type !== "zone"
+                        }
                       >
                         Edit
                       </Button>
@@ -691,7 +628,9 @@ export function WarehouseFloorPlan() {
             <Button variant="outline" onClick={() => setAddZoneOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAddZone}>Add Zone</Button>
+            <Button onClick={handleAddZone} disabled={isCreatingFloorPlanItem}>
+              {isCreatingFloorPlanItem ? "Adding..." : "Add Zone"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -753,7 +692,9 @@ export function WarehouseFloorPlan() {
             <Button variant="outline" onClick={() => setAddRackOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleAddRack}>Add Rack</Button>
+            <Button onClick={handleAddRack} disabled={isCreatingFloorPlanItem}>
+              {isCreatingFloorPlanItem ? "Adding..." : "Add Rack"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -764,7 +705,8 @@ export function WarehouseFloorPlan() {
           <div className="max-w-lg w-full">
             <EquipmentEditor
               itemId={selectedItemDetails.id}
-              itemType={selectedItemDetails.type}
+              itemType={selectedItemDetails.type as EquipmentType}
+              warehouseId={selectedWarehouse}
               onClose={() => setShowEquipmentEditor(false)}
             />
           </div>

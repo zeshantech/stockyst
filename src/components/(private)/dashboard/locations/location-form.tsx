@@ -10,8 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Selector } from "@/components/ui/selector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LocationPickerMap } from "@/components/(private)/dashboard/locations/location-picker-map";
+import dynamic from "next/dynamic";
 import { ILocation } from "@/types/location";
+
+// Dynamically import the map component with ssr disabled
+const LocationPickerMap = dynamic(
+  () => import("./location-picker-map").then((mod) => mod.LocationPickerMap),
+  { ssr: false }
+);
 
 // Zod schema for form validation
 const locationFormSchema = z.object({

@@ -189,9 +189,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                 </div>
               </div>
             </div>
-            {mail.date && (
+            {mail.createdAt && (
               <div className="ml-auto text-xs text-muted-foreground">
-                {format(new Date(mail.date), "PPpp")}
+                {format(new Date(mail.createdAt), "PPpp")}
               </div>
             )}
           </div>

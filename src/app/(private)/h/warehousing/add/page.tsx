@@ -23,11 +23,18 @@ export default function AddWarehousePage() {
       utilization: Number(data.utilization),
     };
 
-    createWarehouse(formattedData, {
-      onSuccess: () => {
-        router.push("/h/warehousing");
+    // Ensure type is provided as it's required in the IWarehouse interface
+    createWarehouse(
+      {
+        ...formattedData,
+        type: formattedData.type || "standard", // Provide a default value if type is missing
       },
-    });
+      {
+        onSuccess: () => {
+          router.push("/h/warehousing");
+        },
+      }
+    );
   };
 
   return (

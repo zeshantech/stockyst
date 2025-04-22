@@ -1,6 +1,7 @@
+"use client";
+
 import React from "react";
 
-import { Metadata } from "next";
 import BatchTrackingTable from "@/components/(private)/dashboard/stock/batch-tracking/batch-tracking-table";
 import BatchTrackingFilters from "@/components/(private)/dashboard/stock/batch-tracking/batch-tracking-filters";
 import { Page } from "@/components/(private)/dashboard/page";
@@ -9,11 +10,6 @@ import { Button } from "@/components/ui/button";
 import { DownloadIcon, PlusIcon, UploadIcon } from "lucide-react";
 import BatchTrackingForm from "@/components/(private)/dashboard/stock/batch-tracking/batch-tracking-form";
 import { DialogComponent } from "@/components/ui/dialog";
-
-export const metadata: Metadata = {
-  title: "Batch Tracking | Stockyst",
-  description: "Track stock items by batch number",
-};
 
 export default function BatchTrackingPage() {
   return (

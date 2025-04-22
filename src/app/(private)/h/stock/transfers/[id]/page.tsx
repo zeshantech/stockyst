@@ -188,7 +188,7 @@ export default function ViewStockTransferPage() {
       case "draft":
         return <Badge variant="outline">Draft</Badge>;
       case "cancelled":
-        return <Badge variant="destructive">Cancelled</Badge>;
+        return <Badge variant="error">Cancelled</Badge>;
       default:
         return <Badge>{status}</Badge>;
     }
@@ -329,7 +329,7 @@ export default function ViewStockTransferPage() {
           </CardContent>
           <CardFooter>
             <Button
-              variant="destructive"
+              color="error"
               size="sm"
               className="ml-auto"
               onClick={handleDelete}

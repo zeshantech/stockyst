@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import * as z from "zod";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -95,9 +95,8 @@ export function ProductForm({
 }: ProductFormProps) {
   const { data: categories = [] } = useProductCategories();
   const { data: suppliers = [] } = useProductSuppliers();
-
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
+    resolver: zodResolver(productFormSchema) as Resolver<ProductFormValues>,
     defaultValues: { ...defaultValues, ...initialValues },
   });
 

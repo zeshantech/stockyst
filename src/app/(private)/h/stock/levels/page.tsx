@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { PageHeader } from "@/components/(private)/dashboard/page-header";
 import { Button } from "@/components/ui/button";
 import { Page } from "@/components/(private)/dashboard/page";
@@ -8,6 +8,10 @@ import { PlusIcon, SettingsIcon } from "lucide-react";
 import { StockLevelsTable } from "@/components/(private)/dashboard/stock/levels/stock-levels-table";
 import { StockLevelsStats } from "@/components/(private)/dashboard/stock/levels/stock-levels-stats";
 import { StockLevelDialog } from "@/components/(private)/dashboard/stock/levels/stock-level-dialog";
+
+function StockLevelsTableLoading() {
+  return <div className="mt-6 p-4 text-center">Loading stock levels...</div>;
+}
 
 export default function StockLevelsPage() {
   return (
@@ -33,7 +37,9 @@ export default function StockLevelsPage() {
       />
 
       <StockLevelsStats />
-      <StockLevelsTable />
+      <Suspense fallback={<StockLevelsTableLoading />}>
+        <StockLevelsTable />
+      </Suspense>
     </Page>
   );
 }

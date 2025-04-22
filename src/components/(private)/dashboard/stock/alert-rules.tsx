@@ -37,102 +37,21 @@ import {
 import { toast } from "sonner";
 import { TestAlertRuleDialog } from "./test-alert-rule-dialog";
 import { Label } from "@/components/ui/label";
-
-// Sample alert rule data
-interface AlertRule {
-  id: string;
-  name: string;
-  description: string;
-  type: "low-stock" | "out-of-stock" | "expiry" | "price-change";
-  conditions: {
-    field: string;
-    operator: string;
-    value: string | number;
-  }[];
-  severity: "low" | "medium" | "high";
-  actions: {
-    sendEmail: boolean;
-    sendNotification: boolean;
-    createTask: boolean;
-  };
-  isActive: boolean;
-}
-
-const sampleAlertRules: AlertRule[] = [
-  {
-    id: "1",
-    name: "Low Stock Alert",
-    description: "Alert when stock falls below reorder point",
-    type: "low-stock",
-    conditions: [
-      {
-        field: "quantity",
-        operator: "<=",
-        value: "reorderPoint",
-      },
-    ],
-    severity: "medium",
-    actions: {
-      sendEmail: true,
-      sendNotification: true,
-      createTask: false,
-    },
-    isActive: true,
-  },
-  {
-    id: "2",
-    name: "Out of Stock Alert",
-    description: "Alert when stock reaches zero",
-    type: "out-of-stock",
-    conditions: [
-      {
-        field: "quantity",
-        operator: "==",
-        value: 0,
-      },
-    ],
-    severity: "high",
-    actions: {
-      sendEmail: true,
-      sendNotification: true,
-      createTask: true,
-    },
-    isActive: true,
-  },
-  {
-    id: "3",
-    name: "Expiry Alert",
-    description: "Alert when products are nearing expiry",
-    type: "expiry",
-    conditions: [
-      {
-        field: "daysToExpiry",
-        operator: "<=",
-        value: 30,
-      },
-    ],
-    severity: "medium",
-    actions: {
-      sendEmail: true,
-      sendNotification: true,
-      createTask: false,
-    },
-    isActive: true,
-  },
-];
+import { AlertRule } from "@/types/stock-alerts";
+import { useStockAlerts } from "@/hooks/use-stock-alerts";
 
 // Define the form schema
 const alertRuleFormSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   description: z.string().optional(),
-  type: z.enum(["low-stock", "out-of-stock", "expiry", "price-change"]),
-  conditionField: z.string(),
-  conditionOperator: z.string(),
+  conditionType: z.enum(["stock_level", "stock_value", "stock_age", "custom"]),
+  conditionOperator: z.enum(["less_than", "greater_than", "equals", "between"]),
   conditionValue: z.string(),
+  productsType: z.enum(["all", "category", "specific"]),
+  productIds: z.array(z.string()).optional(),
+  categoryIds: z.array(z.string()).optional(),
+  notificationChannels: z.array(z.string()),
   severity: z.enum(["low", "medium", "high"]),
-  sendEmail: z.boolean(),
-  sendNotification: z.boolean(),
-  createTask: z.boolean(),
   isActive: z.boolean(),
 });
 
@@ -140,8 +59,20 @@ const alertRuleFormSchema = z.object({
 type AlertRuleFormValues = z.infer<typeof alertRuleFormSchema>;
 
 export function AlertRules() {
-  const [alertRules, setAlertRules] =
-    React.useState<AlertRule[]>(sampleAlertRules);
+  const {
+    alertRules = [],
+    isLoadingRules,
+    createAlertRule,
+    updateAlertRule,
+    deleteAlertRule,
+    toggleAlertRuleStatus,
+    testAlertRule,
+    isCreatingAlertRule,
+    isUpdatingAlertRule,
+    isDeletingAlertRule,
+    isTestingAlertRule,
+  } = useStockAlerts();
+
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [isTestDialogOpen, setIsTestDialogOpen] = React.useState(false);
   const [editingRule, setEditingRule] = React.useState<AlertRule | null>(null);
@@ -162,14 +93,14 @@ export function AlertRules() {
     defaultValues: {
       name: "",
       description: "",
-      type: "low-stock",
-      conditionField: "quantity",
-      conditionOperator: "<=",
-      conditionValue: "reorderPoint",
+      conditionType: "stock_level",
+      conditionOperator: "less_than",
+      conditionValue: "10",
+      productsType: "all",
+      productIds: [],
+      categoryIds: [],
+      notificationChannels: ["browser"],
       severity: "medium",
-      sendEmail: false,
-      sendNotification: true,
-      createTask: false,
       isActive: true,
     },
   });
@@ -179,14 +110,14 @@ export function AlertRules() {
     reset({
       name: "",
       description: "",
-      type: "low-stock",
-      conditionField: "quantity",
-      conditionOperator: "<=",
-      conditionValue: "reorderPoint",
+      conditionType: "stock_level",
+      conditionOperator: "less_than",
+      conditionValue: "10",
+      productsType: "all",
+      productIds: [],
+      categoryIds: [],
+      notificationChannels: ["browser"],
       severity: "medium",
-      sendEmail: false,
-      sendNotification: true,
-      createTask: false,
       isActive: true,
     });
     setEditingRule(null);
@@ -197,15 +128,15 @@ export function AlertRules() {
   const handleEditRule = (rule: AlertRule) => {
     reset({
       name: rule.name,
-      description: rule.description,
-      type: rule.type,
-      conditionField: rule.conditions[0].field,
-      conditionOperator: rule.conditions[0].operator,
-      conditionValue: rule.conditions[0].value.toString(),
-      severity: rule.severity,
-      sendEmail: rule.actions.sendEmail,
-      sendNotification: rule.actions.sendNotification,
-      createTask: rule.actions.createTask,
+      description: rule.description || "",
+      conditionType: rule.condition.type,
+      conditionOperator: rule.condition.operator,
+      conditionValue: rule.condition.value.toString(),
+      productsType: rule.products.type,
+      productIds: rule.products.ids || [],
+      categoryIds: rule.products.categoryIds || [],
+      notificationChannels: rule.notificationChannels,
+      severity: "medium", // Placeholder since the AlertRule type doesn't have severity
       isActive: rule.isActive,
     });
     setEditingRule(rule);
@@ -214,37 +145,35 @@ export function AlertRules() {
 
   // Handle form submission
   const onSubmit = (data: AlertRuleFormValues) => {
-    const newRule: AlertRule = {
-      id: editingRule ? editingRule.id : `rule-${Date.now()}`,
+    const ruleData: Omit<AlertRule, "id" | "createdAt"> = {
       name: data.name,
       description: data.description || "",
-      type: data.type,
-      conditions: [
-        {
-          field: data.conditionField,
-          operator: data.conditionOperator,
-          value: data.conditionValue,
-        },
-      ],
-      severity: data.severity,
-      actions: {
-        sendEmail: data.sendEmail,
-        sendNotification: data.sendNotification,
-        createTask: data.createTask,
+      condition: {
+        type: data.conditionType,
+        operator: data.conditionOperator,
+        value: Number(data.conditionValue),
       },
+      products: {
+        type: data.productsType,
+        ...(data.productsType === "specific" ? { ids: data.productIds } : {}),
+        ...(data.productsType === "category"
+          ? { categoryIds: data.categoryIds }
+          : {}),
+      },
+      notificationChannels: data.notificationChannels as any[],
       isActive: data.isActive,
     };
 
     if (editingRule) {
       // Update existing rule
-      setAlertRules(
-        alertRules.map((rule) => (rule.id === editingRule.id ? newRule : rule))
-      );
-      toast.success("Alert rule updated successfully");
+      updateAlertRule({
+        ...ruleData,
+        id: editingRule.id,
+        createdAt: editingRule.createdAt,
+      });
     } else {
       // Add new rule
-      setAlertRules([...alertRules, newRule]);
-      toast.success("Alert rule created successfully");
+      createAlertRule(ruleData);
     }
 
     setIsDialogOpen(false);
@@ -252,57 +181,61 @@ export function AlertRules() {
 
   // Handle rule deletion
   const handleDeleteRule = (ruleId: string) => {
-    setAlertRules(alertRules.filter((rule) => rule.id !== ruleId));
-    toast.success("Alert rule deleted successfully");
+    deleteAlertRule(ruleId);
   };
 
   // Handle rule status toggle
-  const handleToggleActive = (ruleId: string) => {
-    setAlertRules(
-      alertRules.map((rule) =>
-        rule.id === ruleId ? { ...rule, isActive: !rule.isActive } : rule
-      )
-    );
+  const handleToggleActive = (ruleId: string, currentStatus: boolean) => {
+    toggleAlertRuleStatus({ id: ruleId, isActive: !currentStatus });
   };
 
   // Open the test dialog for a rule
   const handleTestRule = (rule: AlertRule) => {
     setSelectedRule(rule);
     setIsTestDialogOpen(true);
+    testAlertRule(rule.id);
   };
 
-  // Render severity badge
-  const renderSeverityBadge = (severity: AlertRule["severity"]) => {
-    switch (severity) {
-      case "low":
-        return <Badge variant="outline">Low</Badge>;
-      case "medium":
-        return <Badge variant="warning">Medium</Badge>;
-      case "high":
-        return <Badge variant="error">High</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
+  // Render severity badge - using a placeholder implementation since the AlertRule type doesn't have severity
+  const renderSeverityBadge = (rule: AlertRule) => {
+    // This is a placeholder implementation based on rule condition
+    if (
+      rule.condition.type === "stock_level" &&
+      rule.condition.operator === "equals" &&
+      rule.condition.value === 0
+    ) {
+      return <Badge variant="error">High</Badge>;
+    } else if (
+      rule.condition.type === "stock_level" &&
+      rule.condition.operator === "less_than"
+    ) {
+      return <Badge variant="warning">Medium</Badge>;
+    } else {
+      return <Badge variant="outline">Low</Badge>;
     }
   };
 
   // Render alert type text
-  const getAlertTypeText = (type: AlertRule["type"]) => {
-    switch (type) {
-      case "low-stock":
-        return "Low Stock";
-      case "out-of-stock":
-        return "Out of Stock";
-      case "expiry":
-        return "Expiry";
-      case "price-change":
-        return "Price Change";
+  const getAlertTypeText = (rule: AlertRule) => {
+    switch (rule.condition.type) {
+      case "stock_level":
+        return rule.condition.operator === "equals" &&
+          rule.condition.value === 0
+          ? "Out of Stock"
+          : "Low Stock";
+      case "stock_age":
+        return "Aging Inventory";
+      case "stock_value":
+        return "Stock Value";
+      case "custom":
+        return "Custom";
       default:
         return "Unknown";
     }
   };
 
-  // Watch the conditionValue field to determine if it's "reorderPoint"
-  const conditionValue = watch("conditionValue");
+  // Watch the form values for conditional rendering
+  const productsType = watch("productsType");
 
   return (
     <>
@@ -314,7 +247,7 @@ export function AlertRules() {
               Configure rules to trigger stock alerts
             </CardDescription>
           </div>
-          <Button onClick={handleAddRule}>
+          <Button onClick={handleAddRule} disabled={isCreatingAlertRule}>
             <IconPlus className="mr-2 h-4 w-4" />
             Add Rule
           </Button>
@@ -328,13 +261,23 @@ export function AlertRules() {
                   <TableHead>Type</TableHead>
                   <TableHead>Condition</TableHead>
                   <TableHead>Severity</TableHead>
-                  <TableHead>Actions</TableHead>
+                  <TableHead>Notifications</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Manage</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {alertRules.length === 0 ? (
+                {isLoadingRules ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-10">
+                      <div className="flex flex-col items-center justify-center">
+                        <span className="mt-2 text-muted-foreground">
+                          Loading alert rules...
+                        </span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : alertRules.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-10">
                       <div className="flex flex-col items-center justify-center">
@@ -365,49 +308,36 @@ export function AlertRules() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{getAlertTypeText(rule.type)}</TableCell>
+                      <TableCell>{getAlertTypeText(rule)}</TableCell>
                       <TableCell>
                         <div className="text-sm">
-                          {rule.conditions.map((condition, index) => (
-                            <div key={index}>
-                              {condition.field}{" "}
-                              <span className="font-medium">
-                                {condition.operator}
-                              </span>{" "}
-                              {condition.value}
+                          <div>
+                            {rule.condition.type}{" "}
+                            <span className="font-medium">
+                              {rule.condition.operator}
+                            </span>{" "}
+                            {rule.condition.value}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{renderSeverityBadge(rule)}</TableCell>
+                      <TableCell>
+                        <div className="text-sm space-y-1">
+                          {rule.notificationChannels.map((channel, idx) => (
+                            <div key={idx} className="flex items-center">
+                              <IconCheck className="h-3 w-3 mr-1 text-green-500" />
+                              {channel}
                             </div>
                           ))}
                         </div>
                       </TableCell>
                       <TableCell>
-                        {renderSeverityBadge(rule.severity)}
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm space-y-1">
-                          {rule.actions.sendEmail && (
-                            <div className="flex items-center">
-                              <IconCheck className="h-3 w-3 mr-1 text-green-500" />
-                              Email
-                            </div>
-                          )}
-                          {rule.actions.sendNotification && (
-                            <div className="flex items-center">
-                              <IconCheck className="h-3 w-3 mr-1 text-green-500" />
-                              Notification
-                            </div>
-                          )}
-                          {rule.actions.createTask && (
-                            <div className="flex items-center">
-                              <IconCheck className="h-3 w-3 mr-1 text-green-500" />
-                              Task
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
                         <Switch
                           checked={rule.isActive}
-                          onCheckedChange={() => handleToggleActive(rule.id)}
+                          onCheckedChange={() =>
+                            handleToggleActive(rule.id, rule.isActive)
+                          }
+                          disabled={isDeletingAlertRule}
                         />
                       </TableCell>
                       <TableCell className="text-right">
@@ -417,6 +347,7 @@ export function AlertRules() {
                             size="icon"
                             onClick={() => handleTestRule(rule)}
                             title="Test Rule"
+                            disabled={isTestingAlertRule}
                           >
                             <IconBell className="h-4 w-4" />
                           </Button>
@@ -425,6 +356,7 @@ export function AlertRules() {
                             size="icon"
                             onClick={() => handleEditRule(rule)}
                             title="Edit Rule"
+                            disabled={isUpdatingAlertRule}
                           >
                             <IconEdit className="h-4 w-4" />
                           </Button>
@@ -433,6 +365,7 @@ export function AlertRules() {
                             size="icon"
                             onClick={() => handleDeleteRule(rule.id)}
                             title="Delete Rule"
+                            disabled={isDeletingAlertRule}
                           >
                             <IconTrash className="h-4 w-4" />
                           </Button>
@@ -455,7 +388,11 @@ export function AlertRules() {
         title={editingRule ? "Edit Alert Rule" : "Create Alert Rule"}
         description="Configure when and how alerts should be triggered"
         footer={
-          <Button type="submit" form="alert-rule-form">
+          <Button
+            type="submit"
+            form="alert-rule-form"
+            disabled={isCreatingAlertRule || isUpdatingAlertRule}
+          >
             {editingRule ? "Update Rule" : "Create Rule"}
           </Button>
         }
@@ -488,16 +425,16 @@ export function AlertRules() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Selector
-                value={watch("type")}
-                onChange={(value) => setValue("type", value as any)}
+                value={watch("conditionType")}
+                onChange={(value) => setValue("conditionType", value as any)}
                 options={[
-                  { value: "low-stock", label: "Low Stock" },
-                  { value: "out-of-stock", label: "Out of Stock" },
-                  { value: "expiry", label: "Expiry" },
-                  { value: "price-change", label: "Price Change" },
+                  { value: "stock_level", label: "Stock Level" },
+                  { value: "stock_age", label: "Stock Age" },
+                  { value: "stock_value", label: "Stock Value" },
+                  { value: "custom", label: "Custom" },
                 ]}
                 label="Alert Type"
-                error={errors.type?.message}
+                error={errors.conditionType?.message}
                 info="Select the type of alert rule to create"
               />
             </div>
@@ -523,29 +460,15 @@ export function AlertRules() {
             <div className="grid grid-cols-3 gap-2">
               <div className="space-y-2">
                 <Selector
-                  value={watch("conditionField")}
-                  onChange={(value) => setValue("conditionField", value)}
-                  options={[
-                    { value: "quantity", label: "Quantity" },
-                    { value: "price", label: "Price" },
-                    { value: "daysToExpiry", label: "Days to Expiry" },
-                  ]}
-                  label="Condition Field"
-                  error={errors.conditionField?.message}
-                  info="Which field to check in the condition"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Selector
                   value={watch("conditionOperator")}
-                  onChange={(value) => setValue("conditionOperator", value)}
+                  onChange={(value) =>
+                    setValue("conditionOperator", value as any)
+                  }
                   options={[
-                    { value: "<", label: "Less than" },
-                    { value: "<=", label: "Less than or equal" },
-                    { value: "==", label: "Equal to" },
-                    { value: ">", label: "Greater than" },
-                    { value: ">=", label: "Greater than or equal" },
+                    { value: "less_than", label: "Less than" },
+                    { value: "equals", label: "Equal to" },
+                    { value: "greater_than", label: "Greater than" },
+                    { value: "between", label: "Between" },
                   ]}
                   label="Condition Operator"
                   error={errors.conditionOperator?.message}
@@ -554,81 +477,134 @@ export function AlertRules() {
               </div>
 
               <div className="space-y-2">
-                {conditionValue === "reorderPoint" ? (
-                  <Selector
-                    value={watch("conditionValue")}
-                    onChange={(value) => setValue("conditionValue", value)}
-                    options={[
-                      { value: "reorderPoint", label: "Reorder Point" },
-                      { value: "minimum", label: "Minimum" },
-                    ]}
-                    label="Condition Value"
-                    error={errors.conditionValue?.message}
-                    info="Value to compare against"
-                  />
-                ) : (
-                  <Input
-                    id="conditionValue"
-                    type="text"
-                    placeholder="Value"
-                    label="Condition Value"
-                    error={errors.conditionValue?.message}
-                    info="Value to compare against"
-                    {...register("conditionValue")}
-                  />
-                )}
+                <Input
+                  id="conditionValue"
+                  type="text"
+                  placeholder="Value"
+                  label="Condition Value"
+                  error={errors.conditionValue?.message}
+                  info="Value to compare against"
+                  {...register("conditionValue")}
+                />
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <Label className="font-medium">Actions</Label>
+            <Label className="font-medium">Product Selection</Label>
+            <div className="space-y-2">
+              <Selector
+                value={watch("productsType")}
+                onChange={(value) => setValue("productsType", value as any)}
+                options={[
+                  { value: "all", label: "All Products" },
+                  { value: "category", label: "Product Categories" },
+                  { value: "specific", label: "Specific Products" },
+                ]}
+                label="Product Selection Type"
+                error={errors.productsType?.message}
+                info="Which products should this rule apply to"
+              />
+            </div>
+
+            {productsType === "category" && (
+              <div className="mt-2 border rounded-md p-3">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Select product categories (placeholder - would be a
+                  multi-select component)
+                </p>
+              </div>
+            )}
+
+            {productsType === "specific" && (
+              <div className="mt-2 border rounded-md p-3">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Select specific products (placeholder - would be a product
+                  selector)
+                </p>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <Label className="font-medium">Notification Channels</Label>
             <div className="space-y-4">
               <div className="flex flex-row items-center justify-between rounded-lg border p-3">
                 <div className="space-y-0.5">
-                  <label htmlFor="sendEmail" className="text-base font-medium">
-                    Send Email
+                  <label
+                    htmlFor="emailNotification"
+                    className="text-base font-medium"
+                  >
+                    Email
                   </label>
                   <p className="text-sm text-muted-foreground">
-                    Send email notifications to configured recipients
+                    Send email notifications
                   </p>
                 </div>
                 <Switch
-                  id="sendEmail"
-                  checked={watch("sendEmail")}
-                  onCheckedChange={(checked) => setValue("sendEmail", checked)}
+                  id="emailNotification"
+                  checked={watch("notificationChannels").includes("email")}
+                  onCheckedChange={(checked) => {
+                    const current = watch("notificationChannels");
+                    if (checked) {
+                      setValue("notificationChannels", [...current, "email"]);
+                    } else {
+                      setValue(
+                        "notificationChannels",
+                        current.filter((c) => c !== "email")
+                      );
+                    }
+                  }}
                 />
               </div>
 
               <div className="flex flex-row items-center justify-between rounded-lg border p-3">
                 <div className="space-y-0.5">
-                  <Label htmlFor="sendNotification" className="font-medium">
-                    Send Notification
+                  <Label htmlFor="browserNotification" className="font-medium">
+                    Browser Notification
                   </Label>
                   <p className="text-sm text-muted-foreground">
                     Display in-app notifications
                   </p>
                 </div>
                 <Switch
-                  id="sendNotification"
-                  checked={watch("sendNotification")}
-                  onCheckedChange={(checked) =>
-                    setValue("sendNotification", checked)
-                  }
+                  id="browserNotification"
+                  checked={watch("notificationChannels").includes("browser")}
+                  onCheckedChange={(checked) => {
+                    const current = watch("notificationChannels");
+                    if (checked) {
+                      setValue("notificationChannels", [...current, "browser"]);
+                    } else {
+                      setValue(
+                        "notificationChannels",
+                        current.filter((c) => c !== "browser")
+                      );
+                    }
+                  }}
                 />
               </div>
 
               <div className="flex flex-row items-center justify-between rounded-lg border p-3">
                 <div className="space-y-0.5">
-                  <Label htmlFor="createTask">Create Task</Label>
+                  <Label htmlFor="slackNotification">Slack</Label>
                   <p className="text-sm text-muted-foreground">
-                    Create a task for staff to follow up
+                    Send notifications to Slack
                   </p>
                 </div>
                 <Switch
-                  id="createTask"
-                  checked={watch("createTask")}
-                  onCheckedChange={(checked) => setValue("createTask", checked)}
+                  id="slackNotification"
+                  checked={watch("notificationChannels").includes("slack")}
+                  onCheckedChange={(checked) => {
+                    const current = watch("notificationChannels");
+                    if (checked) {
+                      setValue("notificationChannels", [...current, "slack"]);
+                    } else {
+                      setValue(
+                        "notificationChannels",
+                        current.filter((c) => c !== "slack")
+                      );
+                    }
+                  }}
                 />
               </div>
             </div>

@@ -15,8 +15,8 @@ const mockStockData: IStock[] = [
     totalValue: 550,
     status: "in-stock",
     lastRestocked: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: "2",
@@ -30,8 +30,8 @@ const mockStockData: IStock[] = [
     totalValue: 600,
     status: "in-stock",
     lastRestocked: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: "3",
@@ -45,8 +45,8 @@ const mockStockData: IStock[] = [
     totalValue: 137.5,
     status: "in-stock",
     lastRestocked: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: "4",
@@ -60,8 +60,8 @@ const mockStockData: IStock[] = [
     totalValue: 420,
     status: "in-stock",
     lastRestocked: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 

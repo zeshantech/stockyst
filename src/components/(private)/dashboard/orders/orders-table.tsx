@@ -119,8 +119,8 @@ export function OrdersTable({ data }: OrdersTableProps) {
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            !!table.getIsAllPageRowsSelected() ||
+            !!(table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
@@ -469,7 +469,7 @@ export function OrdersTable({ data }: OrdersTableProps) {
           {table.getFilteredSelectedRowModel().rows.length > 0 && (
             <Button
               color="error"
-              size="sm"
+              variant="outline"
               onClick={() => setBulkDeleteDialogOpen(true)}
             >
               <IconTrash />
@@ -499,27 +499,13 @@ export function OrdersTable({ data }: OrdersTableProps) {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Sheet
-            open={bulkUploadSheetOpen}
-            onOpenChange={setBulkUploadSheetOpen}
-          >
-            <SheetTrigger asChild>
-              <Button variant="outline" size="sm">
-                <IconUpload />
-                Bulk Upload
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle>Bulk Upload Orders</SheetTitle>
-                <SheetDescription>
-                  Upload multiple orders at once using CSV, Excel, or JSON
-                  files.
-                </SheetDescription>
-              </SheetHeader>
-              <BulkUpload onUpload={bulkUploadOrders.mutateAsync} />
-            </SheetContent>
-          </Sheet>
+
+          <BulkUpload
+            title="Orders"
+            description="Upload multiple orders at once using CSV, Excel, or JSON files."
+            onUpload={(formData) => bulkUploadOrders.mutateAsync({ formData })}
+            onExport={handleExport}
+          />
         </div>
       </div>
       <div className="rounded-md border">

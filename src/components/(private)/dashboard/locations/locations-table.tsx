@@ -102,8 +102,8 @@ export function LocationsTable({ data }: LocationsTableProps) {
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            !!table.getIsAllPageRowsSelected() ||
+            !!(table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
@@ -390,7 +390,9 @@ export function LocationsTable({ data }: LocationsTableProps) {
           <BulkUpload
             title="Locations"
             description="Upload multiple locations at once using CSV, Excel, or JSON files."
-            onUpload={bulkUploadLocations.mutateAsync}
+            onUpload={(formData) =>
+              bulkUploadLocations.mutateAsync({ formData })
+            }
             onExport={handleExport}
           />
         </div>

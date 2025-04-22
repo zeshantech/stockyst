@@ -17,6 +17,7 @@ export interface IWarehouse extends ISchema {
   phone: string;
   email: string;
   isDefault: boolean;
+  type: "warehouse" | "distribution-center" | "store" | "fulfillment" | string;
 }
 
 // Warehouse location interface
@@ -112,6 +113,59 @@ export interface IPutawayItem extends ISchema {
   notes?: string;
 }
 
+// Equipment type definitions
+export type EquipmentType = "rack" | "zone" | "shelf" | "bin";
+
+// For rack configuration
+export interface RackConfiguration {
+  shelves: number;
+  adjustable: boolean;
+  reinforced: boolean;
+}
+
+// For zone configuration
+export interface ZoneConfiguration {
+  hasRacks: boolean;
+  hasShelves: boolean;
+  hazardous: boolean;
+}
+
+// Equipment interface
+export interface IEquipment extends ISchema {
+  warehouseId: string;
+  type: EquipmentType;
+  name: string;
+  dimensions: {
+    width: number;
+    depth: number;
+    height: number;
+  };
+  capacity: {
+    weight: number;
+    items: number;
+  };
+  configuration: RackConfiguration | ZoneConfiguration;
+  status: "active" | "inactive" | "maintenance";
+}
+
+// Equipment form values
+export interface EquipmentFormValues {
+  warehouseId: string;
+  type: EquipmentType;
+  name: string;
+  dimensions: {
+    width: number;
+    depth: number;
+    height: number;
+  };
+  capacity: {
+    weight: number;
+    items: number;
+  };
+  configuration: RackConfiguration | ZoneConfiguration;
+  status?: "active" | "inactive" | "maintenance";
+}
+
 // Form values for Warehouse
 export interface WarehouseFormValues {
   name: string;
@@ -129,6 +183,7 @@ export interface WarehouseFormValues {
   phone: string;
   email: string;
   isDefault: boolean;
+  type?: IWarehouse["type"];
 }
 
 // Form values for Location

@@ -25,8 +25,13 @@ import {
 import { Progress } from "@/components/ui/progress";
 
 export function WarehouseStatsGrid() {
-  const { warehouses, locations, isLoadingWarehouses, isLoadingLocations } =
-    useWarehousing();
+  const {
+    warehouses,
+    locations,
+    isLoadingWarehouses,
+    isLoadingLocations,
+    statistics,
+  } = useWarehousing();
 
   if (isLoadingWarehouses || isLoadingLocations) {
     return (
@@ -60,7 +65,7 @@ export function WarehouseStatsGrid() {
 
   const totalLocations = locations.length;
 
-  // Count types of warehouses (assuming type property exists)
+  // Count types of warehouses
   const warehousesByType = warehouses.reduce((acc, warehouse) => {
     const type = warehouse.type || "unknown";
     acc[type] = (acc[type] || 0) + 1;
@@ -158,16 +163,27 @@ export function WarehouseStatsGrid() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-2">
-              <div className="text-3xl font-bold">124,578</div>
+              <div className="text-3xl font-bold">
+                {statistics?.totalUtilization || 124578}
+              </div>
               <div className="flex items-center text-xs text-muted-foreground">
-                <span>Capacity: 250,000 units</span>
+                <span>
+                  Capacity: {statistics?.totalCapacity || 250000} units
+                </span>
               </div>
               <div className="flex flex-col gap-1">
                 <div className="flex justify-between text-xs">
                   <span>Utilization</span>
-                  <span className="text-amber-500 font-medium">49%</span>
+                  <span className="text-amber-500 font-medium">
+                    {statistics?.utilizationRate
+                      ? `${Math.round(statistics.utilizationRate)}%`
+                      : "49%"}
+                  </span>
                 </div>
-                <Progress value={49} className="text-amber-500" />
+                <Progress
+                  value={statistics?.utilizationRate || 49}
+                  className="text-amber-500"
+                />
               </div>
             </div>
           </CardContent>
@@ -234,7 +250,11 @@ export function WarehouseStatsGrid() {
 
                 <div className="flex flex-col gap-1">
                   <span className="text-sm font-medium">Avg. Utilization</span>
-                  <span className="text-2xl font-bold">49%</span>
+                  <span className="text-2xl font-bold">
+                    {statistics?.utilizationRate
+                      ? `${Math.round(statistics.utilizationRate)}%`
+                      : "49%"}
+                  </span>
                   <span className="text-xs text-muted-foreground">
                     Space efficiency rate
                   </span>
@@ -250,7 +270,9 @@ export function WarehouseStatsGrid() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="flex flex-col gap-1">
                   <span className="text-sm font-medium">Pending Receipts</span>
-                  <span className="text-2xl font-bold">48</span>
+                  <span className="text-2xl font-bold">
+                    {statistics?.pendingReceiving || 48}
+                  </span>
                   <span className="text-xs text-muted-foreground">
                     Awaiting delivery
                   </span>
@@ -290,7 +312,9 @@ export function WarehouseStatsGrid() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="flex flex-col gap-1">
                   <span className="text-sm font-medium">Active Shipments</span>
-                  <span className="text-2xl font-bold">72</span>
+                  <span className="text-2xl font-bold">
+                    {statistics?.pendingTransfers || 72}
+                  </span>
                   <span className="text-xs text-muted-foreground">
                     In progress
                   </span>

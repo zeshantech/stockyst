@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { IOrder } from "@/types/order";
+import { IOrder, IAddress } from "@/types/order";
 
 // Sample data - replace with actual API call
 const sampleOrders: IOrder[] = [
@@ -33,11 +33,23 @@ const sampleOrders: IOrder[] = [
     total: 284.97,
     status: "pending",
     paymentStatus: "paid",
-    shippingAddress: "123 Main St, City, Country",
-    billingAddress: "123 Main St, City, Country",
+    shippingAddress: {
+      street: "123 Main St",
+      city: "City",
+      state: "State",
+      zipCode: "12345",
+      country: "Country",
+    },
+    billingAddress: {
+      street: "123 Main St",
+      city: "City",
+      state: "State",
+      zipCode: "12345",
+      country: "Country",
+    },
     notes: "Please handle with care",
-    createdAt: "2024-03-15",
-    updatedAt: "2024-03-15",
+    createdAt: new Date("2024-03-15"),
+    updatedAt: new Date("2024-03-15"),
   },
   {
     id: "2",
@@ -61,11 +73,23 @@ const sampleOrders: IOrder[] = [
     total: 174.99,
     status: "processing",
     paymentStatus: "pending",
-    shippingAddress: "456 Oak St, City, Country",
-    billingAddress: "456 Oak St, City, Country",
+    shippingAddress: {
+      street: "456 Oak St",
+      city: "City",
+      state: "State",
+      zipCode: "54321",
+      country: "Country",
+    },
+    billingAddress: {
+      street: "456 Oak St",
+      city: "City",
+      state: "State",
+      zipCode: "54321",
+      country: "Country",
+    },
     notes: "",
-    createdAt: "2024-03-14",
-    updatedAt: "2024-03-14",
+    createdAt: new Date("2024-03-14"),
+    updatedAt: new Date("2024-03-14"),
   },
 ];
 

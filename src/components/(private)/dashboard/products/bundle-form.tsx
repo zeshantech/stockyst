@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import * as z from "zod";
 import { IconCheck, IconPlus, IconTrash } from "@tabler/icons-react";
 
@@ -117,9 +117,8 @@ export function BundleForm({
   const availableProducts = React.useMemo(() => {
     return allProducts.filter((product) => !product.tags.includes("bundle"));
   }, [allProducts]);
-
   const form = useForm<BundleFormValues>({
-    resolver: zodResolver(bundleFormSchema),
+    resolver: zodResolver(bundleFormSchema) as Resolver<BundleFormValues>,
     defaultValues: { ...defaultValues, ...initialValues },
   });
 

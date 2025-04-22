@@ -109,8 +109,8 @@ export function CategoriesTable({ data }: CategoriesTableProps) {
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            !!table.getIsAllPageRowsSelected() ||
+            !!(table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
@@ -391,15 +391,15 @@ export function CategoriesTable({ data }: CategoriesTableProps) {
             </DropdownMenuContent>
           </DropdownMenu>
           <BulkUpload
+            title="Bulk Upload Categories"
+            description="Upload multiple categories at once using CSV, Excel, or JSON format."
             onUpload={async (formData) => {
               bulkUploadCategories.mutateAsync({ formData });
             }}
-            accept={{
-              csv: ".csv",
-              excel: ".xlsx,.xls",
-
-              json: ".json",
-            }}
+            onExport={(format) => handleExport(format)}
+            buttonText="Upload Categories"
+            isUploading={bulkUploadCategories.isPending}
+            allowedTypes={[".csv", ".xlsx", ".xls", ".json"]}
           />
         </div>
       </div>

@@ -49,7 +49,7 @@ export function AlertRuleForm({
   onCancel,
   isSubmitting = false,
 }: AlertRuleFormProps) {
-  const form = useForm<AlertRuleFormData>({
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
@@ -78,14 +78,32 @@ export function AlertRuleForm({
       id: initialData?.id || "new-rule",
       name: name || "New Rule",
       description: description || "",
-      condition,
-      products,
+      condition: {
+        type: condition.type || "stock_level",
+        operator: condition.operator || "less_than",
+        value: condition.value || 0,
+        value2: condition.value2,
+      },
+      products: {
+        type: products.type || "all",
+        ids: products.ids,
+        categoryIds: products.categoryIds,
+      },
       notificationChannels,
       isActive: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
-  }, [name, description, condition, products, notificationChannels, initialData?.id, form]);
+  }, [
+    name,
+    description,
+    condition,
+    products,
+    notificationChannels,
+    initialData?.id,
+  ]);
+
+  const [isTestDialogOpen, setIsTestDialogOpen] = React.useState(false);
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -257,13 +275,17 @@ export function AlertRuleForm({
       <div className="flex justify-end gap-4">
         <TestAlertRuleDialog
           rule={testRule}
-          alertRuleId={initialData?.id || "new-rule"}
-          conditionType={form.watch("condition.type")}
+          open={isTestDialogOpen}
+          onOpenChange={setIsTestDialogOpen}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setIsTestDialogOpen(true)}
+          disabled={isSubmitting}
         >
-          <Button type="button" variant="outline">
-            Test Rule
-          </Button>
-        </TestAlertRuleDialog>
+          Test Rule
+        </Button>
         <Button
           type="button"
           variant="outline"

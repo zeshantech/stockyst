@@ -25,7 +25,7 @@ export const SUBSCRIPTION_PLANS: ISubscriptionPlan[] = [
     limitations: ["No API access", "No custom fields", "Limited integrations"],
     isPopular: false,
     buttonText: "Get Started",
-    buttonVariant: "outline",
+    buttonColor: "default",
     stripePriceId: {
       monthly: "price_free_monthly",
       yearly: "price_free_yearly",
@@ -58,7 +58,7 @@ export const SUBSCRIPTION_PLANS: ISubscriptionPlan[] = [
     ],
     isPopular: true,
     buttonText: "Get Started",
-    buttonVariant: "default",
+    buttonColor: "default",
     stripePriceId: {
       monthly: "price_pro_monthly",
       yearly: "price_pro_yearly",
@@ -93,7 +93,7 @@ export const SUBSCRIPTION_PLANS: ISubscriptionPlan[] = [
     ],
     isPopular: false,
     buttonText: "Contact Sales",
-    buttonVariant: "default",
+    buttonColor: "default",
     stripePriceId: {
       monthly: "price_enterprise_monthly",
       yearly: "price_enterprise_yearly",

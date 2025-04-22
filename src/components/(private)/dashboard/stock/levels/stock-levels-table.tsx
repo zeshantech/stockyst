@@ -36,9 +36,7 @@ import { useStocks } from "@/hooks/use-stock";
 import { toast } from "sonner";
 import { Edit, EyeIcon, MoreVertical, Trash, Upload } from "lucide-react";
 import { StockLevelDialog } from "./stock-level-dialog";
-import {
-  AlertDialogComponent,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogComponent } from "@/components/ui/alert-dialog";
 import { StockLevelsFilters } from "./stock-levels-filters";
 import { BulkUpload } from "@/components/ui/bulk-upload";
 import {
@@ -236,8 +234,8 @@ export function StockLevelsTable() {
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            !!table.getIsAllPageRowsSelected() ||
+            !!(table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"

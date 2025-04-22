@@ -50,11 +50,11 @@ import BatchTrackingForm from "./batch-tracking-form";
 import BatchTrackingDetails from "./batch-tracking-details";
 
 const BatchTrackingTable = () => {
-  const { stock, isLoadingStock } = useStocks();
+  const { stocks, isLoadingStock } = useStocks();
 
   // Generated some mock batch data based on stock
   const batchData: IStockBatch[] = React.useMemo(() => {
-    return stock
+    return stocks
       .filter((item) => item.batchNumber)
       .map((item) => ({
         id: item.id,
@@ -74,7 +74,7 @@ const BatchTrackingTable = () => {
             : "active",
         notes: item.notes,
       }));
-  }, [stock]);
+  }, [stocks]);
 
   // State to manage dialogs
   const [selectedBatch, setSelectedBatch] = React.useState<IStockBatch | null>(

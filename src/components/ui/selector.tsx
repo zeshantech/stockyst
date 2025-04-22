@@ -21,7 +21,7 @@ interface SelectorProps {
   options: Option[];
   value?: string;
   defaultValue?: string;
-  onChange?: (value: string) => void;
+  onChange?: (value: any) => void;
   label?: string;
   info?: string;
   placeholder?: string;

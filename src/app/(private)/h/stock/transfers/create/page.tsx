@@ -33,7 +33,7 @@ const stockTransferSchema = z.object({
     .min(1, "At least one item is required"),
 });
 
-type StockTransferFormValues = z.infer<typeof stockTransferSchema>;
+type StockTransferFormData = z.infer<typeof stockTransferSchema>;
 
 export default function CreateStockTransferPage() {
   const router = useRouter();
@@ -47,14 +47,14 @@ export default function CreateStockTransferPage() {
     isCreatingStockTransfer,
   } = useStocks();
 
-  const defaultValues: Partial<StockTransferFormValues> = {
+  const defaultValues: StockTransferFormData = {
     sourceLocationId: "",
     destinationLocationId: "",
     notes: "",
     items: [{ stockId: "", quantity: 1, notes: "" }],
   };
 
-  const form = useForm<StockTransferFormValues>({
+  const form = useForm<StockTransferFormData>({
     resolver: zodResolver(stockTransferSchema),
     defaultValues,
   });
@@ -64,8 +64,17 @@ export default function CreateStockTransferPage() {
     name: "items",
   });
 
-  const onSubmit = (data: StockTransferFormValues) => {
-    createStockTransfer(data);
+  const onSubmit = (data: StockTransferFormData) => {
+    createStockTransfer({
+      sourceLocationId: data.sourceLocationId,
+      destinationLocationId: data.destinationLocationId,
+      notes: data.notes,
+      items: data.items.map((item) => ({
+        stockId: item.stockId,
+        quantity: item.quantity,
+        notes: item.notes,
+      })),
+    });
     toast.success("Stock transfer created successfully");
     router.push("/h/stock/transfers");
   };

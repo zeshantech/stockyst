@@ -6,6 +6,11 @@ import {
   ITransfer,
   IReceiving,
   IPutaway,
+  IEquipment,
+  EquipmentType,
+  EquipmentFormValues,
+  WarehouseFormValues,
+  TransferFormValues,
 } from "@/types/warehouse";
 
 export const WAREHOUSING_QUERY_KEYS = {
@@ -46,6 +51,7 @@ const sampleWarehouses: IWarehouse[] = [
     phone: "+1-555-123-4567",
     email: "john.smith@example.com",
     isDefault: true,
+    type: "warehouse",
     createdAt: new Date("2023-01-15"),
     updatedAt: new Date("2024-03-20"),
   },
@@ -66,6 +72,7 @@ const sampleWarehouses: IWarehouse[] = [
     phone: "+1-555-987-6543",
     email: "emily.johnson@example.com",
     isDefault: false,
+    type: "distribution-center",
     createdAt: new Date("2023-03-10"),
     updatedAt: new Date("2024-02-15"),
   },
@@ -86,6 +93,7 @@ const sampleWarehouses: IWarehouse[] = [
     phone: "+1-555-456-7890",
     email: "michael.chen@example.com",
     isDefault: false,
+    type: "warehouse",
     createdAt: new Date("2023-05-20"),
     updatedAt: new Date("2024-01-30"),
   },
@@ -106,6 +114,7 @@ const sampleWarehouses: IWarehouse[] = [
     phone: "+1-555-321-6540",
     email: "sarah.miller@example.com",
     isDefault: false,
+    type: "distribution-center",
     createdAt: new Date("2023-07-05"),
     updatedAt: new Date("2024-04-01"),
   },
@@ -126,6 +135,7 @@ const sampleWarehouses: IWarehouse[] = [
     phone: "+1-555-789-0123",
     email: "robert.johnson@example.com",
     isDefault: false,
+    type: "store",
     createdAt: new Date("2023-09-15"),
     updatedAt: new Date("2024-03-01"),
   },
@@ -428,6 +438,78 @@ const samplePutaways: IPutaway[] = [
   },
 ];
 
+const sampleEquipment: IEquipment[] = [
+  {
+    id: "eq1",
+    warehouseId: "wh1",
+    type: "rack",
+    name: "Storage Rack A1",
+    dimensions: {
+      width: 42,
+      depth: 48,
+      height: 96,
+    },
+    capacity: {
+      weight: 2000,
+      items: 100,
+    },
+    configuration: {
+      shelves: 4,
+      adjustable: true,
+      reinforced: false,
+    },
+    status: "active",
+    createdAt: new Date("2023-02-15"),
+    updatedAt: new Date("2024-01-10"),
+  },
+  {
+    id: "eq2",
+    warehouseId: "wh1",
+    type: "zone",
+    name: "Receiving Zone",
+    dimensions: {
+      width: 300,
+      depth: 200,
+      height: 120,
+    },
+    capacity: {
+      weight: 8000,
+      items: 400,
+    },
+    configuration: {
+      hasRacks: true,
+      hasShelves: true,
+      hazardous: false,
+    },
+    status: "active",
+    createdAt: new Date("2023-02-15"),
+    updatedAt: new Date("2024-01-10"),
+  },
+  {
+    id: "eq3",
+    warehouseId: "wh2",
+    type: "rack",
+    name: "Heavy Duty Rack B2",
+    dimensions: {
+      width: 48,
+      depth: 60,
+      height: 120,
+    },
+    capacity: {
+      weight: 4000,
+      items: 150,
+    },
+    configuration: {
+      shelves: 6,
+      adjustable: true,
+      reinforced: true,
+    },
+    status: "active",
+    createdAt: new Date("2023-03-20"),
+    updatedAt: new Date("2024-02-05"),
+  },
+];
+
 const warehouseStatistics = {
   totalWarehouses: 5,
   activeWarehouses: 3,
@@ -451,6 +533,175 @@ const warehouseStatistics = {
     { id: "wh2", name: "East Coast Distribution", utilization: 65.0 },
   ],
 };
+
+// Add sample floor plan items
+const sampleFloorPlanItems = [
+  {
+    id: "zone-a",
+    type: "zone",
+    name: "Zone A",
+    warehouseId: "wh1",
+    x: 50,
+    y: 50,
+    width: 300,
+    height: 200,
+    utilization: 75,
+    status: "active",
+  },
+  {
+    id: "zone-b",
+    type: "zone",
+    name: "Zone B",
+    warehouseId: "wh1",
+    x: 400,
+    y: 50,
+    width: 250,
+    height: 200,
+    utilization: 90,
+    status: "active",
+  },
+  {
+    id: "zone-c",
+    type: "zone",
+    name: "Zone C",
+    warehouseId: "wh1",
+    x: 50,
+    y: 300,
+    width: 300,
+    height: 150,
+    utilization: 60,
+    status: "maintenance",
+  },
+  {
+    id: "zone-d",
+    type: "zone",
+    name: "Zone D",
+    warehouseId: "wh1",
+    x: 400,
+    y: 300,
+    width: 250,
+    height: 150,
+    utilization: 40,
+    status: "active",
+  },
+  {
+    id: "receiving",
+    type: "receiving",
+    name: "Receiving Area",
+    warehouseId: "wh1",
+    x: 700,
+    y: 50,
+    width: 150,
+    height: 150,
+    status: "active",
+  },
+  {
+    id: "shipping",
+    type: "shipping",
+    name: "Shipping Area",
+    warehouseId: "wh1",
+    x: 700,
+    y: 300,
+    width: 150,
+    height: 150,
+    status: "active",
+  },
+  {
+    id: "rack-a1",
+    type: "rack",
+    name: "Rack A1",
+    warehouseId: "wh1",
+    x: 75,
+    y: 75,
+    width: 40,
+    height: 150,
+    utilization: 80,
+    status: "active",
+  },
+  {
+    id: "rack-a2",
+    type: "rack",
+    name: "Rack A2",
+    warehouseId: "wh1",
+    x: 125,
+    y: 75,
+    width: 40,
+    height: 150,
+    utilization: 85,
+    status: "active",
+  },
+  {
+    id: "rack-a3",
+    type: "rack",
+    name: "Rack A3",
+    warehouseId: "wh1",
+    x: 175,
+    y: 75,
+    width: 40,
+    height: 150,
+    utilization: 65,
+    status: "active",
+  },
+  {
+    id: "rack-a4",
+    type: "rack",
+    name: "Rack A4",
+    warehouseId: "wh1",
+    x: 225,
+    y: 75,
+    width: 40,
+    height: 150,
+    utilization: 75,
+    status: "active",
+  },
+  // Warehouse 2 floor plan items
+  {
+    id: "zone-e",
+    type: "zone",
+    name: "Zone E",
+    warehouseId: "wh2",
+    x: 50,
+    y: 50,
+    width: 400,
+    height: 250,
+    utilization: 65,
+    status: "active",
+  },
+  {
+    id: "zone-f",
+    type: "zone",
+    name: "Zone F",
+    warehouseId: "wh2",
+    x: 500,
+    y: 50,
+    width: 350,
+    height: 250,
+    utilization: 80,
+    status: "active",
+  },
+  {
+    id: "receiving-wh2",
+    type: "receiving",
+    name: "Receiving Area",
+    warehouseId: "wh2",
+    x: 50,
+    y: 350,
+    width: 200,
+    height: 150,
+    status: "active",
+  },
+  {
+    id: "shipping-wh2",
+    type: "shipping",
+    name: "Shipping Area",
+    warehouseId: "wh2",
+    x: 650,
+    y: 350,
+    width: 200,
+    height: 150,
+    status: "active",
+  },
+];
 
 /**
  * Main hook for warehousing operations
@@ -521,6 +772,28 @@ export function useWarehousing() {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 400));
       return warehouseStatistics;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // Query for all equipment
+  const allEquipmentQuery = useQuery({
+    queryKey: ["equipment"],
+    queryFn: async () => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return sampleEquipment;
+    },
+    enabled: isAuthenticated,
+  });
+
+  // Query for floor plan items
+  const allFloorPlanItemsQuery = useQuery({
+    queryKey: ["floorPlanItems"],
+    queryFn: async () => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return sampleFloorPlanItems;
     },
     enabled: isAuthenticated,
   });
@@ -669,6 +942,28 @@ export function useWarehousing() {
       },
       enabled: isAuthenticated && !!id,
     });
+  };
+
+  // Equipment functions
+  const getEquipmentById = (id: string): IEquipment | undefined => {
+    return allEquipmentQuery.data?.find((equipment) => equipment.id === id);
+  };
+
+  const getEquipmentByWarehouseId = (warehouseId: string): IEquipment[] => {
+    return (
+      allEquipmentQuery.data?.filter(
+        (equipment) => equipment.warehouseId === warehouseId
+      ) || []
+    );
+  };
+
+  // Function to get floor plan items by warehouse ID
+  const getFloorPlanItemsByWarehouseId = (warehouseId: string) => {
+    return (
+      allFloorPlanItemsQuery.data?.filter(
+        (item) => item.warehouseId === warehouseId
+      ) || []
+    );
   };
 
   // Create warehouse mutation
@@ -1123,6 +1418,211 @@ export function useWarehousing() {
     );
   };
 
+  // Update equipment mutation
+  const updateEquipmentMutation = useMutation({
+    mutationFn: async ({
+      id,
+      ...data
+    }: Partial<IEquipment> & { id: string }) => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return {
+        ...data,
+        id,
+        updatedAt: new Date(),
+      } as IEquipment;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["equipment"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["equipment", data.id],
+      });
+      toast.success("Equipment updated successfully");
+    },
+    onError: (error) => {
+      console.error("Error updating equipment:", error);
+      toast.error("Failed to update equipment");
+    },
+  });
+
+  // Create equipment mutation
+  const createEquipmentMutation = useMutation({
+    mutationFn: async (
+      newEquipment: Omit<IEquipment, "id" | "createdAt" | "updatedAt">
+    ) => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return {
+        ...newEquipment,
+        id: `eq-${Date.now()}`,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as IEquipment;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["equipment"],
+      });
+      toast.success("Equipment created successfully");
+    },
+    onError: (error) => {
+      console.error("Error creating equipment:", error);
+      toast.error("Failed to create equipment");
+    },
+  });
+
+  // Delete equipment mutation
+  const deleteEquipmentMutation = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["equipment"],
+      });
+      toast.success("Equipment deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Error deleting equipment:", error);
+      toast.error("Failed to delete equipment");
+    },
+  });
+
+  // Function to parse API parameters from form values
+  const parseWarehouseFormValues = (
+    formValues: WarehouseFormValues
+  ): Omit<IWarehouse, "id" | "createdAt" | "updatedAt"> => {
+    return {
+      ...formValues,
+      capacity: parseInt(formValues.capacity),
+      utilization: parseInt(formValues.utilization),
+      type: formValues.type || "warehouse",
+    };
+  };
+
+  // Parse transfer form values
+  const parseTransferFormValues = (
+    formValues: TransferFormValues,
+    userId: string = "system"
+  ): Omit<
+    ITransfer,
+    "id" | "items" | "createdAt" | "updatedAt" | "initiatedAt"
+  > & {
+    items: Array<
+      Omit<
+        ITransfer["items"][0],
+        "id" | "transferId" | "createdAt" | "updatedAt"
+      >
+    >;
+  } => {
+    return {
+      sourceWarehouseId: formValues.sourceWarehouseId,
+      destinationWarehouseId: formValues.destinationWarehouseId,
+      status: "draft",
+      initiatedBy: userId,
+      notes: formValues.notes,
+      trackingNumber: formValues.trackingNumber,
+      estimatedArrival: formValues.estimatedArrival
+        ? new Date(formValues.estimatedArrival)
+        : undefined,
+      items: formValues.items.map((item) => ({
+        productId: item.productId,
+        quantity: parseInt(item.quantity),
+        sourceLocationId: item.sourceLocationId,
+        destinationLocationId: item.destinationLocationId,
+        notes: item.notes,
+        status: "pending",
+      })),
+    };
+  };
+
+  // Parse equipment form values
+  const parseEquipmentFormValues = (
+    formValues: EquipmentFormValues
+  ): Omit<IEquipment, "id" | "createdAt" | "updatedAt"> => {
+    return {
+      warehouseId: formValues.warehouseId,
+      type: formValues.type,
+      name: formValues.name,
+      dimensions: formValues.dimensions,
+      capacity: formValues.capacity,
+      configuration: formValues.configuration,
+      status: formValues.status || "active",
+    };
+  };
+
+  // Create floor plan item mutation
+  const createFloorPlanItemMutation = useMutation({
+    mutationFn: async (
+      newItem: Omit<(typeof sampleFloorPlanItems)[0], "id">
+    ) => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return {
+        ...newItem,
+        id: `item-${Date.now()}`,
+      };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["floorPlanItems"],
+      });
+      toast.success("Floor plan item created successfully");
+    },
+    onError: (error) => {
+      console.error("Error creating floor plan item:", error);
+      toast.error("Failed to create floor plan item");
+    },
+  });
+
+  // Update floor plan item mutation
+  const updateFloorPlanItemMutation = useMutation({
+    mutationFn: async ({
+      id,
+      ...data
+    }: Partial<(typeof sampleFloorPlanItems)[0]> & { id: string }) => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return {
+        ...data,
+        id,
+      };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["floorPlanItems"],
+      });
+      toast.success("Floor plan item updated successfully");
+    },
+    onError: (error) => {
+      console.error("Error updating floor plan item:", error);
+      toast.error("Failed to update floor plan item");
+    },
+  });
+
+  // Delete floor plan item mutation
+  const deleteFloorPlanItemMutation = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["floorPlanItems"],
+      });
+      toast.success("Floor plan item deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Error deleting floor plan item:", error);
+      toast.error("Failed to delete floor plan item");
+    },
+  });
+
   return {
     // Data
     warehouses: allWarehousesQuery.data || [],
@@ -1131,6 +1631,8 @@ export function useWarehousing() {
     receiving: allReceivingQuery.data || [],
     putaways: allPutawayQuery.data || [],
     statistics: statisticsQuery.data || null,
+    equipment: allEquipmentQuery.data || [],
+    floorPlanItems: allFloorPlanItemsQuery.data || [],
 
     // Loading states
     isLoadingWarehouses: allWarehousesQuery.isLoading,
@@ -1139,6 +1641,8 @@ export function useWarehousing() {
     isLoadingReceiving: allReceivingQuery.isLoading,
     isLoadingPutaways: allPutawayQuery.isLoading,
     isLoadingStatistics: statisticsQuery.isLoading,
+    isLoadingEquipment: allEquipmentQuery.isLoading,
+    isLoadingFloorPlanItems: allFloorPlanItemsQuery.isLoading,
 
     // Error states
     warehousesError: allWarehousesQuery.error,
@@ -1147,6 +1651,8 @@ export function useWarehousing() {
     receivingError: allReceivingQuery.error,
     putawaysError: allPutawayQuery.error,
     statisticsError: statisticsQuery.error,
+    equipmentError: allEquipmentQuery.error,
+    floorPlanItemsError: allFloorPlanItemsQuery.error,
 
     // Utility functions
     getWarehouseById,
@@ -1164,6 +1670,9 @@ export function useWarehousing() {
     useTransferById,
     useReceivingById,
     usePutawayById,
+    getEquipmentById,
+    getEquipmentByWarehouseId,
+    getFloorPlanItemsByWarehouseId,
 
     // Mutations
     createWarehouse: createWarehouseMutation.mutate,
@@ -1179,6 +1688,12 @@ export function useWarehousing() {
     updateReceiving: updateReceivingMutation.mutate,
     createPutaway: createPutawayMutation.mutate,
     updatePutaway: updatePutawayMutation.mutate,
+    createEquipment: createEquipmentMutation.mutate,
+    updateEquipment: updateEquipmentMutation.mutate,
+    deleteEquipment: deleteEquipmentMutation.mutate,
+    createFloorPlanItem: createFloorPlanItemMutation.mutate,
+    updateFloorPlanItem: updateFloorPlanItemMutation.mutate,
+    deleteFloorPlanItem: deleteFloorPlanItemMutation.mutate,
 
     // Mutation states
     isCreatingWarehouse: createWarehouseMutation.isPending,
@@ -1194,8 +1709,19 @@ export function useWarehousing() {
     isUpdatingReceiving: updateReceivingMutation.isPending,
     isCreatingPutaway: createPutawayMutation.isPending,
     isUpdatingPutaway: updatePutawayMutation.isPending,
+    isCreatingEquipment: createEquipmentMutation.isPending,
+    isUpdatingEquipment: updateEquipmentMutation.isPending,
+    isDeletingEquipment: deleteEquipmentMutation.isPending,
+    isCreatingFloorPlanItem: createFloorPlanItemMutation.isPending,
+    isUpdatingFloorPlanItem: updateFloorPlanItemMutation.isPending,
+    isDeletingFloorPlanItem: deleteFloorPlanItemMutation.isPending,
 
     isAuthenticated,
+
+    // Form value parsing helpers
+    parseWarehouseFormValues,
+    parseTransferFormValues,
+    parseEquipmentFormValues,
   };
 }
 
@@ -1307,4 +1833,45 @@ export function useReceiving(id: string) {
 export function usePutaway(id: string) {
   const { usePutawayById } = useWarehousing();
   return usePutawayById(id);
+}
+
+export function useAllEquipment() {
+  const {
+    equipment,
+    isLoadingEquipment: isLoading,
+    equipmentError: error,
+  } = useWarehousing();
+  return { data: equipment, isLoading, error };
+}
+
+export function useEquipmentByWarehouse(warehouseId: string) {
+  const { equipment, isLoadingEquipment: isLoading } = useWarehousing();
+  const data = equipment.filter((eq) => eq.warehouseId === warehouseId);
+  return { data, isLoading };
+}
+
+export function useCreateEquipment() {
+  const {
+    createEquipment,
+    isCreatingEquipment: isPending,
+    parseEquipmentFormValues,
+  } = useWarehousing();
+  return {
+    mutate: createEquipment,
+    isPending,
+    parseFormValues: parseEquipmentFormValues,
+  };
+}
+
+export function useUpdateEquipment() {
+  const { updateEquipment, isUpdatingEquipment: isPending } = useWarehousing();
+  return { mutate: updateEquipment, isPending };
+}
+
+// Add floor plan hook
+export function useFloorPlanItems(warehouseId: string) {
+  const { getFloorPlanItemsByWarehouseId, isLoadingFloorPlanItems } =
+    useWarehousing();
+  const items = getFloorPlanItemsByWarehouseId(warehouseId);
+  return { data: items, isLoading: isLoadingFloorPlanItems };
 }

@@ -33,7 +33,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAllWarehouses } from "@/hooks/use-warehousing";
+import { useAllWarehouses, useWarehousing } from "@/hooks/use-warehousing";
 
 // Zod schema for transfer form validation
 const transferFormSchema = z
@@ -87,7 +87,7 @@ export function TransferForm({
   );
 
   // Create form with the schema and initial values
-  const form = useForm<TransferFormValues>({
+  const form = useForm<z.infer<typeof transferFormSchema>>({
     resolver: zodResolver(transferFormSchema),
     defaultValues: initialData
       ? {
@@ -140,7 +140,25 @@ export function TransferForm({
 
   // Handle form submission
   const handleSubmit = form.handleSubmit((data) => {
-    onSubmit(data);
+    // Convert form data to TransferFormValues
+    const transferData: TransferFormValues = {
+      sourceWarehouseId: data.sourceWarehouseId,
+      destinationWarehouseId: data.destinationWarehouseId,
+      items: data.items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        sourceLocationId: item.sourceLocationId,
+        destinationLocationId: item.destinationLocationId,
+        notes: item.notes,
+      })),
+      notes: data.notes,
+      trackingNumber: data.trackingNumber,
+      estimatedArrival: data.estimatedArrival
+        ? data.estimatedArrival.toISOString()
+        : undefined,
+    };
+
+    onSubmit(transferData);
   });
 
   // Mock products data (would be fetched from an API in a real implementation)

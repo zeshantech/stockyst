@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -31,75 +31,122 @@ import {
   IconDeviceFloppy,
   IconWeight,
 } from "@tabler/icons-react";
+import { useWarehousing } from "@/hooks/use-warehousing";
+import {
+  EquipmentType,
+  IEquipment,
+  RackConfiguration,
+  ZoneConfiguration,
+} from "@/types/warehouse";
 
 interface EquipmentEditorProps {
-  itemId: string;
-  itemType: string;
+  itemId?: string;
+  itemType: EquipmentType;
+  warehouseId: string;
   onClose: () => void;
 }
-
-const mockEquipmentData = {
-  rack: {
-    dimensions: {
-      width: 42,
-      depth: 48,
-      height: 96,
-    },
-    capacity: {
-      weight: 2000,
-      items: 100,
-    },
-    configuration: {
-      shelves: 4,
-      adjustable: true,
-      reinforced: false,
-    },
-  },
-  zone: {
-    dimensions: {
-      width: 300,
-      depth: 200,
-      height: 120,
-    },
-    capacity: {
-      weight: 8000,
-      items: 400,
-    },
-    configuration: {
-      hasRacks: true,
-      hasShelves: true,
-      hazardous: false,
-    },
-  },
-};
 
 export function EquipmentEditor({
   itemId,
   itemType,
+  warehouseId,
   onClose,
 }: EquipmentEditorProps) {
   const [activeTab, setActiveTab] = useState("dimensions");
-  const [saving, setSaving] = useState(false);
 
-  // Get initial data based on item type
-  const initialData =
-    mockEquipmentData[itemType as keyof typeof mockEquipmentData] ||
-    mockEquipmentData.rack;
+  const {
+    getEquipmentById,
+    updateEquipment,
+    createEquipment,
+    isUpdatingEquipment: isUpdating,
+    isCreatingEquipment: isCreating,
+  } = useWarehousing();
 
-  const [dimensions, setDimensions] = useState(initialData.dimensions);
-  const [capacity, setCapacity] = useState(initialData.capacity);
-  const [configuration, setConfiguration] = useState(initialData.configuration);
+  const equipment = itemId ? getEquipmentById(itemId) : null;
+  const isEditMode = !!equipment;
+  const saving = isUpdating || isCreating;
+
+  // Initialize state with equipment data or defaults based on type
+  const [dimensions, setDimensions] = useState(
+    equipment?.dimensions || {
+      width: itemType === "rack" ? 42 : 300,
+      depth: itemType === "rack" ? 48 : 200,
+      height: itemType === "rack" ? 96 : 120,
+    }
+  );
+
+  const [capacity, setCapacity] = useState(
+    equipment?.capacity || {
+      weight: itemType === "rack" ? 2000 : 8000,
+      items: itemType === "rack" ? 100 : 400,
+    }
+  );
+
+  // Type-safe configuration state
+  const [configuration, setConfiguration] = useState<
+    RackConfiguration | ZoneConfiguration
+  >(() => {
+    if (equipment) {
+      return equipment.configuration;
+    }
+
+    return itemType === "rack"
+      ? { shelves: 4, adjustable: true, reinforced: false }
+      : { hasRacks: true, hasShelves: true, hazardous: false };
+  });
 
   // Handle saving equipment changes
   const handleSave = () => {
-    setSaving(true);
+    const equipmentData = {
+      warehouseId,
+      type: itemType,
+      name: `${itemType === "rack" ? "Rack" : "Zone"} ${new Date()
+        .toISOString()
+        .slice(0, 10)}`,
+      dimensions,
+      capacity,
+      configuration,
+      status: "active" as const,
+    };
 
-    // Simulate API call
-    setTimeout(() => {
-      setSaving(false);
-      toast.success(`Equipment "${itemId}" updated successfully`);
-      onClose();
-    }, 800);
+    if (isEditMode && itemId) {
+      updateEquipment({
+        id: itemId,
+        ...equipmentData,
+      });
+    } else {
+      createEquipment(equipmentData);
+    }
+  };
+
+  // Strongly-typed function to handle rack configuration changes
+  const updateRackConfiguration = (updates: Partial<RackConfiguration>) => {
+    if (itemType === "rack") {
+      setConfiguration((prev) => ({
+        ...(prev as RackConfiguration),
+        ...updates,
+      }));
+    }
+  };
+
+  // Strongly-typed function to handle zone configuration changes
+  const updateZoneConfiguration = (updates: Partial<ZoneConfiguration>) => {
+    if (itemType === "zone") {
+      setConfiguration((prev) => ({
+        ...(prev as ZoneConfiguration),
+        ...updates,
+      }));
+    }
+  };
+
+  // Type guard to check if we have a rack configuration
+  const isRackConfiguration = (config: any): config is RackConfiguration => {
+    return "shelves" in config;
+  };
+
+  // Type guard to check if we have a zone configuration
+  const isZoneConfiguration = (config: any): config is ZoneConfiguration => {
+    return "hasRacks" in config;
   };
 
   return (
@@ -223,15 +270,14 @@ export function EquipmentEditor({
             </TabsContent>
 
             <TabsContent value="configuration" className="mt-0 space-y-4">
-              {itemType === "rack" ? (
+              {itemType === "rack" && isRackConfiguration(configuration) ? (
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="shelves">Number of Shelves</Label>
                     <Select
-                      value={configuration.shelves?.toString()}
+                      value={configuration.shelves.toString()}
                       onValueChange={(value) =>
-                        setConfiguration({
-                          ...configuration,
+                        updateRackConfiguration({
                           shelves: parseInt(value),
                         })
                       }
@@ -254,8 +300,7 @@ export function EquipmentEditor({
                       id="adjustable"
                       checked={configuration.adjustable}
                       onCheckedChange={(checked) =>
-                        setConfiguration({
-                          ...configuration,
+                        updateRackConfiguration({
                           adjustable: checked,
                         })
                       }
@@ -267,15 +312,14 @@ export function EquipmentEditor({
                       id="reinforced"
                       checked={configuration.reinforced}
                       onCheckedChange={(checked) =>
-                        setConfiguration({
-                          ...configuration,
+                        updateRackConfiguration({
                           reinforced: checked,
                         })
                       }
                     />
                   </div>
                 </>
-              ) : (
+              ) : itemType === "zone" && isZoneConfiguration(configuration) ? (
                 <>
                   <div className="flex items-center justify-between space-y-0">
                     <Label htmlFor="hasRacks">Contains Racks</Label>
@@ -283,8 +327,7 @@ export function EquipmentEditor({
                       id="hasRacks"
                       checked={configuration.hasRacks}
                       onCheckedChange={(checked) =>
-                        setConfiguration({
-                          ...configuration,
+                        updateZoneConfiguration({
                           hasRacks: checked,
                         })
                       }
@@ -296,8 +339,7 @@ export function EquipmentEditor({
                       id="hasShelves"
                       checked={configuration.hasShelves}
                       onCheckedChange={(checked) =>
-                        setConfiguration({
-                          ...configuration,
+                        updateZoneConfiguration({
                           hasShelves: checked,
                         })
                       }
@@ -309,8 +351,7 @@ export function EquipmentEditor({
                       id="hazardous"
                       checked={configuration.hazardous}
                       onCheckedChange={(checked) =>
-                        setConfiguration({
-                          ...configuration,
+                        updateZoneConfiguration({
                           hazardous: checked,
                         })
                       }
@@ -332,7 +373,7 @@ export function EquipmentEditor({
                     </Select>
                   </div>
                 </>
-              )}
+              ) : null}
             </TabsContent>
           </div>
         </Tabs>
@@ -341,9 +382,15 @@ export function EquipmentEditor({
         <Button variant="outline" onClick={onClose}>
           Cancel
         </Button>
-        <Button onClick={handleSave} loading={saving}>
-          <IconDeviceFloppy />
-          Save Changes
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <>Loading...</>
+          ) : (
+            <>
+              <IconDeviceFloppy className="mr-2 h-4 w-4" />
+              Save Changes
+            </>
+          )}
         </Button>
       </CardFooter>
     </Card>

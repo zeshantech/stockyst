@@ -25,9 +25,9 @@ import AdjustmentDetails from "./adjustment-details";
 const AdjustmentsTable = () => {
   const router = useRouter();
   const {
-    stock,
     updateStockAdjustment,
-    deleteStockAdjustment,
+    deleteStock,
+
     isLoadingStock,
   } = useStocks();
 
@@ -61,8 +61,8 @@ const AdjustmentsTable = () => {
             notes: "",
           },
         ],
-        createdAt: new Date("2024-03-20").toISOString(),
-        updatedAt: new Date("2024-03-21").toISOString(),
+        createdAt: new Date("2024-03-20"),
+        updatedAt: new Date("2024-03-21"),
       },
       {
         id: "2",
@@ -91,8 +91,8 @@ const AdjustmentsTable = () => {
             notes: "Water damage",
           },
         ],
-        createdAt: new Date("2024-03-18").toISOString(),
-        updatedAt: new Date("2024-03-19").toISOString(),
+        createdAt: new Date("2024-03-18"),
+        updatedAt: new Date("2024-03-19"),
       },
       {
         id: "3",
@@ -119,8 +119,8 @@ const AdjustmentsTable = () => {
             notes: "",
           },
         ],
-        createdAt: new Date("2024-03-22").toISOString(),
-        updatedAt: new Date("2024-03-22").toISOString(),
+        createdAt: new Date("2024-03-22"),
+        updatedAt: new Date("2024-03-22"),
       },
     ];
   }, []);
@@ -206,10 +206,10 @@ const AdjustmentsTable = () => {
 
     setIsActionLoading(true);
 
-    // Delete the adjustment
-    deleteStockAdjustment({
-      id: selectedAdjustment.id,
-    });
+    // TODO: Delete the adjustment
+    // deleteStockAdjustment({
+    //   id: selectedAdjustment.id,
+    // });
 
     // Simulate API call
     setTimeout(() => {
@@ -224,7 +224,7 @@ const AdjustmentsTable = () => {
       case "addition":
         return <Badge variant="success">Addition</Badge>;
       case "subtraction":
-        return <Badge variant="destructive">Subtraction</Badge>;
+        return <Badge variant="error">Subtraction</Badge>;
       case "correction":
         return <Badge variant="outline">Correction</Badge>;
       case "write-off":
@@ -243,7 +243,7 @@ const AdjustmentsTable = () => {
       case "approved":
         return <Badge variant="success">Approved</Badge>;
       case "rejected":
-        return <Badge variant="destructive">Rejected</Badge>;
+        return <Badge variant="error">Rejected</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }

@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import * as z from "zod";
 import { IconCheck } from "@tabler/icons-react";
 
@@ -105,9 +105,8 @@ export function VariantForm({
   const parentProducts = useMemo(() => {
     return allProducts.filter((product) => !product.tags.includes("variant"));
   }, [allProducts]);
-
   const form = useForm<VariantFormValues>({
-    resolver: zodResolver(variantFormSchema),
+    resolver: zodResolver(variantFormSchema) as Resolver<VariantFormValues>,
     defaultValues: { ...defaultValues, ...initialValues },
   });
 

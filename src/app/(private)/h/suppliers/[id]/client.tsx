@@ -96,8 +96,17 @@ export default function SupplierDetailsClient(_: { id: string }) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setSupplier({
         ...supplier,
-        ...values,
-        updatedAt: new Date(),
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        status: values.status,
+        address: {
+          street: values.address.street,
+          city: values.address.city,
+          state: values.address.state,
+          zipCode: values.address.zipCode,
+          country: values.address.country,
+        },
       });
       setIsEditing(false);
       toast.success("Supplier updated successfully");
@@ -202,7 +211,7 @@ export default function SupplierDetailsClient(_: { id: string }) {
                   <label className="text-sm font-medium">Status</label>
                   <Selector
                     value={form.watch("status")}
-                    onChange={(value) => form.setValue("status", value)}
+                    onChange={(value) => form.setValue("status", value as any)}
                     error={form.formState.errors.status?.message}
                     info="Current status of the supplier"
                     options={[

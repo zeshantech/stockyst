@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/(private)/dashboard/page-header";
 import { ProductForm } from "@/components/(private)/dashboard/products/product-form";
@@ -13,14 +14,12 @@ import { useCreateProduct } from "@/hooks/use-products";
 import { VariantForm } from "@/components/(private)/dashboard/products/variant-form";
 import { BundleForm } from "@/components/(private)/dashboard/products/bundle-form";
 
-export default function AddProductPage() {
+function ProductFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
 
   const { mutate: createProduct, isPending: isSubmitting } = useCreateProduct();
-
-  // Set page title and description based on product type
 
   const handleSubmit = (
     data: ProductFormValues | BundleFormValues | VariantFormValues
@@ -79,49 +78,75 @@ export default function AddProductPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <PageHeader
-        title={
-          type === "variant"
-            ? "Add Product Variant"
-            : type === "bundle"
-            ? "Create Product Bundle"
-            : "Add New Product"
-        }
-        description={
-          type === "variant"
-            ? "Create a new variant of an existing product"
-            : type === "bundle"
-            ? "Create a new bundle of products"
-            : "Create a new product in your inventory"
-        }
-        backButton
-      />
+    <div className="rounded-lg border p-6">
+      {type === "variant" ? (
+        <VariantForm
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isSubmitting={isSubmitting}
+          submitButtonText="Create Variant"
+        />
+      ) : type === "bundle" ? (
+        <BundleForm
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isSubmitting={isSubmitting}
+          submitButtonText="Create Bundle"
+        />
+      ) : (
+        <ProductForm
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isSubmitting={isSubmitting}
+          submitButtonText="Create Product"
+        />
+      )}
+    </div>
+  );
+}
 
-      <div className="rounded-lg border p-6">
-        {type === "variant" ? (
-          <VariantForm
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            isSubmitting={isSubmitting}
-            submitButtonText="Create Variant"
-          />
-        ) : type === "bundle" ? (
-          <BundleForm
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            isSubmitting={isSubmitting}
-            submitButtonText="Create Bundle"
-          />
-        ) : (
-          <ProductForm
-            onSubmit={handleSubmit}
-            onCancel={handleCancel}
-            isSubmitting={isSubmitting}
-            submitButtonText="Create Product"
-          />
-        )}
-      </div>
+function LoadingFallback() {
+  return (
+    <div className="rounded-lg border p-6 animate-pulse">Loading form...</div>
+  );
+}
+
+// Component to handle the page header with search params
+function PageHeaderWithType() {
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
+
+  return (
+    <PageHeader
+      title={
+        type === "variant"
+          ? "Add Product Variant"
+          : type === "bundle"
+          ? "Create Product Bundle"
+          : "Add New Product"
+      }
+      description={
+        type === "variant"
+          ? "Create a new variant of an existing product"
+          : type === "bundle"
+          ? "Create a new bundle of products"
+          : "Create a new product in your inventory"
+      }
+      backButton
+    />
+  );
+}
+
+export default function AddProductPage() {
+  return (
+    <div className="flex flex-col gap-6 p-6">
+      <Suspense fallback={<div className="h-16 animate-pulse">Loading...</div>}>
+        <PageHeaderWithType />
+      </Suspense>
+
+      <Suspense fallback={<LoadingFallback />}>
+        <ProductFormContent />
+      </Suspense>
     </div>
   );
 }

@@ -1,5 +1,5 @@
+import { IStore } from "@/types/store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Store } from "./use-stores";
 import { toast } from "sonner";
 
 interface CreateStoreInput {
@@ -14,16 +14,16 @@ interface CreateStoreInput {
 }
 
 // Mock function to create a store
-const createStore = async (storeData: CreateStoreInput): Promise<Store> => {
+const createStore = async (storeData: CreateStoreInput): Promise<IStore> => {
   // This would normally be an API call
   // For now, simulate a server request
   return new Promise((resolve) => {
     setTimeout(() => {
-      const newStore: Store = {
+      const newStore: IStore = {
         id: `store-${Date.now()}`, // Generate a unique ID
         ...storeData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
       resolve(newStore);
     }, 500);
@@ -37,7 +37,7 @@ export function useStoreActions() {
     mutationFn: createStore,
     onSuccess: (newStore) => {
       // Update the stores query data
-      queryClient.setQueryData<Store[]>(["stores"], (old = []) => [
+      queryClient.setQueryData<IStore[]>(["stores"], (old = []) => [
         ...old,
         newStore,
       ]);

@@ -153,7 +153,7 @@ export function PricingCard({
                 ? "hover:shadow-lg hover:shadow-primary/20 hover:transform hover:translate-y-[-2px]"
                 : ""
             )}
-            variant={plan.buttonVariant}
+            color={plan.buttonColor}
             disabled={isCurrentPlan}
             onClick={() => onSelect && onSelect(plan.id)}
           >

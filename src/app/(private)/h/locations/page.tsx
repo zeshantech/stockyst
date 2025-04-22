@@ -5,10 +5,19 @@ import { useRouter } from "next/navigation";
 import { IconPlus } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LocationsOverviewMap } from "@/components/(private)/dashboard/locations/locations-overview-map";
+import dynamic from "next/dynamic";
 import { LocationsTable } from "@/components/(private)/dashboard/locations/locations-table";
 import { useQuery } from "@tanstack/react-query";
 import { ILocation } from "@/types/location";
+
+// Dynamically import the map component with SSR disabled
+const LocationsOverviewMap = dynamic(
+  () =>
+    import(
+      "@/components/(private)/dashboard/locations/locations-overview-map"
+    ).then((mod) => mod.LocationsOverviewMap),
+  { ssr: false }
+);
 
 // Mock data - Replace with actual API call
 const mockLocations: ILocation[] = [

@@ -33,9 +33,7 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Edit, EyeIcon, MoreVertical, Trash, Upload } from "lucide-react";
-import {
-  AlertDialogComponent,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogComponent } from "@/components/ui/alert-dialog";
 import { BulkUpload } from "@/components/ui/bulk-upload";
 import {
   IconDownload,
@@ -277,8 +275,8 @@ export function WarehouseInventoryTable({
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            !!table.getIsAllPageRowsSelected() ||
+            !!(table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"

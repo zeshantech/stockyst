@@ -74,97 +74,100 @@ export function StockTransfersTable() {
   const { isLoadingStock } = useStocks();
 
   // Mock stock transfer data
-  const transferData = useMemo<IStockTransfer[]>(() => [
-    {
-      id: "1",
-      transferNumber: "TR-001",
-      status: "completed",
-      sourceLocationId: "1",
-      sourceLocationName: "Warehouse A",
-      destinationLocationId: "2",
-      destinationLocationName: "Warehouse B",
-      requestedBy: "John Doe",
-      requestedDate: new Date("2023-06-01").toISOString(),
-      completedDate: new Date("2023-06-02").toISOString(),
-      notes: "Regular transfer",
-      items: [
-        {
-          id: "1",
-          transferId: "1",
-          stockId: "1",
-          productName: "Laptop Pro X1",
-          sku: "LP-X1-2023",
-          quantity: 5,
-        },
-        {
-          id: "2",
-          transferId: "1",
-          stockId: "2",
-          productName: "Office Chair Ergo",
-          sku: "OC-E-2023",
-          quantity: 3,
-        },
-      ],
-      createdAt: new Date("2023-06-01"),
-      updatedAt: new Date("2023-06-02"),
-    },
-    {
-      id: "2",
-      transferNumber: "TR-002",
-      status: "in-progress",
-      sourceLocationId: "2",
-      sourceLocationName: "Warehouse B",
-      destinationLocationId: "3",
-      destinationLocationName: "Store Front",
-      requestedBy: "Jane Smith",
-      requestedDate: new Date("2023-06-05").toISOString(),
-      notes: "Urgent transfer",
-      items: [
-        {
-          id: "3",
-          transferId: "2",
-          stockId: "3",
-          productName: "Wireless Mouse",
-          sku: "WM-2023",
-          quantity: 10,
-        },
-      ],
-      createdAt: new Date("2023-06-05"),
-      updatedAt: new Date("2023-06-05"),
-    },
-    {
-      id: "3",
-      transferNumber: "TR-003",
-      status: "draft",
-      sourceLocationId: "1",
-      sourceLocationName: "Warehouse A",
-      destinationLocationId: "3",
-      destinationLocationName: "Store Front",
-      requestedBy: "Mike Johnson",
-      requestedDate: new Date("2023-06-10").toISOString(),
-      notes: "Monthly stock replenishment",
-      items: [
-        {
-          id: "4",
-          transferId: "3",
-          stockId: "4",
-          productName: "Desk Lamp",
-          sku: "DL-2023",
-          quantity: 8,
-        },
-        {
-          id: "5",
-          transferId: "3",
-          stockId: "5",
-          productName: "Coffee Maker",
-          sku: "CM-2023",
-          quantity: 2,
-        },
-      ],
-      createdAt: new Date("2023-06-10"),
-      updatedAt: new Date("2023-06-10"),
-    },
-  ], []);
+  const transferData = useMemo<IStockTransfer[]>(
+    () => [
+      {
+        id: "1",
+        transferNumber: "TR-001",
+        status: "completed",
+        sourceLocationId: "1",
+        sourceLocationName: "Warehouse A",
+        destinationLocationId: "2",
+        destinationLocationName: "Warehouse B",
+        requestedBy: "John Doe",
+        requestedDate: new Date("2023-06-01").toISOString(),
+        completedDate: new Date("2023-06-02").toISOString(),
+        notes: "Regular transfer",
+        items: [
+          {
+            id: "1",
+            transferId: "1",
+            stockId: "1",
+            productName: "Laptop Pro X1",
+            sku: "LP-X1-2023",
+            quantity: 5,
+          },
+          {
+            id: "2",
+            transferId: "1",
+            stockId: "2",
+            productName: "Office Chair Ergo",
+            sku: "OC-E-2023",
+            quantity: 3,
+          },
+        ],
+        createdAt: new Date("2023-06-01"),
+        updatedAt: new Date("2023-06-02"),
+      },
+      {
+        id: "2",
+        transferNumber: "TR-002",
+        status: "in-progress",
+        sourceLocationId: "2",
+        sourceLocationName: "Warehouse B",
+        destinationLocationId: "3",
+        destinationLocationName: "Store Front",
+        requestedBy: "Jane Smith",
+        requestedDate: new Date("2023-06-05").toISOString(),
+        notes: "Urgent transfer",
+        items: [
+          {
+            id: "3",
+            transferId: "2",
+            stockId: "3",
+            productName: "Wireless Mouse",
+            sku: "WM-2023",
+            quantity: 10,
+          },
+        ],
+        createdAt: new Date("2023-06-05"),
+        updatedAt: new Date("2023-06-05"),
+      },
+      {
+        id: "3",
+        transferNumber: "TR-003",
+        status: "draft",
+        sourceLocationId: "1",
+        sourceLocationName: "Warehouse A",
+        destinationLocationId: "3",
+        destinationLocationName: "Store Front",
+        requestedBy: "Mike Johnson",
+        requestedDate: new Date("2023-06-10").toISOString(),
+        notes: "Monthly stock replenishment",
+        items: [
+          {
+            id: "4",
+            transferId: "3",
+            stockId: "4",
+            productName: "Desk Lamp",
+            sku: "DL-2023",
+            quantity: 8,
+          },
+          {
+            id: "5",
+            transferId: "3",
+            stockId: "5",
+            productName: "Coffee Maker",
+            sku: "CM-2023",
+            quantity: 2,
+          },
+        ],
+        createdAt: new Date("2023-06-10"),
+        updatedAt: new Date("2023-06-10"),
+      },
+    ],
+    []
+  );
 
   // Filter transfers based on URL parameters
   const filteredTransfers = useMemo(() => {
@@ -318,8 +321,8 @@ export function StockTransfersTable() {
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            !!table.getIsAllPageRowsSelected() ||
+            !!(table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"

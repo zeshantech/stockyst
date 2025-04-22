@@ -46,9 +46,7 @@ import { ITransfer } from "@/types/warehouse";
 import { useWarehousing, useDeleteTransfer } from "@/hooks/use-warehousing";
 import { toast } from "sonner";
 import { Upload } from "lucide-react";
-import {
-  AlertDialogComponent,
-} from "@/components/ui/alert-dialog";
+import { AlertDialogComponent } from "@/components/ui/alert-dialog";
 import { TransfersFilters } from "./transfers-filters";
 import { BulkUpload } from "@/components/ui/bulk-upload";
 import { EyeIcon } from "lucide-react";
@@ -241,7 +239,7 @@ export function TransfersTable() {
     dateRangeFilter,
     sortParam,
     warehouses,
-    getWarehouseName
+    getWarehouseName,
   ]);
 
   const handleDelete = (transfer: ITransfer) => {
@@ -301,8 +299,8 @@ export function TransfersTable() {
       header: ({ table }) => (
         <Checkbox
           checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            !!table.getIsAllPageRowsSelected() ||
+            !!(table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"

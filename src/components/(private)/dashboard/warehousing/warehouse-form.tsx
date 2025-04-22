@@ -32,6 +32,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useWarehousing } from "@/hooks/use-warehousing";
 
 // Zod schema for warehouse form validation
 const warehouseFormSchema = z.object({
@@ -56,7 +57,13 @@ const warehouseFormSchema = z.object({
   phone: z.string().min(5, "Phone number must be at least 5 characters"),
   email: z.string().email("Please enter a valid email address"),
   isDefault: z.boolean().default(false),
+  type: z
+    .enum(["warehouse", "distribution-center", "store", "fulfillment"])
+    .optional(),
 });
+
+// Type for the schema
+type WarehouseFormSchemaType = z.infer<typeof warehouseFormSchema>;
 
 export function WarehouseForm({
   initialData,
@@ -69,15 +76,21 @@ export function WarehouseForm({
 }) {
   const router = useRouter();
   const isEditMode = !!initialData;
+  const { parseWarehouseFormValues } = useWarehousing();
 
   // Create form with the schema and initial values
-  const form = useForm<WarehouseFormValues>({
+  const form = useForm<WarehouseFormSchemaType>({
     resolver: zodResolver(warehouseFormSchema),
     defaultValues: initialData
       ? {
           ...initialData,
           capacity: initialData.capacity.toString(),
           utilization: initialData.utilization.toString(),
+          type: initialData.type as
+            | "warehouse"
+            | "distribution-center"
+            | "store"
+            | "fulfillment",
         }
       : {
           name: "",
@@ -95,12 +108,31 @@ export function WarehouseForm({
           phone: "",
           email: "",
           isDefault: false,
+          type: "warehouse",
         },
   });
 
   // Handle form submission
   const handleSubmit = form.handleSubmit((data) => {
-    onSubmit(data);
+    const warehouseData: WarehouseFormValues = {
+      name: data.name,
+      code: data.code,
+      description: data.description || "",
+      address: data.address,
+      city: data.city,
+      state: data.state,
+      country: data.country,
+      zipCode: data.zipCode,
+      status: data.status,
+      capacity: data.capacity,
+      utilization: data.utilization,
+      manager: data.manager,
+      phone: data.phone,
+      email: data.email,
+      isDefault: data.isDefault,
+      type: data.type,
+    };
+    onSubmit(warehouseData);
   });
 
   return (
@@ -337,6 +369,37 @@ export function WarehouseForm({
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Warehouse Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="warehouse">Warehouse</SelectItem>
+                        <SelectItem value="distribution-center">
+                          Distribution Center
+                        </SelectItem>
+                        <SelectItem value="store">Store</SelectItem>
+                        <SelectItem value="fulfillment">
+                          Fulfillment Center
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

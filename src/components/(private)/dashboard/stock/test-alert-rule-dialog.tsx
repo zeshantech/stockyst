@@ -7,15 +7,7 @@ import * as z from "zod";
 import { IconBell } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { DialogComponent } from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -34,15 +26,14 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useTestAlert } from "@/hooks/use-test-alert";
 import { toast } from "sonner";
 import { AlertRule } from "@/types/stock-alerts";
+import { useStockAlerts } from "@/hooks/use-stock-alerts";
 
 interface TestAlertRuleDialogProps {
-  children?: React.ReactNode;
   rule: AlertRule;
-  alertRuleId: string;
-  conditionType: AlertRule["condition"]["type"];
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 // Form schema for test values
@@ -55,17 +46,15 @@ const testFormSchema = z.object({
 type TestFormValues = z.infer<typeof testFormSchema>;
 
 export function TestAlertRuleDialog({
-  children,
   rule,
-  alertRuleId,
-  conditionType,
+  open,
+  onOpenChange,
 }: TestAlertRuleDialogProps) {
-  const [open, setOpen] = React.useState(false);
   const [testResult, setTestResult] = React.useState<
     "idle" | "triggered" | "not-triggered"
   >("idle");
 
-  const { testAlert, isTestingAlert } = useTestAlert();
+  const { testAlertRule, isTestingAlertRule } = useStockAlerts();
 
   const form = useForm<TestFormValues>({
     resolver: zodResolver(testFormSchema),
@@ -132,139 +121,123 @@ export function TestAlertRuleDialog({
       toast.info("Alert rule would not be triggered with these values");
     }
 
-    // Simulate API call to test the alert
-    testAlert({
-      ruleId: alertRuleId,
-      productId: data.productId,
-      value: data.testValue,
-      notes: data.notes || "",
-    });
+    // Use our hook function to test the alert rule
+    testAlertRule(rule.id);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children || (
-          <Button variant="outline" type="button">
-            Test Rule
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Test Alert Rule: {rule?.name || "New Rule"}</DialogTitle>
-          <DialogDescription>
-            Test this alert rule by providing sample values
-          </DialogDescription>
-        </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="productId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select Product</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a product" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {sampleProducts.map((product) => (
-                        <SelectItem key={product.id} value={product.id}>
-                          {product.name} ({product.sku})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="testValue"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Test Value for{" "}
-                    {conditionType === "stock_level"
-                      ? "Stock Quantity"
-                      : conditionType === "stock_value"
-                      ? "Stock Value"
-                      : conditionType === "stock_age"
-                      ? "Days Until Expiry"
-                      : "Custom Field"}
-                  </FormLabel>
+    <DialogComponent
+      open={open}
+      onOpenChange={onOpenChange}
+      title={`Test Alert Rule: ${rule.name}`}
+      description="Test this alert rule by providing sample values"
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="productId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Select Product</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <Input
-                      type="number"
-                      placeholder={`Enter a value to test`}
-                      {...field}
-                    />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a product" />
+                    </SelectTrigger>
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Test Notes</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Additional notes for this test"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {testResult !== "idle" && (
-              <Alert
-                variant={testResult === "triggered" ? "destructive" : "default"}
-              >
-                <IconBell className="h-4 w-4" />
-                <AlertTitle>
-                  {testResult === "triggered"
-                    ? "Alert Would Trigger"
-                    : "Alert Would Not Trigger"}
-                </AlertTitle>
-                <AlertDescription>
-                  {testResult === "triggered"
-                    ? "The current test values would trigger this alert rule."
-                    : "The current test values would not trigger this alert rule."}
-                </AlertDescription>
-              </Alert>
+                  <SelectContent>
+                    {sampleProducts.map((product) => (
+                      <SelectItem key={product.id} value={product.id}>
+                        {product.name} ({product.sku})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
             )}
+          />
 
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-              >
-                Close
-              </Button>
-              <Button type="submit" disabled={isTestingAlert}>
-                {isTestingAlert ? "Testing..." : "Test Rule"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          <FormField
+            control={form.control}
+            name="testValue"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Test Value for{" "}
+                  {rule.condition.type === "stock_level"
+                    ? "Stock Quantity"
+                    : rule.condition.type === "stock_value"
+                    ? "Stock Value"
+                    : rule.condition.type === "stock_age"
+                    ? "Days Until Expiry"
+                    : "Custom Field"}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder={`Enter a value to test`}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="notes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Test Notes</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Additional notes for this test"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {testResult !== "idle" && (
+            <Alert
+              variant={testResult === "triggered" ? "destructive" : "default"}
+            >
+              <IconBell className="h-4 w-4" />
+              <AlertTitle>
+                {testResult === "triggered"
+                  ? "Alert Would Trigger"
+                  : "Alert Would Not Trigger"}
+              </AlertTitle>
+              <AlertDescription>
+                {testResult === "triggered"
+                  ? "The current test values would trigger this alert rule."
+                  : "The current test values would not trigger this alert rule."}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isTestingAlertRule}>
+              Test Rule
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </DialogComponent>
   );
 }
