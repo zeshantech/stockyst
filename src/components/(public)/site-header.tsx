@@ -55,7 +55,7 @@ export function SiteHeader() {
             </Button>
             {keycloak?.authenticated ? (
               <Button size="sm" href="/h">
-                Go t Dashboard
+                Go to Dashboard
               </Button>
             ) : (
               <Button size="sm" onClick={() => login()}>
