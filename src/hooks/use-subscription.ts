@@ -1,21 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  SUBSCRIPTION_PLANS,
-  MOCK_ACTIVE_SUBSCRIPTION,
-  MOCK_PAYMENT_METHODS,
-  MOCK_BILLING_INFO,
-  MOCK_INVOICES,
-  MOCK_USAGE_STATS,
-} from "@/constants/subscription";
-import {
-  BillingCycle,
-  ISubscriptionPlan,
-  IActiveSubscription,
-  IPaymentMethod,
-  IBillingInfo,
-  IPaymentMethodInput,
-} from "@/types/subscription";
+import { SUBSCRIPTION_PLANS, MOCK_ACTIVE_SUBSCRIPTION, MOCK_PAYMENT_METHODS, MOCK_BILLING_INFO, MOCK_INVOICES, MOCK_USAGE_STATS } from "@/constants/subscription";
+import { BillingCycle, ISubscriptionPlan, IActiveSubscription, IPaymentMethod, IBillingInfo, IPaymentMethodInput } from "@/types/subscription";
 
 // Query keys
 export const SUBSCRIPTION_QUERY_KEYS = {
@@ -26,10 +12,6 @@ export const SUBSCRIPTION_QUERY_KEYS = {
   USAGE_STATS: ["subscription", "usage-stats"],
 };
 
-/**
- * A comprehensive hook for managing subscriptions, payment methods, billing info, and invoices
- * Combines multiple hooks into a single, easy-to-use interface
- */
 export function useSubscription() {
   const queryClient = useQueryClient();
   const isAuthenticated = true; // TODO: make it dynamic
@@ -125,13 +107,7 @@ export function useSubscription() {
   });
 
   const createSubscriptionMutation = useMutation({
-    mutationFn: async ({
-      planId,
-      billingCycle,
-    }: {
-      planId: string;
-      billingCycle: BillingCycle;
-    }) => {
+    mutationFn: async ({ planId, billingCycle }: { planId: string; billingCycle: BillingCycle }) => {
       // Mock successful response instead of API call
       return {
         ...MOCK_ACTIVE_SUBSCRIPTION,
@@ -174,13 +150,7 @@ export function useSubscription() {
   });
 
   const updateSubscriptionMutation = useMutation({
-    mutationFn: async ({
-      planId,
-      billingCycle,
-    }: {
-      planId: string;
-      billingCycle: BillingCycle;
-    }) => {
+    mutationFn: async ({ planId, billingCycle }: { planId: string; billingCycle: BillingCycle }) => {
       // Mock successful response instead of API call
       return {
         ...MOCK_ACTIVE_SUBSCRIPTION,
@@ -201,9 +171,7 @@ export function useSubscription() {
   });
 
   // Helper functions
-  const getSubscriptionPlanById = (
-    planId: string
-  ): ISubscriptionPlan | undefined => {
+  const getSubscriptionPlanById = (planId: string): ISubscriptionPlan | undefined => {
     return SUBSCRIPTION_PLANS.find((plan) => plan.id === planId);
   };
 
@@ -229,8 +197,7 @@ export function useSubscription() {
     subscriptionPlans: getSubscriptionPlans(),
 
     // Loading states
-    isLoadingActiveSubscription:
-      isAuthenticated && activeSubscriptionQuery.isLoading,
+    isLoadingActiveSubscription: isAuthenticated && activeSubscriptionQuery.isLoading,
     isLoadingPaymentMethods: isAuthenticated && paymentMethodsQuery.isLoading,
     isLoadingBillingInfo: isAuthenticated && billingInfoQuery.isLoading,
     isLoadingInvoices: isAuthenticated && invoicesQuery.isLoading,
@@ -267,65 +234,42 @@ export function useSubscription() {
 
 // For backward compatibility, export individual hooks that use the main hook
 export function useActiveSubscription() {
-  const {
-    activeSubscription,
-    isLoadingActiveSubscription: isLoading,
-    activeSubscriptionError: error,
-  } = useSubscription();
+  const { activeSubscription, isLoadingActiveSubscription: isLoading, activeSubscriptionError: error } = useSubscription();
   return { data: activeSubscription, isLoading, error };
 }
 
 export function usePaymentMethods() {
-  const {
-    paymentMethods,
-    isLoadingPaymentMethods: isLoading,
-    paymentMethodsError: error,
-  } = useSubscription();
+  const { paymentMethods, isLoadingPaymentMethods: isLoading, paymentMethodsError: error } = useSubscription();
   return { data: paymentMethods, isLoading, error };
 }
 
 export function useBillingInfo() {
-  const {
-    billingInfo,
-    isLoadingBillingInfo: isLoading,
-    billingInfoError: error,
-  } = useSubscription();
+  const { billingInfo, isLoadingBillingInfo: isLoading, billingInfoError: error } = useSubscription();
   return { data: billingInfo, isLoading, error };
 }
 
 export function useInvoices() {
-  const {
-    invoices,
-    isLoadingInvoices: isLoading,
-    invoicesError: error,
-  } = useSubscription();
+  const { invoices, isLoadingInvoices: isLoading, invoicesError: error } = useSubscription();
   return { data: invoices, isLoading, error };
 }
 
 export function useUsageStats() {
-  const {
-    usageStats,
-    isLoadingUsageStats: isLoading,
-    usageStatsError: error,
-  } = useSubscription();
+  const { usageStats, isLoadingUsageStats: isLoading, usageStatsError: error } = useSubscription();
   return { data: usageStats, isLoading, error };
 }
 
 export function useAddPaymentMethod() {
-  const { addPaymentMethod, isAddingPaymentMethod: isPending } =
-    useSubscription();
+  const { addPaymentMethod, isAddingPaymentMethod: isPending } = useSubscription();
   return { mutate: addPaymentMethod, isPending };
 }
 
 export function useUpdateBillingInfo() {
-  const { updateBillingInfo, isUpdatingBillingInfo: isPending } =
-    useSubscription();
+  const { updateBillingInfo, isUpdatingBillingInfo: isPending } = useSubscription();
   return { mutate: updateBillingInfo, isPending };
 }
 
 export function useCreateSubscription() {
-  const { createSubscription, isCreatingSubscription: isPending } =
-    useSubscription();
+  const { createSubscription, isCreatingSubscription: isPending } = useSubscription();
   return {
     mutate: createSubscription,
     isPending,
@@ -333,8 +277,7 @@ export function useCreateSubscription() {
 }
 
 export function useCancelSubscription() {
-  const { cancelSubscription, isCancellingSubscription: isPending } =
-    useSubscription();
+  const { cancelSubscription, isCancellingSubscription: isPending } = useSubscription();
   return {
     mutate: cancelSubscription,
     isPending,
@@ -342,8 +285,7 @@ export function useCancelSubscription() {
 }
 
 export function useUpdateSubscription() {
-  const { updateSubscription, isUpdatingSubscription: isPending } =
-    useSubscription();
+  const { updateSubscription, isUpdatingSubscription: isPending } = useSubscription();
   return {
     mutate: updateSubscription,
     isPending,
@@ -351,10 +293,6 @@ export function useUpdateSubscription() {
 }
 
 export function useCurrentPlan() {
-  const {
-    currentPlan,
-    activeSubscription,
-    isLoadingActiveSubscription: isLoading,
-  } = useSubscription();
+  const { currentPlan, activeSubscription, isLoadingActiveSubscription: isLoading } = useSubscription();
   return { currentPlan, activeSubscription, isLoading };
 }

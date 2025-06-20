@@ -1,19 +1,19 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { auth0 } from "./lib/auth0";
 
 export async function middleware(request: NextRequest) {
-  const isAuthPage = request.nextUrl.pathname.startsWith("/h");
-  const token = request.cookies.get("keycloak_token");
+  if (request.nextUrl.pathname.startsWith("/h/")) {
+    const authResponse = await auth0.getSession(request);
 
-  // if (isAuthPage) {
-  //   if (!token) {
-  //     return NextResponse.redirect(new URL("/", request.url));
-  //   }
-  // }
+    if (!authResponse?.session) {
+      return NextResponse.redirect(new URL("/unauth", request.url));
+    }
+  }
 
-  return NextResponse.next();
+  return await auth0.middleware(request);
 }
 
 export const config = {
-  matcher: ["/"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
 };

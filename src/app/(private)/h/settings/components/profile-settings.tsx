@@ -1,25 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { useKeycloak } from "@/contexts/keycloak-provider";
 import { useState, useEffect } from "react";
 import { IconCamera } from "@tabler/icons-react";
 import { toast } from "sonner";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export function ProfileSettings() {
-  const { keycloak, profile } = useKeycloak();
+  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({
     firstName: "",
@@ -35,12 +29,12 @@ export function ProfileSettings() {
 
   useEffect(() => {
     // In a real implementation, we would fetch this from Keycloak
-    if (profile) {
+    if (user) {
       setProfileData({
-        firstName: profile.firstName || "",
-        lastName: profile.lastName || "",
-        email: profile.email || "",
-        phone: keycloak?.tokenParsed?.phone_number || "",
+        firstName: user.given_name || "",
+        lastName: user.family_name || "",
+        email: user.email || "",
+        phone: "",
         jobTitle: "Inventory Manager",
         department: "Operations",
         company: "Stockyst Inc.",
@@ -48,11 +42,9 @@ export function ProfileSettings() {
         isPublicProfile: false,
       });
     }
-  }, [keycloak, profile]);
+  }, [user]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({ ...prev, [name]: value }));
   };
@@ -66,8 +58,6 @@ export function ProfileSettings() {
     setIsLoading(true);
 
     try {
-      // In a real implementation, we would update the profile in Keycloak
-      // For now, we'll just simulate a delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast.success("Profile updated successfully");
@@ -84,10 +74,7 @@ export function ProfileSettings() {
       <Card>
         <CardHeader>
           <CardTitle>Profile Information</CardTitle>
-          <CardDescription>
-            Update your personal information and how others see you on the
-            platform.
-          </CardDescription>
+          <CardDescription>Update your personal information and how others see you on the platform.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-8">
@@ -100,10 +87,7 @@ export function ProfileSettings() {
                     {profileData.lastName.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <Button
-                  size="icon"
-                  className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                >
+                <Button size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                   <IconCamera />
                 </Button>
               </div>
@@ -111,95 +95,41 @@ export function ProfileSettings() {
               <div className="grid w-full gap-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Input
-                      id="firstName"
-                      name="firstName"
-                      value={profileData.firstName}
-                      onChange={handleChange}
-                      label="First Name"
-                    />
+                    <Input id="firstName" name="firstName" value={profileData.firstName} onChange={handleChange} label="First Name" />
                   </div>
                   <div className="space-y-2">
-                    <Input
-                      id="lastName"
-                      name="lastName"
-                      value={profileData.lastName}
-                      onChange={handleChange}
-                      label="Last Name"
-                    />
+                    <Input id="lastName" name="lastName" value={profileData.lastName} onChange={handleChange} label="Last Name" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={profileData.email}
-                      onChange={handleChange}
-                      label="Email"
-                    />
+                    <Input id="email" name="email" type="email" value={profileData.email} onChange={handleChange} label="Email" />
                   </div>
                   <div className="space-y-2">
-                    <Input
-                      id="phone"
-                      name="phone"
-                      value={profileData.phone}
-                      onChange={handleChange}
-                      label="Phone Number"
-                    />
+                    <Input id="phone" name="phone" value={profileData.phone} onChange={handleChange} label="Phone Number" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Input
-                      id="jobTitle"
-                      name="jobTitle"
-                      value={profileData.jobTitle}
-                      onChange={handleChange}
-                      label="Job Title"
-                    />
+                    <Input id="jobTitle" name="jobTitle" value={profileData.jobTitle} onChange={handleChange} label="Job Title" />
                   </div>
                   <div className="space-y-2">
-                    <Input
-                      id="department"
-                      name="department"
-                      value={profileData.department}
-                      onChange={handleChange}
-                      label="Department"
-                    />
+                    <Input id="department" name="department" value={profileData.department} onChange={handleChange} label="Department" />
                   </div>
                   <div className="space-y-2">
-                    <Input
-                      id="company"
-                      name="company"
-                      value={profileData.company}
-                      onChange={handleChange}
-                      label="Company"
-                    />
+                    <Input id="company" name="company" value={profileData.company} onChange={handleChange} label="Company" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="bio">Bio</Label>
-                  <Textarea
-                    id="bio"
-                    name="bio"
-                    value={profileData.bio}
-                    onChange={handleChange}
-                    rows={4}
-                    placeholder="Tell us about yourself"
-                  />
+                  <Textarea id="bio" name="bio" value={profileData.bio} onChange={handleChange} rows={4} placeholder="Tell us about yourself" />
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Switch
-                    id="public-profile"
-                    checked={profileData.isPublicProfile}
-                    onCheckedChange={handleSwitchChange}
-                  />
+                  <Switch id="public-profile" checked={profileData.isPublicProfile} onCheckedChange={handleSwitchChange} />
                   <Label htmlFor="public-profile">Make my profile public</Label>
                 </div>
               </div>
@@ -217,39 +147,22 @@ export function ProfileSettings() {
       <Card>
         <CardHeader>
           <CardTitle>Connected Accounts</CardTitle>
-          <CardDescription>
-            Connect your accounts to enable single sign-on and enhance your
-            profile.
-          </CardDescription>
+          <CardDescription>Connect your accounts to enable single sign-on and enhance your profile.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between p-3 border rounded-md">
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-foreground">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    fill="#4285F4"
-                  />
-                  <path
-                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    fill="#34A853"
-                  />
-                  <path
-                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                    fill="#FBBC05"
-                  />
-                  <path
-                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                    fill="#EA4335"
-                  />
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
                 </svg>
               </div>
               <div>
                 <div className="font-medium">Google</div>
-                <div className="text-sm text-muted-foreground">
-                  Connect your Google account to enable single sign-on
-                </div>
+                <div className="text-sm text-muted-foreground">Connect your Google account to enable single sign-on</div>
               </div>
             </div>
             <Button variant="outline" size="sm">
@@ -261,17 +174,12 @@ export function ProfileSettings() {
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary-foreground">
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
-                  <path
-                    d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"
-                    fill="#1877F2"
-                  />
+                  <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="#1877F2" />
                 </svg>
               </div>
               <div>
                 <div className="font-medium">Facebook</div>
-                <div className="text-sm text-muted-foreground">
-                  Connect your Facebook account to enhance your profile
-                </div>
+                <div className="text-sm text-muted-foreground">Connect your Facebook account to enhance your profile</div>
               </div>
             </div>
             <Button variant="outline" size="sm">
@@ -291,9 +199,7 @@ export function ProfileSettings() {
               </div>
               <div>
                 <div className="font-medium">Twitter</div>
-                <div className="text-sm text-muted-foreground">
-                  Connect your Twitter account to share updates
-                </div>
+                <div className="text-sm text-muted-foreground">Connect your Twitter account to share updates</div>
               </div>
             </div>
             <Button variant="outline" size="sm">
