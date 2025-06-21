@@ -4,6 +4,13 @@ export interface ISchema {
   updatedAt?: Date;
 }
 
+export interface IBaseEntity {
+  ID: string;
+  createdAt: Date;
+  updatedAt?: Date;
+}
+
+
 export interface IPaginatedResponse<T> {
   data: T[];
   total: number;

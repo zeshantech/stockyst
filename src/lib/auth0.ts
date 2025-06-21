@@ -6,4 +6,9 @@ export const auth0 = new Auth0Client({
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
   appBaseUrl: process.env.APP_BASE_URL,
   secret: process.env.AUTH0_SECRET,
+  
+  authorizationParameters: {
+    scope: 'openid profile email read:shows',
+    audience: 'https://stockyst.vercel.app',
+  }
 });

@@ -179,13 +179,14 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
 
                 {/* Embed video (only shown when play is clicked) */}
                 {isVideoPlaying && (
-                  <iframe
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+                  <video
+                    src="./p2.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
                     title="Stockyst Demo"
                     className="absolute inset-0 w-full h-full"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
                   />
                 )}
               </div>

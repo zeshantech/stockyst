@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { IconBox, IconMenu2, IconUser } from "@tabler/icons-react";
+import { IconBox, IconMenu2 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
-import { useUser } from "@auth0/nextjs-auth0";
+import { useUserStore } from "@/store/useUserStore";
 
 export function SiteHeader() {
   const { theme, setTheme } = useTheme();
-  const { user } = useUser();
+  const user = useUserStore((state) => state.currentUser);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">

@@ -2,7 +2,6 @@ import React from "react";
 import { ChartAreaInteractive } from "@/components/(private)/dashboard/chart-area-interactive";
 import { DataTable } from "@/components/(private)/dashboard/data-table";
 import { SectionCards } from "@/components/(private)/dashboard/section-cards";
-
 import data from "./data.json";
 
 export default function page() {

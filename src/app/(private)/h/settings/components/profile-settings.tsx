@@ -3,70 +3,75 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { IconCamera } from "@tabler/icons-react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useUserStore } from "@/store/useUserStore";
+import { IUpdateUserInput } from "@/types/user";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { useState, useEffect } from "react";
-import { IconCamera } from "@tabler/icons-react";
-import { toast } from "sonner";
-import { useUser } from "@auth0/nextjs-auth0";
+import { Label } from "@/components/ui/label";
+import { useEffect, useMemo, useState } from "react";
+import { ImagePicker } from "@/components/ui/image-picker";
+import { ImageCropper } from "@/components/ui/image-cropper";
+import { useUploadImage } from "@/hooks/use-upload-image";
+import { Spinner } from "@/components/ui/spinner";
+import { Loader2 } from "lucide-react";
+
+const schema = yup.object().shape({
+  name: yup.string().optional(),
+  phoneNumber: yup.string().optional(),
+  picture: yup.string().optional(),
+  bio: yup.string().optional(),
+  publicProfile: yup.boolean().optional(),
+});
 
 export function ProfileSettings() {
-  const { user } = useUser();
-  const [isLoading, setIsLoading] = useState(false);
-  const [profileData, setProfileData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    jobTitle: "",
-    department: "",
-    company: "",
-    bio: "",
-    isPublicProfile: false,
+  const user = useUserStore((state) => state.currentUser);
+  const updateUser = useUserStore((state) => state.updateUser);
+  const { upload, isUploading } = useUploadImage();
+
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+  } = useForm<yup.InferType<typeof schema>>({
+    resolver: yupResolver(schema),
   });
 
   useEffect(() => {
-    // In a real implementation, we would fetch this from Keycloak
     if (user) {
-      setProfileData({
-        firstName: user.given_name || "",
-        lastName: user.family_name || "",
-        email: user.email || "",
-        phone: "",
-        jobTitle: "Inventory Manager",
-        department: "Operations",
-        company: "Stockyst Inc.",
-        bio: "Inventory management specialist with 5+ years of experience in retail and warehouse operations.",
-        isPublicProfile: false,
-      });
+      setValue("name", user.name);
+      setValue("phoneNumber", user.phoneNumber);
+      setValue("bio", user.bio);
+      setValue("publicProfile", user.publicProfile);
+      setValue("picture", user.picture);
+      setValue("publicProfile", user.publicProfile);
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setProfileData((prev) => ({ ...prev, [name]: value }));
+  const selectedImageUrl = useMemo(() => {
+    if (!selectedImage) return null;
+    return URL.createObjectURL(selectedImage);
+  }, [selectedImage]);
+
+  const handleImageSelect = (file: File) => {
+    setSelectedImage(file);
   };
 
-  const handleSwitchChange = (checked: boolean) => {
-    setProfileData((prev) => ({ ...prev, isPublicProfile: checked }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Profile updated successfully");
-    } catch (error) {
-      toast.error("Failed to update profile");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+  const handleOnSubmit = async (data: yup.InferType<typeof schema>) => {
+    if (selectedImage) {
+      const { url } = await upload(selectedImage);
+      data.picture = url;
     }
+
+    updateUser(data);
   };
 
   return (
@@ -77,68 +82,51 @@ export function ProfileSettings() {
           <CardDescription>Update your personal information and how others see you on the platform.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit(handleOnSubmit)} className="space-y-8">
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="relative group">
                 <Avatar className="h-24 w-24 border-2 border-border">
-                  <AvatarImage src="" alt="Profile Picture" />
-                  <AvatarFallback className="text-xl">
-                    {profileData.firstName.charAt(0)}
-                    {profileData.lastName.charAt(0)}
-                  </AvatarFallback>
+                  <AvatarImage src={selectedImageUrl || user?.picture} alt="Profile Picture" />
+                  <AvatarFallback className="text-xl">{user?.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <Button size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                  <IconCamera />
-                </Button>
+                <ImagePicker onImageSelect={handleImageSelect} croppable image={selectedImage}>
+                  <Button size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <IconCamera />
+                  </Button>
+                </ImagePicker>
+
+                {isUploading && (
+                  <div className="absolute bottom-0 right-0 bg-black/50 w-full h-full flex items-center justify-center rounded-full">
+                    <Spinner color="primary" />
+                  </div>
+                )}
               </div>
 
               <div className="grid w-full gap-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Input id="firstName" name="firstName" value={profileData.firstName} onChange={handleChange} label="First Name" />
-                  </div>
-                  <div className="space-y-2">
-                    <Input id="lastName" name="lastName" value={profileData.lastName} onChange={handleChange} label="Last Name" />
+                    <Input id="name" name="name" {...register("name")} label="Name" error={errors.name?.message} />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Input id="email" name="email" type="email" value={profileData.email} onChange={handleChange} label="Email" />
-                  </div>
-                  <div className="space-y-2">
-                    <Input id="phone" name="phone" value={profileData.phone} onChange={handleChange} label="Phone Number" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <Input id="jobTitle" name="jobTitle" value={profileData.jobTitle} onChange={handleChange} label="Job Title" />
-                  </div>
-                  <div className="space-y-2">
-                    <Input id="department" name="department" value={profileData.department} onChange={handleChange} label="Department" />
-                  </div>
-                  <div className="space-y-2">
-                    <Input id="company" name="company" value={profileData.company} onChange={handleChange} label="Company" />
-                  </div>
+                  <Input id="email" name="email" type="email" value={user?.email} readOnly label="Email" />
+                  <Input id="phoneNumber" name="phoneNumber" {...register("phoneNumber")} label="Phone Number" error={errors.phoneNumber?.message} />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="bio">Bio</Label>
-                  <Textarea id="bio" name="bio" value={profileData.bio} onChange={handleChange} rows={4} placeholder="Tell us about yourself" />
+                  <Textarea id="bio" name="bio" label="Bio" {...register("bio")} rows={4} placeholder="Tell us about yourself" />
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Switch id="public-profile" checked={profileData.isPublicProfile} onCheckedChange={handleSwitchChange} />
+                  <Switch id="public-profile" checked={watch("publicProfile")} onCheckedChange={(checked) => setValue("publicProfile", checked)} />
                   <Label htmlFor="public-profile">Make my profile public</Label>
                 </div>
               </div>
             </div>
 
             <div className="flex justify-end">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save Changes"}
-              </Button>
+              <Button type="submit">Save Changes</Button>
             </div>
           </form>
         </CardContent>

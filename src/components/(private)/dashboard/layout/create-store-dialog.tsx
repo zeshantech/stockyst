@@ -5,89 +5,68 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Selector } from "@/components/ui/selector";
 import { ImagePicker } from "@/components/ui/image-picker";
-import { useStoreActions } from "@/hooks/use-store-actions";
+import { useStoreStore } from "@/store/useStoreStore";
+import { ICreateStoreInput } from "@/types/store";
+import { useState } from "react";
+import { useUploadImage } from "@/hooks/use-upload-image";
 
-// Schema for store creation form
 const createStoreSchema = z.object({
   name: z.string().min(1, "Store name is required"),
   address: z.string().optional(),
   city: z.string().optional(),
   country: z.string().optional(),
-  phone: z.string().optional(),
+  phoneNumber: z.string().optional(),
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
   type: z.string().optional(),
-  logo: z.string().optional(),
+  logoUrl: z.string().optional(),
 });
 
-type CreateStoreFormValues = z.infer<typeof createStoreSchema>;
+export function CreateStoreDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const createStore = useStoreStore((store) => store.createStore);
+  const isCreateStoreLoading = useStoreStore((store) => store.isCreateStoreLoading);
+  const { upload } = useUploadImage();
 
-export function CreateStoreDialog({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
-  const { createStore, isCreating } = useStoreActions();
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const form = useForm<CreateStoreFormValues>({
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    reset,
+    setValue,
+    watch,
+  } = useForm<ICreateStoreInput>({
     resolver: zodResolver(createStoreSchema),
     defaultValues: {
       name: "",
       address: "",
       city: "",
       country: "",
-      phone: "",
+      phoneNumber: "",
       email: "",
       type: "warehouse",
-      logo: "",
+      logoUrl: "",
     },
   });
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-    reset,
-    setValue,
-    watch,
-  } = form;
-
-  // Handle form submission
-  const onSubmit = async (data: CreateStoreFormValues) => {
-    try {
-      // Filter out empty strings for optional fields
-      const filteredData = {
-        ...Object.fromEntries(
-          Object.entries(data).filter(([_, value]) => value !== "")
-        ),
-        name: data.name, // Ensure name is always included
-      };
-
-      // Create the store
-      await createStore(filteredData);
-
-      // Close the dialog and reset the form
-      onClose();
-      reset();
-    } catch (error) {
-      console.error("Error creating store:", error);
-    }
+  const handleClose = () => {
+    onClose();
+    reset();
   };
 
-  const handleLogoChange = (url: string) => {
-    setValue("logo", url);
+  const handleOnSubmit = async (data: ICreateStoreInput) => {
+    handleClose();
+
+    if (selectedImage) {
+      const imageUrl = await upload(selectedImage);
+      createStore({ ...data, logoUrl: imageUrl.url });
+    } else {
+      createStore(data);
+    }
   };
 
   return (
@@ -95,8 +74,7 @@ export function CreateStoreDialog({
       open={open}
       onOpenChange={(open) => {
         if (!open) {
-          onClose();
-          reset();
+          handleClose();
         }
       }}
     >
@@ -106,35 +84,14 @@ export function CreateStoreDialog({
             <Store className="size-4" />
             Create New Store
           </DialogTitle>
-          <DialogDescription>
-            Add a new store or location to manage inventory.
-          </DialogDescription>
+          <DialogDescription>Add a new store or location to manage inventory.</DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <ImagePicker
-            image={watch("logo")}
-            onChange={(file) => {
-              if (file) {
-                // In a real app, you would upload the file here
-                // and then set the returned URL
-                const mockImageUrl = URL.createObjectURL(file);
-                setValue("logo", mockImageUrl);
-              }
-            }}
-            onRemove={() => setValue("logo", "")}
-            className="w-full h-32"
-            cropOptions={{ crop: true, ratio: 1 }}
-          />
+        <form onSubmit={handleSubmit(handleOnSubmit)} className="space-y-4">
+          <ImagePicker image={selectedImage} onImageSelect={setSelectedImage} croppable dropable />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Store Name"
-              required
-              {...register("name")}
-              placeholder="Main Warehouse"
-              error={errors.name?.message}
-            />
+            <Input label="Store Name" required {...register("name")} placeholder="Main Warehouse" error={errors.name?.message} />
 
             <Selector
               label="Store Type"
@@ -151,46 +108,22 @@ export function CreateStoreDialog({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Phone"
-              {...register("phone")}
-              placeholder="+1 (234) 567-8901"
-            />
-
-            <Input
-              label="Email"
-              type="email"
-              {...register("email")}
-              placeholder="store@example.com"
-              error={errors.email?.message}
-            />
+            <Input label="Phone Number" {...register("phoneNumber")} placeholder="+1 (234) 567-8901" />
+            <Input label="Email" type="email" {...register("email")} placeholder="store@example.com" error={errors.email?.message} />
           </div>
 
-          <Input
-            label="Address"
-            {...register("address")}
-            placeholder="123 Inventory St"
-          />
+          <Input label="Address" {...register("address")} placeholder="123 Inventory St" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="City"
-              {...register("city")}
-              placeholder="San Francisco"
-            />
+            <Input label="City" {...register("city")} placeholder="San Francisco" />
             <Input label="Country" {...register("country")} placeholder="USA" />
           </div>
 
           <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
+            <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" loading={isSubmitting || isCreating}>
+            <Button type="submit" loading={isCreateStoreLoading}>
               Create Store
             </Button>
           </DialogFooter>

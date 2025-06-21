@@ -1,195 +1,161 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, ReactNode } from "react";
 import { IconCamera, IconPhoto, IconX } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
 import { Area, ImageCropper, createCroppedImage } from "./image-cropper";
+import { cn } from "@/lib/utils";
 
 interface ImagePickerProps {
-  image?: string;
-  onChange: (file: File | null) => void;
-  onRemove?: () => void;
+  children?: ReactNode;
+  dropable?: boolean;
+  croppable?: boolean;
+  aspectRatio?: number;
+  maxSize?: number; // in MB
+  acceptedFileTypes?: string;
+  onImageSelect?: (file: File) => void;
+  onChange?: (file: File) => void;
+  image?: File;
   className?: string;
-  cropOptions?: {
-    crop: boolean;
-    ratio?: number;
-  };
-  label?: string;
+  dropzoneText?: string;
+  dropzoneIcon?: ReactNode;
 }
 
 export function ImagePicker({
-  image,
+  children,
+  dropable = false,
+  croppable = false,
+  aspectRatio = 1,
+  maxSize = 5, // 5MB default
+  acceptedFileTypes = "image/*",
+  onImageSelect,
   onChange,
-  onRemove,
-  className = "",
-  cropOptions = { crop: false, ratio: 1 },
-  label,
+  image,
+  className,
+  dropzoneText = "Drag & drop an image or click to browse",
+  dropzoneIcon = <IconPhoto className="w-8 h-8 mb-2 text-muted-foreground" />,
 }: ImagePickerProps) {
-  const [isDragActive, setIsDragActive] = useState(false);
-  const [cropperImage, setCropperImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isCropperOpen, setIsCropperOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const aspectRatio = cropOptions.ratio || 1;
 
-  // Handle file selection
-  const handleFileSelect = useCallback(
-    (file: File) => {
-      if (cropOptions.crop) {
-        // Create a temporary URL for the selected image
-        const tempImageUrl = URL.createObjectURL(file);
-        setCropperImage(tempImageUrl);
+  const handleFileChange = useCallback((file: File) => {
+    if (file.size > maxSize * 1024 * 1024) {
+      alert(`File size should not exceed ${maxSize}MB`);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      
+      if (croppable) {
+        setSelectedImage(result);
+        setIsCropperOpen(true);
       } else {
-        // No cropping needed, pass the file directly
-        onChange(file);
+        if (onImageSelect) onImageSelect(file);
+        if (onChange) onChange(file);
       }
-    },
-    [cropOptions.crop, onChange]
-  );
+    };
+    reader.readAsDataURL(file);
+  }, [croppable, maxSize, onChange, onImageSelect]);
 
-  // Handle file input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFileSelect(e.target.files[0]);
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileChange(file);
     }
-  };
+  }, [handleFileChange]);
 
-  // Handle drag and drop events
-  const handleDragEnter = (e: React.DragEvent) => {
+  const handleClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(true);
-  };
+    setIsDragging(true);
+  }, []);
 
-  const handleDragLeave = (e: React.DragEvent) => {
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(false);
-  };
+    setIsDragging(false);
+  }, []);
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
-    e.stopPropagation();
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFileSelect(e.dataTransfer.files[0]);
+    setIsDragging(false);
+    
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      handleFileChange(file);
     }
-  };
+  }, [handleFileChange]);
 
-  // Handle cropping
-  const handleCropComplete = async (croppedAreaPixels: Area) => {
-    if (cropperImage) {
+  const handleCropComplete = useCallback(async (croppedAreaPixels: Area) => {
+    if (selectedImage) {
       try {
-        const croppedFile = await createCroppedImage(
-          cropperImage,
-          croppedAreaPixels
-        );
-        // Revoke the temporary URL to avoid memory leaks
-        URL.revokeObjectURL(cropperImage);
-        setCropperImage(null);
-        onChange(croppedFile);
+        const croppedFile = await createCroppedImage(selectedImage, croppedAreaPixels);
+        if (onImageSelect) onImageSelect(croppedFile);
+        if (onChange) onChange(croppedFile);
+        setIsCropperOpen(false);
+        setSelectedImage(null);
       } catch (error) {
-        console.error("Error cropping image:", error);
-        URL.revokeObjectURL(cropperImage);
-        setCropperImage(null);
+        console.error("Error creating cropped image:", error);
       }
     }
-  };
+  }, [selectedImage, onImageSelect, onChange]);
 
-  const handleCropCancel = () => {
-    if (cropperImage) {
-      URL.revokeObjectURL(cropperImage);
-      setCropperImage(null);
-    }
-  };
+  const handleCropCancel = useCallback(() => {
+    setIsCropperOpen(false);
+    setSelectedImage(null);
+  }, []);
 
   return (
-    <div className="space-y-1.5">
-      {label && <p className="text-sm font-medium">{label}</p>}
-
-      <div
-        className={`relative border rounded-md overflow-hidden transition-colors ${
-          isDragActive
-            ? "border-primary bg-primary/5"
-            : image
-            ? "border"
-            : "border-dashed"
-        } ${className}`}
-        style={{
-          aspectRatio: aspectRatio.toString(),
-          minHeight: "80px",
-        }}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        onClick={() => !image && fileInputRef.current?.click()}
-      >
-        {image ? (
-          <div className="relative w-full h-full">
-            {/* Image */}
-            <img
-              src={image}
-              alt={label || "Selected image"}
-              className="w-full h-full object-cover"
-            />
-
-            {/* Hover overlay with subtle action buttons */}
-            <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-200">
-              <div className="absolute top-2 right-2 flex gap-1">
-                <button
-                  className="p-1 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fileInputRef.current?.click();
-                  }}
-                >
-                  <IconCamera className="size-3.5" />
-                </button>
-                {onRemove && (
-                  <button
-                    className="p-1 rounded-full bg-black/50 text-white hover:bg-red-500/80 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRemove();
-                    }}
-                  >
-                    <IconX className="size-3.5" />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full p-4 cursor-pointer">
-            <IconPhoto className="size-6 text-muted-foreground mb-2" />
-            <p className="text-sm text-center text-muted-foreground">
-              Drop image here or click to browse
-            </p>
-          </div>
-        )}
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={handleInputChange}
-          accept="image/*"
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-
-      {/* Cropper dialog */}
-      {cropperImage && (
+    <div className={cn("space-y-1.5", className)}>
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept={acceptedFileTypes}
+        onChange={handleInputChange}
+      />
+      
+      {dropable ? (
+        <div 
+          className={cn(
+            "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors",
+            isDragging ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50",
+            className
+          )}
+          onClick={handleClick}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          {dropzoneIcon}
+          <p className="text-sm text-muted-foreground">{dropzoneText}</p>
+        </div>
+      ) : children ? (
+        <div onClick={handleClick}>
+          {children}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={handleClick}
+          className="flex items-center justify-center gap-2 p-2 border rounded-md hover:bg-accent transition-colors"
+        >
+          <IconCamera className="w-4 h-4" />
+          <span>Select Image</span>
+        </button>
+      )}
+      
+      {croppable && selectedImage && (
         <ImageCropper
-          image={cropperImage}
+          image={selectedImage}
           onCropComplete={handleCropComplete}
           onCancel={handleCropCancel}
-          open={!!cropperImage}
+          open={isCropperOpen}
           aspectRatio={aspectRatio}
         />
       )}

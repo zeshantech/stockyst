@@ -18,7 +18,7 @@ interface SubscriptionManagerProps {
 }
 
 export function SubscriptionManager({ showTitle = false, defaultBillingCycle = "monthly" }: SubscriptionManagerProps) {
-  const { user } = useUser();
+  const { user: isAuthenticated } = useUser();
   const router = useRouter();
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [billingCycle, setBillingCycle] = useState<BillingCycle>(defaultBillingCycle);
@@ -28,7 +28,7 @@ export function SubscriptionManager({ showTitle = false, defaultBillingCycle = "
 
   const handlePlanSelect = (planId: string) => {
     try {
-      if (!user) {
+      if (!isAuthenticated) {
         router.push("/auth/login?returnTo=/subscription");
         return;
       }
@@ -41,7 +41,7 @@ export function SubscriptionManager({ showTitle = false, defaultBillingCycle = "
     }
   };
 
-  if (!user && (isLoadingActiveSubscription || isLoadingPaymentMethods || isLoadingBillingInfo || isLoadingInvoices)) {
+  if (!isAuthenticated && (isLoadingActiveSubscription || isLoadingPaymentMethods || isLoadingBillingInfo || isLoadingInvoices)) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>

@@ -1,41 +1,12 @@
 "use client";
 
 import * as React from "react";
-import {
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconHelp,
-  IconReport,
-  IconSettings,
-  IconBox,
-  IconTruck,
-  IconCategory,
-  IconShoppingCart,
-  IconBuildingStore,
-  IconPackage,
-  IconReceipt,
-  IconBarcode,
-  IconCalendarStats,
-  IconBuildingWarehouse,
-  IconFileInvoice,
-  IconTag,
-  IconUsersGroup,
-  IconCurrencyDollar,
-  IconApi,
-  IconBooks,
-} from "@tabler/icons-react";
-
+import { IconChartBar, IconDashboard, IconDatabase, IconHelp, IconReport, IconSettings, IconBox, IconTruck, IconCategory, IconShoppingCart, IconBuildingStore, IconPackage, IconReceipt, IconBarcode, IconCalendarStats, IconBuildingWarehouse, IconFileInvoice, IconTag, IconUsersGroup, IconCurrencyDollar, IconApi, IconBooks } from "@tabler/icons-react";
 import { NavDocuments } from "./nav-documents";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { StoreSwitcher } from "./team-switcher";
 
 const data = {
@@ -450,9 +421,9 @@ export function AppSidebar() {
       <SidebarContent className="hide-scrollbar">
         <NavMain items={data.navMain} />
         <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
+        <NavSecondary items={data.navSecondary} />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

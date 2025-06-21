@@ -1,22 +1,21 @@
 import axios from "axios";
+import { auth0 } from "./auth0";
 
-// Create an axios instance with default config
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+  baseURL: process.env.SERVER_URL || "http://localhost:8080",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Add a request interceptor to add auth token
 api.interceptors.request.use((config) => {
-  // Check if we're in the browser environment
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
+  (async () => {
+    const token = {token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImVUNmxRcG9XVEw3djJWQU5UQ2EtbSJ9.eyJpc3MiOiJodHRwczovL2Rldi1xYzZrbTN1M3V3Nm5oZDRiLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnaXRodWJ8MTM4NjYwNDc0IiwiYXVkIjpbImh0dHBzOi8vc3RvY2t5c3QudmVyY2VsLmFwcCIsImh0dHBzOi8vZGV2LXFjNmttM3UzdXc2bmhkNGIudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTc1MDUwNDAxOCwiZXhwIjoxNzUwNTkwNDE4LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiR0dZUEdQTEJkQkltTlJYVEZIQ0ZVTDl5TzFubFdaSlcifQ.zK8-ojgQl4NQwqFNRPxVJYot8P7J9QrzvINMMCPqla-_VZ5StglBhWodaUCMX357jvXsdBR4fNUEJc3TX_p08__swr6O1bEIJWEmfk5B3Efr-XevSNQhE2-qm6jmSUYhyvOhuBjC6WsoThNlARVL2NugOLEeN-1nYF7VeTeREDdK-q_at44yPzFPcSLEPJZg0Cx_XUkKfNtqaamKeDpWdRjfVFSIWUktZTOhXX3FJXAdg6_wlxEQz9N13_aelcKcCfa31UyLWlHoRijG9MdKqH4xz4SuOcT8g2G7MuJloXvXIETXhn1rbCOxgVElc2hfCiEzMrdr9LtOJRfaX_L54A'};
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token.token}`;
     }
-  }
+  })();
+
   return config;
 });
 
@@ -24,11 +23,6 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 && typeof window !== "undefined") {
-      // Handle unauthorized access
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
     return Promise.reject(error);
   }
 );

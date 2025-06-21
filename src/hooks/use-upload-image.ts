@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { toast } from "sonner";
 
 export interface UploadImageResponse {
@@ -6,26 +7,29 @@ export interface UploadImageResponse {
   id: string;
 }
 
-/**
- * Upload an image to the server/cloud storage
- */
 const uploadImage = async (file: File): Promise<UploadImageResponse> => {
-  // In a real app, you would upload to your backend or directly to Cloudinary
-  // This is a mock implementation
-  return new Promise((resolve) => {
-    // Simulate API call delay
-    setTimeout(() => {
-      resolve({
-        url: URL.createObjectURL(file),
-        id: `image_${Date.now()}`,
-      });
-    }, 800);
-  });
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "techyst"); // Replace with your Cloudinary upload preset
+
+  try {
+    const response = await axios.post(
+      `https://api.cloudinary.com/v1_1/djvfnekle/image/upload`, // Replace with your Cloudinary cloud name
+      formData
+    );
+
+    const data = response.data as { secure_url: string; public_id: string };
+
+    return {
+      url: data.secure_url,
+      id: data.public_id,
+    };
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    throw error;
+  }
 };
 
-/**
- * Hook for uploading images
- */
 export function useUploadImage() {
   const mutation = useMutation({
     mutationFn: uploadImage,
@@ -42,7 +46,7 @@ export function useUploadImage() {
   });
 
   return {
-    upload: mutation.mutate,
+    upload: mutation.mutateAsync,
     isUploading: mutation.isPending,
     data: mutation.data,
   };
