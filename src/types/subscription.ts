@@ -29,14 +29,7 @@ export interface ISubscriptionPlan extends Omit<ISchema, "createdAt"> {
 export interface IActiveSubscription {
   id: string;
   planId: string;
-  status:
-    | "active"
-    | "canceled"
-    | "past_due"
-    | "trialing"
-    | "incomplete"
-    | "incomplete_expired"
-    | "unpaid";
+  status: "active" | "canceled" | "past_due" | "trialing" | "incomplete" | "incomplete_expired" | "unpaid";
   currentPeriodStart: Date;
   currentPeriodEnd: Date;
   cancelAtPeriodEnd: boolean;

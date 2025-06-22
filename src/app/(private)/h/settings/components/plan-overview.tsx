@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -20,17 +14,14 @@ import { useSubscription } from "@/hooks/use-subscription";
 
 export function PlanOverview() {
   const [isChangingPlan, setIsChangingPlan] = useState(false);
-  const { currentPlan, usageStats, isLoadingUsageStats, activeSubscription } =
-    useSubscription();
+  const { currentPlan, usageStats, isLoadingUsageStats, activeSubscription } = useSubscription();
 
   if (!currentPlan || !activeSubscription) {
     return (
       <Card>
         <CardHeader>
           <CardTitle>Current Plan</CardTitle>
-          <CardDescription>
-            Your current subscription plan and usage information.
-          </CardDescription>
+          <CardDescription>Your current subscription plan and usage information.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <Skeleton className="h-24 w-full" />
@@ -45,9 +36,7 @@ export function PlanOverview() {
     <Card>
       <CardHeader>
         <CardTitle>Current Plan</CardTitle>
-        <CardDescription>
-          Your current subscription plan and usage information.
-        </CardDescription>
+        <CardDescription>Your current subscription plan and usage information.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-md bg-primary/5">
@@ -57,18 +46,9 @@ export function PlanOverview() {
               <Badge variant="success">Active</Badge>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
-              {currentPlan.price[activeSubscription.billingCycle]} billed{" "}
-              {activeSubscription.billingCycle}
+              {currentPlan.price[activeSubscription.billingCycle]} billed {activeSubscription.billingCycle}
             </p>
-            {activeSubscription.nextBillingDate ? (
-              <p className="text-sm mt-3">
-                Next billing date:{" "}
-                {format(
-                  new Date(activeSubscription.nextBillingDate),
-                  "MMMM d, yyyy"
-                )}
-              </p>
-            ) : null}
+            {activeSubscription.nextBillingDate ? <p className="text-sm mt-3">Next billing date: {format(new Date(activeSubscription.nextBillingDate), "MMMM d, yyyy")}</p> : null}
           </div>
           <div className="flex gap-2 mt-4 md:mt-0">
             <Button onClick={() => setIsChangingPlan(true)}>Change Plan</Button>
@@ -108,19 +88,14 @@ export function PlanOverview() {
                   <div className="flex items-center justify-between">
                     <Label>Team Members</Label>
                     <div className="text-sm font-medium">
-                      {usageStats.teamMembers.used} /{" "}
-                      {usageStats.teamMembers.total}
+                      {usageStats.teamMembers.used} / {usageStats.teamMembers.total}
                     </div>
                   </div>
                   <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full"
-                      style={{ width: `${usageStats.teamMembers.percentage}%` }}
-                    ></div>
+                    <div className="h-full bg-primary rounded-full" style={{ width: `${usageStats.teamMembers.percentage}%` }}></div>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {usageStats.teamMembers.used} of{" "}
-                    {usageStats.teamMembers.total} team members used
+                    {usageStats.teamMembers.used} of {usageStats.teamMembers.total} team members used
                   </p>
                 </div>
 
@@ -128,39 +103,26 @@ export function PlanOverview() {
                   <div className="flex items-center justify-between">
                     <Label>Storage</Label>
                     <div className="text-sm font-medium">
-                      {usageStats.storage.used} GB / {usageStats.storage.total}{" "}
-                      GB
+                      {usageStats.storage.used} GB / {usageStats.storage.total} GB
                     </div>
                   </div>
                   <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full"
-                      style={{ width: `${usageStats.storage.percentage}%` }}
-                    ></div>
+                    <div className="h-full bg-primary rounded-full" style={{ width: `${usageStats.storage.percentage}%` }}></div>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {usageStats.storage.percentage}% of storage used
-                  </p>
+                  <p className="text-xs text-muted-foreground">{usageStats.storage.percentage}% of storage used</p>
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label>API Requests</Label>
                     <div className="text-sm font-medium">
-                      {usageStats.apiRequests.used.toLocaleString()} /{" "}
-                      {usageStats.apiRequests.total.toLocaleString()}
+                      {usageStats.apiRequests.used.toLocaleString()} / {usageStats.apiRequests.total.toLocaleString()}
                     </div>
                   </div>
                   <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full"
-                      style={{ width: `${usageStats.apiRequests.percentage}%` }}
-                    ></div>
+                    <div className="h-full bg-primary rounded-full" style={{ width: `${usageStats.apiRequests.percentage}%` }}></div>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    {usageStats.apiRequests.percentage}% of monthly API quota
-                    used
-                  </p>
+                  <p className="text-xs text-muted-foreground">{usageStats.apiRequests.percentage}% of monthly API quota used</p>
                 </div>
               </div>
             )}

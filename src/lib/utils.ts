@@ -17,7 +17,6 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-
-export function noop(...args: any[]) {
+export function noop(...args: any[]): any {
   return;
 }

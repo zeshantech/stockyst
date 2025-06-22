@@ -5,11 +5,11 @@ import { IconBox, IconMenu2 } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon } from "lucide-react";
-import { useUserStore } from "@/store/useUserStore";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export function SiteHeader() {
   const { theme, setTheme } = useTheme();
-  const user = useUserStore((state) => state.currentUser);
+  const { user } = useUser();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">

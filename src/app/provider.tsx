@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import React, { ReactNode, useState } from "react";
 import { DevelopmentDialog } from "@/components/(public)/development-dialog";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Provider({ children }: { children: ReactNode }) {
   const queryClient = new QueryClient();
@@ -13,6 +14,7 @@ export default function Provider({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <DevelopmentDialog open={open} onOpenChange={setOpen} />
+        <Toaster />
         {children}
       </ThemeProvider>
     </QueryClientProvider>

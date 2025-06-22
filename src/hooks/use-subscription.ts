@@ -15,7 +15,7 @@ export const SUBSCRIPTION_QUERY_KEYS = {
 export function useSubscription() {
   const queryClient = useQueryClient();
   const isAuthenticated = true;
-  
+
   // Queries
   const activeSubscriptionQuery = useQuery({
     queryKey: SUBSCRIPTION_QUERY_KEYS.ACTIVE_SUBSCRIPTION,
