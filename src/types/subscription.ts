@@ -50,31 +50,11 @@ export interface IPaymentMethodInput {
 
 export interface IPaymentMethod {
   id: string;
-  type: string;
+  brand: string;
   last4: string;
-  expiryDate: string;
+  expMonth: number;
+  expYear: number;
   isDefault: boolean;
-  cardType: string;
-  stripePaymentMethodId: string;
-}
-
-export interface IBillingInfo {
-  name: string;
-  email: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
-
-export interface IInvoice {
-  id: string;
-  date: Date;
-  amount: string;
-  status: "paid" | "pending" | "failed";
-  invoiceUrl?: string;
-  stripeInvoiceId: string;
 }
 
 export interface IUsageStats {

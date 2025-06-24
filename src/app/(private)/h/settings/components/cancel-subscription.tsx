@@ -1,25 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconAlertTriangle } from "@tabler/icons-react";
-import { useSubscription } from "@/hooks/use-subscription";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
+import { useBillingStore } from "@/store/useBillingStore";
 
 export function CancelSubscription() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const { cancelSubscription, isCancellingSubscription } = useSubscription();
+  const cancelSubscription = useBillingStore((state) => state.cancelSubscription);
+  const isCancellingSubscription = useBillingStore((state) => state.isCancelSubscriptionPending);
 
-  const handleCancelSubscription = async () => {
-    await cancelSubscription();
+  const handleCancelSubscription = () => {
+    cancelSubscription();
     setIsConfirmOpen(false);
   };
 
@@ -27,18 +22,14 @@ export function CancelSubscription() {
     <Card>
       <CardHeader>
         <CardTitle>Cancel Subscription</CardTitle>
-        <CardDescription>
-          Cancel your subscription and delete account data.
-        </CardDescription>
+        <CardDescription>Cancel your subscription and delete account data.</CardDescription>
       </CardHeader>
       <CardContent>
         <Alert variant={"error"}>
           <IconAlertTriangle />
           <AlertTitle>Warning: This action cannot be undone</AlertTitle>
           <AlertDescription>
-            Cancelling your subscription will immediately revoke access to
-            premium features. Your data will be retained for 30 days after
-            cancellation.
+            After cancelling subscription, you will still have access to the premium features for the rest of the billing cycle.
             <ConfirmationDialog
               trigger={
                 <Button className="mt-4" color="error">
@@ -46,7 +37,7 @@ export function CancelSubscription() {
                 </Button>
               }
               title="Are you absolutely sure?"
-              description="This action will immediately cancel your subscription and revoke access to premium features. Your data will be retained for 30 days and then permanently deleted."
+              description="This action will cancel your subscription and you will still have access to the premium features for the rest of the billing cycle, but we will not deduct any money from your account."
               cancelText="Cancel"
               confirmText="Yes, Cancel Subscription"
               onConfirm={handleCancelSubscription}

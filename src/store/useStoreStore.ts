@@ -53,6 +53,7 @@ export function useInitializeStoreStore() {
   const updateStoreMutation = useUpdateStore();
   const completeStorePaymentMutation = useCompleteStorePayment();
 
+  console.log("=======================================", storesQuery.error, "=======================================");
   useEffect(() => {
     useStoreStore.setState({
       stores: storesQuery.data,
@@ -65,7 +66,6 @@ export function useInitializeStoreStore() {
   }, [storesQuery.data, storesQuery.isLoading, storesQuery.isFetching, storesQuery.isSuccess, storesQuery.isError, storesQuery.refetch]);
 
   useEffect(() => {
-    console.log("createStoreMutation.data", createStoreMutation.data);
     useStoreStore.setState({
       createStore: async (store: ICreateStoreInput) => {
         return createStoreMutation.mutateAsync(store);
