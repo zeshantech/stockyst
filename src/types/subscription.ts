@@ -1,7 +1,5 @@
 import { ISchema } from "./generic";
 
-export type BillingCycle = "monthly" | "yearly";
-
 export interface ISubscriptionPlan extends Omit<ISchema, "createdAt"> {
   id: string;
   name: string;
@@ -33,7 +31,7 @@ export interface IActiveSubscription {
   currentPeriodStart: Date;
   currentPeriodEnd: Date;
   cancelAtPeriodEnd: boolean;
-  billingCycle: BillingCycle;
+  billingCycle: IntervalType;
   nextBillingDate?: Date;
   cancelAt?: Date;
   trialEndsAt?: Date;

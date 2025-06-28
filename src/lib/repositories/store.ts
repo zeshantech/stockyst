@@ -1,27 +1,26 @@
-import { IPaymentIntentResponse } from "@/types/billing";
-import { api } from "../api";
-import { ICreateStoreInput, IStore, IUpdateStoreInput } from "@/types/store";
+import { apiCall } from "../api";
+import { ICreateStoreInput, ICreateStoreOutput, IStore, IUpdateStoreInput } from "@/types/store";
 
 export async function getStores() {
-  const res = await api.get<IStore[]>("/store");
+  const res = await apiCall<IStore[]>("/store", "GET");
 
-  return res.data;
+  return res;
 }
 
 export async function updateStore(id: string, input: IUpdateStoreInput) {
-  const res = await api.put<IStore>(`/store/${id}`, input);
+  const res = await apiCall<IStore>(`/store/${id}`, "PUT", input);
 
-  return res.data;
+  return res;
 }
 
 export async function createStore(input: ICreateStoreInput) {
-  const res = await api.post<IPaymentIntentResponse | null>("/store", input);
+  const res = await apiCall<ICreateStoreOutput | null>("/store", "POST", input);
 
-  return res.data;
+  return res;
 }
 
 export async function completeStorePayment(paymentIntentId: string, storeData: ICreateStoreInput) {
-  const res = await api.post<IStore>(`/store/${paymentIntentId}/payment-complete`, storeData);
+  const res = await apiCall<IStore>(`/store/${paymentIntentId}/payment-complete`, "POST", storeData);
 
-  return res.data;
+  return res;
 }

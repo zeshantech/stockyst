@@ -10,17 +10,11 @@ import { NotificationSettings } from "./components/notification-settings";
 import { IntegrationSettings } from "./components/integration-settings";
 import { BillingSettings } from "./components/billing-settings";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  IconUser,
-  IconLock,
-  IconKey,
-  IconBuildingStore,
-  IconBell,
-  IconPlugConnected,
-  IconReceipt,
-} from "@tabler/icons-react";
+import { IconUser, IconLock, IconKey, IconBuildingStore, IconBell, IconPlugConnected, IconReceipt } from "@tabler/icons-react";
+import { useInitializeBillingStore } from "@/store/useBillingStore";
 
 function SettingsContent() {
+  useInitializeBillingStore();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
@@ -44,23 +38,13 @@ function SettingsContent() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground mt-2">
-            Manage your account settings and preferences.
-          </p>
+          <p className="text-muted-foreground mt-2">Manage your account settings and preferences.</p>
         </div>
 
-        <Tabs
-          value={activeTab}
-          onValueChange={handleOnTabChange}
-          className="space-y-6"
-        >
-          <TabsList className="bg-muted p-1 h-auto gap-1 flex flex-wrap items-center">
+        <Tabs value={activeTab} onValueChange={handleOnTabChange}>
+          <TabsList className="bg-muted p-1 h-auto gap-1 flex flex-wrap items-center w-full">
             {TABS.map((tab) => (
-              <TabsTrigger
-                key={tab.id}
-                value={tab.id}
-                className="flex items-center gap-2 px-4 py-2 data-[state=active]:bg-background rounded-md"
-              >
+              <TabsTrigger key={tab.id} value={tab.id}>
                 <tab.icon className="size-4" />
                 <span>{tab.label}</span>
               </TabsTrigger>
@@ -68,7 +52,7 @@ function SettingsContent() {
           </TabsList>
 
           {TABS.map((tab) => (
-            <TabsContent key={tab.id} value={tab.id} className="pt-4">
+            <TabsContent key={tab.id} value={tab.id}>
               <tab.component />
             </TabsContent>
           ))}

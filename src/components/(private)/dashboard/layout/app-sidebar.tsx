@@ -7,7 +7,7 @@ import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
-import { StoreSwitcher } from "./team-switcher";
+import StoreSwitcher from "./StoreSwitcher";
 
 const data = {
   navMain: [

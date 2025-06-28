@@ -1,172 +1,94 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { IconCheck } from "@tabler/icons-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { BillingCycle, ISubscriptionPlan } from "@/types/subscription";
-import { Badge } from "../ui/badge";
+import { IPlan, IntervalType } from "@/types/plan";
+import { useBillingStore } from "@/store/useBillingStore";
+import { useUser } from "@auth0/nextjs-auth0";
+import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { PaymentForm } from "../ui/payment-form";
 
-interface PricingCardProps {
-  plan: ISubscriptionPlan;
-  billingCycle: BillingCycle;
-  isCurrentPlan?: boolean;
-  onSelect?: (planId: string) => void;
-  index?: number;
-  showPopularBadge?: boolean;
+interface PricingCardProps extends IPlan {
+  activeTab: IntervalType;
   className?: string;
+  isPopular?: boolean;
 }
 
-export function PricingCard({
-  plan,
-  billingCycle,
-  isCurrentPlan = false,
-  onSelect,
-  index = 0,
-  showPopularBadge = true,
-  className,
-}: PricingCardProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.2 }}
-      viewport={{ once: true }}
-      className={cn("flex", className)}
-    >
-      <div
-        className={cn(
-          "relative rounded-2xl overflow-hidden border shadow-lg h-full flex flex-col w-full group transition-all duration-300",
-          plan.isPopular
-            ? "border-primary/40 shadow-primary/20"
-            : "border-border hover:border-primary/20 hover:shadow-md",
-          isCurrentPlan && "border-success shadow-success/20"
-        )}
-      >
-        {/* Popular badge */}
-        {plan.isPopular && showPopularBadge && (
-          <>
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/80 to-primary"></div>
-            <div className="absolute -right-12 top-6 bg-gradient-to-r from-primary/80 to-primary text-primary-foreground px-12 py-1 rotate-45 text-xs font-medium shadow-md">
-              Most Popular
-            </div>
-          </>
-        )}
+export function PricingCard({ planId, name, description, features, limitations, prices, activeTab, className, isPopular }: PricingCardProps) {
+  const router = useRouter();
+  const { user } = useUser();
 
-        {/* Current plan badge */}
-        {isCurrentPlan && (
-          <Badge className="absolute top-2 right-2 bg-success text-white">
-            Current Plan
+  const subscribeToPlan = useBillingStore((store) => store.subscribeToPlan);
+  const isSubscribeToPlanPending = useBillingStore((store) => store.isSubscribeToPlanPending);
+
+  const activePrice = useMemo(() => prices.find((price) => price.interval === activeTab), [prices, activeTab]);
+
+  const isPremiumPlan = name === "Pro" || name === "Custom";
+
+  const handlePlanSelect = (planId: string) => {
+    if (!user) {
+      router.push("/auth/login?returnTo=/subscription");
+      return;
+    }
+
+    if (activePrice) {
+      subscribeToPlan({ planId, priceId: activePrice.stripePriceId });
+    } else {
+      toast.error("No active price found");
+    }
+  };
+
+  return (
+    <Card className={cn("flex flex-col border-border/40", isPopular && "border-primary shadow-lg scale-[1.02]", isPremiumPlan && "bg-gradient-to-br from-background to-primary/5 border-primary/30", className)}>
+      <CardHeader>
+        {isPopular && (
+          <Badge className="w-fit mb-2" variant="outline">
+            Most Popular
           </Badge>
         )}
-
-        <div
-          className={cn(
-            "p-6",
-            plan.isPopular
-              ? "bg-gradient-to-br from-primary/5 to-background"
-              : ""
-          )}
-        >
-          <div className="mb-4">
-            <h3
-              className={cn(
-                "text-2xl font-bold",
-                plan.isPopular ? "text-primary" : "text-foreground",
-                isCurrentPlan && "text-success"
-              )}
-            >
-              {plan.name}
-            </h3>
-            <div className="flex items-end gap-1 mt-2">
-              <span className="text-4xl font-extrabold text-foreground">
-                {plan.price[billingCycle]}
-              </span>
-              <span className="text-sm text-muted-foreground mb-1">
-                {plan.period[billingCycle]}
-              </span>
-            </div>
-            <div className="mt-3 text-sm text-muted-foreground">
-              {plan.description}
-            </div>
+        {isPremiumPlan && (
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <Badge className="bg-primary/20 text-primary hover:bg-primary/30">{name === "Pro" ? "Premium" : "Enterprise"}</Badge>
           </div>
-
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent my-6"></div>
-
-          <ul className="space-y-4 text-sm flex-grow">
-            {plan.features.map((feature, idx) => (
-              <motion.li
-                key={idx}
-                className="flex items-start gap-3"
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * idx + index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <div
-                  className={cn(
-                    "rounded-full p-1 mt-0.5",
-                    plan.isPopular
-                      ? "bg-primary/20 text-primary"
-                      : "bg-muted text-muted-foreground",
-                    isCurrentPlan && "bg-success/20 text-success"
-                  )}
-                >
-                  <IconCheck className="h-3 w-3" />
-                </div>
-                <span className="text-foreground">{feature}</span>
-              </motion.li>
-            ))}
-
-            {plan.limitations && plan.limitations.length > 0 && (
-              <>
-                <li className="pt-2 text-sm text-muted-foreground font-medium">
-                  Limitations:
+        )}
+        <CardTitle className={cn("text-xl font-bold", isPremiumPlan && "text-primary")}>{name}</CardTitle>
+        {description && <CardDescription>{description}</CardDescription>}
+        <div className="mt-4">
+          <span className={cn("text-3xl font-bold", isPremiumPlan && "bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70")}>${activePrice?.amount}</span>
+          <span className="text-muted-foreground ml-1">/{activeTab === "monthly" ? "month" : "year"}</span>
+        </div>
+      </CardHeader>
+      <CardContent className="flex-grow">
+        <ul className="space-y-2">
+          {Object.entries(features).map(([key, value]) => (
+            <li key={key} className="flex items-start gap-2">
+              <Check className={cn("h-5 w-5 flex-shrink-0 mt-0.5", isPremiumPlan ? "text-primary" : "text-primary")} />
+              <span>{key === "members" ? `${value} team members` : key}</span>
+            </li>
+          ))}
+        </ul>
+        {limitations.length > 0 && (
+          <div className="mt-4">
+            <h4 className="text-sm font-medium mb-2">Limitations:</h4>
+            <ul className="space-y-1">
+              {limitations.map((limitation, i) => (
+                <li key={i} className="text-sm text-muted-foreground">
+                  {limitation}
                 </li>
-                {plan.limitations.map((limitation, idx) => (
-                  <motion.li
-                    key={`limit-${idx}`}
-                    className="flex items-start gap-3 text-muted-foreground"
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{
-                      delay: 0.1 * (plan.features.length + idx) + index * 0.1,
-                    }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="rounded-full p-1 mt-0.5 bg-muted text-muted-foreground">
-                      <IconCheck className="h-3 w-3" />
-                    </div>
-                    <span>{limitation}</span>
-                  </motion.li>
-                ))}
-              </>
-            )}
-          </ul>
-        </div>
-
-        <div className="p-6 border-t border-border mt-auto">
-          <Button
-            className={cn(
-              "w-full h-12 font-medium transition-all duration-300",
-              plan.isPopular
-                ? "hover:shadow-lg hover:shadow-primary/20 hover:transform hover:translate-y-[-2px]"
-                : ""
-            )}
-            color={plan.buttonColor}
-            disabled={isCurrentPlan}
-            onClick={() => onSelect && onSelect(plan.id)}
-          >
-            {isCurrentPlan ? "Current Plan" : plan.buttonText}
-          </Button>
-
-          <p className="text-xs text-center text-muted-foreground mt-3">
-            {plan.id === "free" && "No credit card required to start"}
-            {plan.id === "professional" && "14-day money-back guarantee"}
-            {plan.id === "enterprise" && "Personalized onboarding included"}
-          </p>
-        </div>
-      </div>
-    </motion.div>
+              ))}
+            </ul>
+          </div>
+        )}
+      </CardContent>
+      <CardFooter>
+        <Button onClick={() => handlePlanSelect(planId)} className={cn("w-full", isPremiumPlan && !isPopular && "bg-primary/20 text-primary hover:bg-primary hover:text-primary-foreground")} variant={isPopular ? "default" : isPremiumPlan ? "default" : "outline"} loading={isSubscribeToPlanPending}>
+          Choose {name}
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

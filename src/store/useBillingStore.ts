@@ -1,6 +1,6 @@
 import { useCancelSubscription, useCreateCustomerPortalSession, useGetCurrentSubscription, useGetInvoices, useGetPaymentMethods, useGetSubscriptionPlans, usePaymentMethodSetupIntent, useRequestCustomPlan, useSubscribeToPlan } from "@/hooks/use-billing";
 import { noop } from "@/lib/utils";
-import { ICustomPlanRequestInput, IPlan, ISubscribeToPlanInput, IBillingInfo, ISubscribeToPlanOutput, ISubscription, IPaymentMethod, IInvoice } from "@/types/plan";
+import { ICustomPlanRequestInput, ISubscribeToPlanInput, ISubscribeToPlanOutput, ISubscription, IPaymentMethod, IInvoice, IPlans } from "@/types/plan";
 import { useEffect } from "react";
 import { create } from "zustand";
 
@@ -8,7 +8,7 @@ interface IBillingStore {
   currentSubscription: ISubscription | null;
   isCurrentSubscriptionLoading: boolean;
 
-  plans: IPlan[];
+  plans: IPlans | null;
   isPlansLoading: boolean;
 
   invoices: IInvoice[];
@@ -17,9 +17,10 @@ interface IBillingStore {
   subscribeToPlan: (input: ISubscribeToPlanInput) => void;
   isSubscribeToPlanPending: boolean;
   subscribeToPlanResult: ISubscribeToPlanOutput | null;
+  clearSubscribeToPlanResult: () => void;
   isSubscribeToPlanSuccess: boolean;
 
-  requestCustomPlan: (plan: ICustomPlanRequestInput) => void;
+  requestCustomPlan: (plan: ICustomPlanRequestInput) => Promise<void>;
   isRequestCustomPlanPending: boolean;
 
   cancelSubscription: () => void;
@@ -27,26 +28,22 @@ interface IBillingStore {
 
   paymentMethods: IPaymentMethod[];
   isPaymentMethodsLoading: boolean;
+  refetchPaymentMethods: () => void;
 
-  paymentMethodSetupIntent: () => Promise<void>;
+  paymentMethodSetupIntent: () => Promise<{ clientSecret: string }>;
   isPaymentMethodSetupIntentPending: boolean;
   paymentMethodSetupIntentResult: { clientSecret: string } | null;
+  clearPaymentMethodSetupIntentResult: () => void;
 
   createCustomerPortalSession: () => void;
   isCreateCustomerPortalSessionPending: boolean;
-
-  billingInfo: IBillingInfo | null;
-  isLoadingBillingInfo: boolean;
-
-  updateBillingInfo: (input: IBillingInfo) => void;
-  isUpdateBillingInfoPending: boolean;
 }
 
 export const useBillingStore = create<IBillingStore>((set) => ({
   currentSubscription: null,
   isCurrentSubscriptionLoading: false,
 
-  plans: [],
+  plans: null,
   isPlansLoading: false,
 
   invoices: [],
@@ -55,6 +52,7 @@ export const useBillingStore = create<IBillingStore>((set) => ({
   subscribeToPlan: noop,
   isSubscribeToPlanPending: false,
   subscribeToPlanResult: null,
+  clearSubscribeToPlanResult: noop,
   isSubscribeToPlanSuccess: false,
 
   requestCustomPlan: noop,
@@ -65,18 +63,15 @@ export const useBillingStore = create<IBillingStore>((set) => ({
 
   paymentMethods: [],
   isPaymentMethodsLoading: false,
+  refetchPaymentMethods: noop,
 
   paymentMethodSetupIntent: noop,
   isPaymentMethodSetupIntentPending: false,
   paymentMethodSetupIntentResult: null,
+  clearPaymentMethodSetupIntentResult: noop,
 
   createCustomerPortalSession: noop,
   isCreateCustomerPortalSessionPending: false,
-
-  billingInfo: null,
-  isLoadingBillingInfo: false,
-  updateBillingInfo: noop,
-  isUpdateBillingInfoPending: false,
 }));
 
 export function useInitializeBillingStore() {
@@ -98,8 +93,9 @@ export function useInitializeBillingStore() {
   }, [currentSubscriptionQuery.data, currentSubscriptionQuery.isLoading]);
 
   useEffect(() => {
+    console.log(plansQuery.data, "plansQuery.data");
     useBillingStore.setState({
-      plans: plansQuery.data,
+      plans: plansQuery.data || null,
       isPlansLoading: plansQuery.isLoading,
     });
   }, [plansQuery.data, plansQuery.isLoading]);
@@ -112,13 +108,14 @@ export function useInitializeBillingStore() {
       isSubscribeToPlanPending: subscribeToPlanMutation.isPending,
       subscribeToPlanResult: subscribeToPlanMutation.data,
       isSubscribeToPlanSuccess: subscribeToPlanMutation.isSuccess,
+      clearSubscribeToPlanResult: subscribeToPlanMutation.reset,
     });
   }, [subscribeToPlanMutation.mutate, subscribeToPlanMutation.isPending]);
 
   useEffect(() => {
     useBillingStore.setState({
-      requestCustomPlan: (plan: ICustomPlanRequestInput) => {
-        requestCustomPlanMutation.mutate(plan);
+      requestCustomPlan: async (plan: ICustomPlanRequestInput) => {
+        await requestCustomPlanMutation.mutateAsync(plan);
       },
       isRequestCustomPlanPending: requestCustomPlanMutation.isPending,
     });
@@ -137,16 +134,16 @@ export function useInitializeBillingStore() {
     useBillingStore.setState({
       paymentMethods: paymentMethodsQuery.data,
       isPaymentMethodsLoading: paymentMethodsQuery.isLoading,
+      refetchPaymentMethods: paymentMethodsQuery.refetch,
     });
   }, [paymentMethodsQuery.data, paymentMethodsQuery.isLoading]);
 
   useEffect(() => {
     useBillingStore.setState({
-      paymentMethodSetupIntent: async () => {
-        await paymentMethodSetupIntentMutation.mutateAsync();
-      },
+      paymentMethodSetupIntent: paymentMethodSetupIntentMutation.mutateAsync,
       paymentMethodSetupIntentResult: paymentMethodSetupIntentMutation.data,
       isPaymentMethodSetupIntentPending: paymentMethodSetupIntentMutation.isPending,
+      clearPaymentMethodSetupIntentResult: paymentMethodSetupIntentMutation.reset,
     });
   }, [paymentMethodSetupIntentMutation.mutate, paymentMethodSetupIntentMutation.isPending, paymentMethodSetupIntentMutation.data]);
 

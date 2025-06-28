@@ -96,14 +96,7 @@ export function CreateStoreDialog({ open, onClose }: { open: boolean; onClose: (
       storeInput = { ...storeInput, logoUrl: imageUrl.url };
     }
 
-    const result = await createStore(storeInput);
-
-    if (!result?.requiresPaymentMethod) {
-      setShowConfetti(true);
-      setTimeout(() => {
-        handleClose();
-      }, 3000);
-    }
+    await createStore(storeInput);
   };
 
   const handlePaymentSuccess = async (paymentIntentId: string) => {
@@ -139,12 +132,12 @@ export function CreateStoreDialog({ open, onClose }: { open: boolean; onClose: (
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <Store className="size-4" />
-                  {createStoreResult?.requiresPaymentMethod ? "Payment Required" : "Create New Store"}
+                  {createStoreResult?.clientSecret ? "Payment Required" : "Create New Store"}
                 </DialogTitle>
-                <DialogDescription>{createStoreResult?.requiresPaymentMethod ? `A ${formatCurrency(createStoreResult.amount)} fee is required to create an additional store.` : "Add a new store or location to manage inventory."}</DialogDescription>
+                <DialogDescription>{createStoreResult?.clientSecret ? `A ${formatCurrency(createStoreResult.amount)} fee is required to create an additional store.` : "Add a new store or location to manage inventory."}</DialogDescription>
               </DialogHeader>
 
-              {createStoreResult?.requiresPaymentMethod ? (
+              {createStoreResult?.clientSecret ? (
                 <PaymentForm clientSecret={createStoreResult.clientSecret} onPaymentSuccess={handlePaymentSuccess} amount={createStoreResult.amount} />
               ) : (
                 <form onSubmit={handleSubmit(handleOnSubmit)} className="space-y-4">

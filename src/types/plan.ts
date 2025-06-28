@@ -28,30 +28,41 @@ export interface IInterval {
   stripePriceId: string;
 }
 
-export interface IPlan extends IBaseEntity {
+export interface IPlan {
+  planId: string;
   name: string;
   description: string;
-  type: PlanType;
-  monthlyInterval: IInterval;
-  annualInterval: IInterval;
-  stripeProductId: string;
-  features: { name: string; count?: number }[];
+  type: string;
+  features: Record<string, string>;
   limitations: string[];
+  prices: {
+    amount: number;
+    currency: string;
+    stripePriceId: string;
+    interval: IntervalType;
+  }[];
+}
+
+export interface IPlans {
+  free: IPlan;
+  pro: IPlan;
+  custom: IPlan | null;
 }
 
 export interface ISubscribeToPlanInput {
   planId: string;
-  interval: IntervalType;
+  priceId: string;
 }
 
 export interface ISubscribeToPlanOutput {
   subscriptionId: string;
   clientSecret: string;
   customerId: string;
+  paymentStatus: "paid" | "pending";
 }
 
 export interface ISubscription extends IBaseEntity {
-  plan: string;
+  planId: string;
   store: string;
   type: PlanType;
   status: SubscriptionStatus;
@@ -64,18 +75,9 @@ export interface ISubscription extends IBaseEntity {
 
 export interface ICustomPlanRequestInput {
   description: string;
-  features: { name: string; count?: number }[];
+  companySize: number;
+  features: Record<string, number | undefined>;
   limitations: string[];
-}
-
-export interface IBillingInfo {
-  name: string;
-  email: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
 }
 
 export interface IPaymentMethod {

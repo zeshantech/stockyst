@@ -6,21 +6,24 @@ import { IconCreditCard, IconEdit, IconTrash, IconPlus } from "@tabler/icons-rea
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBillingStore } from "@/store/useBillingStore";
 import { IPaymentMethod } from "@/types/plan";
+import { useState } from "react";
+import { StripePaymentMethodForm } from "./stripe-payment-method-form";
+import { getStripe, noop } from "@/lib/utils";
+import { Elements } from "@stripe/react-stripe-js";
 
 export function PaymentMethods() {
   const paymentMethods = useBillingStore((state) => state.paymentMethods);
   const isLoadingPaymentMethods = useBillingStore((state) => state.isPaymentMethodsLoading);
   const paymentMethodSetupIntent = useBillingStore((state) => state.paymentMethodSetupIntent);
+  const isPaymentMethodSetupIntentPending = useBillingStore((state) => state.isPaymentMethodSetupIntentPending);
   const paymentMethodSetupIntentResult = useBillingStore((state) => state.paymentMethodSetupIntentResult);
 
-  const handleAddPaymentMethod = async () => {
-    const clientSecret = await paymentMethodSetupIntent();
-    console.log(clientSecret);
-  };
+  const [isAddingPaymentMethod, setIsAddingPaymentMethod] = useState(false);
 
-  if (paymentMethodSetupIntentResult) {
-    return <div>Client Secret: {paymentMethodSetupIntentResult.clientSecret}</div>;
-  }
+  const handleAddPaymentMethod = async () => {
+    await paymentMethodSetupIntent();
+    setIsAddingPaymentMethod(true);
+  };
 
   if (isLoadingPaymentMethods) {
     return (
@@ -44,19 +47,28 @@ export function PaymentMethods() {
           <CardTitle>Payment Methods</CardTitle>
           <CardDescription>Manage your payment methods for billing.</CardDescription>
         </div>
-        <Button size="sm" onClick={handleAddPaymentMethod}>
-          <IconPlus className="h-4 w-4 mr-2" />
+        <Button size="sm" href="/h/settings?tab=billing" onClick={handleAddPaymentMethod} loading={isPaymentMethodSetupIntentPending}>
+          <IconPlus />
           Add Method
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
-        {paymentMethods && paymentMethods.length > 0 ? (
+        {isAddingPaymentMethod && paymentMethodSetupIntentResult?.clientSecret ? (
+          <Elements
+            stripe={getStripe()}
+            options={{
+              clientSecret: paymentMethodSetupIntentResult.clientSecret,
+            }}
+          >
+            <StripePaymentMethodForm onClose={() => setIsAddingPaymentMethod(false)} />
+          </Elements>
+        ) : paymentMethods?.length ? (
           paymentMethods.map((method: IPaymentMethod, index: number) => {
             return (
               <div key={index} className="flex items-center justify-between p-4 border rounded-md">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-14 bg-primary/10 rounded-md flex items-center justify-center">
-                    <IconCreditCard className="h-5 w-5" />
+                    <IconCreditCard />
                   </div>
                   <div>
                     <p className="font-medium">
@@ -69,11 +81,9 @@ export function PaymentMethods() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button size="icon" variant="ghost">
-                    <IconEdit className="h-4 w-4" />
-                  </Button>
-                  <Button size="icon" variant="ghost" className="text-destructive">
-                    <IconTrash className="h-4 w-4" />
+                  <Button color="error" variant="ghost" onClick={noop}>
+                    <IconTrash />
+                    Remove
                   </Button>
                 </div>
               </div>
@@ -84,7 +94,7 @@ export function PaymentMethods() {
             <IconCreditCard className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
             <h3 className="text-sm font-medium mb-1">No payment methods</h3>
             <p className="text-sm text-muted-foreground mb-4">You haven't added any payment methods yet.</p>
-            <Button size="sm" onClick={handleAddPaymentMethod}>
+            <Button size="sm" onClick={handleAddPaymentMethod} loading={isPaymentMethodSetupIntentPending}>
               Add payment method
             </Button>
           </div>

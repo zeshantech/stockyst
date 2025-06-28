@@ -356,9 +356,6 @@ export function useGetPaymentMethods() {
 export function usePaymentMethodSetupIntent() {
   return useMutation({
     mutationFn: subscriptionRepositories.paymentMethodSetupIntent,
-    onSuccess: () => {
-      toast.success("Payment method added successfully");
-    },
     onError: (error) => {
       toast.error(error.message || "Failed to add payment method");
     },
@@ -369,10 +366,10 @@ export function useCreateCustomerPortalSession() {
   return useMutation({
     mutationFn: subscriptionRepositories.createCustomerPortalSession,
     onSuccess: () => {
-      toast.success("Billing information updated successfully");
+      toast.success("Customer portal session created");
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to update billing information");
+      toast.error(error.message || "Failed to create customer portal session");
     },
   });
 }
@@ -384,5 +381,37 @@ export function useGetInvoices() {
     queryKey: ["subscription", "invoices"],
     queryFn: subscriptionRepositories.getInvoices,
     enabled: !!user,
+  });
+}
+
+export function useStripePaymentMethod() {
+  return useMutation({
+    mutationFn: async ({ stripe, elements }: { stripe: any; elements: any }) => {
+      if (!stripe || !elements) {
+        throw new Error("Stripe or Elements not initialized");
+      }
+
+      const result = await stripe.confirmSetup({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/h/settings?tab=billing`,
+        },
+        redirect: "if_required",
+      });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      toast.success("Payment method added successfully");
+    },
+    onError: (error: Error) => {
+      toast.error("Failed to add payment method", {
+        description: error.message,
+      });
+    },
   });
 }

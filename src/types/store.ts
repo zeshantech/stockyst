@@ -1,6 +1,6 @@
-import { ISchema } from "./generic";
+import { IBaseEntity } from "./generic";
 
-export interface IStore extends ISchema {
+export interface IStore extends IBaseEntity {
   name: string;
   address: string;
   city: string;
@@ -10,6 +10,8 @@ export interface IStore extends ISchema {
   type: string;
   logoUrl: string;
   active: boolean;
+  stripeSubscriptionId: string;
+  stripeCustomerId: string;
 }
 
 export interface ICreateStoreInput {
@@ -33,4 +35,10 @@ export interface IUpdateStoreInput {
   email: string;
   type: string;
   logoUrl: string;
+}
+
+export interface ICreateStoreOutput {
+  clientSecret: string;
+  paymentIntentId: string;
+  amount: number;
 }

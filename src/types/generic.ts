@@ -10,7 +10,6 @@ export interface IBaseEntity {
   updatedAt?: Date;
 }
 
-
 export interface IPaginatedResponse<T> {
   data: T[];
   total: number;
@@ -28,7 +27,6 @@ export interface IResponse<T> {
   message: string;
   status: string;
 }
-
 
 export interface IError {
   message: string;

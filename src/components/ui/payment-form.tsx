@@ -68,7 +68,6 @@ function CheckoutForm({ onPaymentSuccess, amount }: { onPaymentSuccess: (payment
     e.preventDefault();
 
     if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
       return;
     }
 
@@ -102,7 +101,7 @@ function CheckoutForm({ onPaymentSuccess, amount }: { onPaymentSuccess: (payment
       <Button loading={isLoading} disabled={!stripe || !elements} className="w-full" type="submit">
         {amount ? `Pay ${formatCurrency(amount)}` : "Pay"}
       </Button>
-      {message && <div className="text-sm text-error mt-2">{message}</div>}
+      {message && <div className="text-sm  mt-2">{message}</div>}
     </form>
   );
 }

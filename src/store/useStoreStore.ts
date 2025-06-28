@@ -1,9 +1,8 @@
 "use client";
 
 import { useStores, useCreateStore, useUpdateStore, useCompleteStorePayment } from "@/hooks/use-stores";
-import { noop } from "@/lib/utils";
-import { IPaymentIntentResponse } from "@/types/billing";
-import { IStore, ICreateStoreInput, IUpdateStoreInput } from "@/types/store";
+import { noop, setLocalStorage } from "@/lib/utils";
+import { IStore, ICreateStoreInput, IUpdateStoreInput, ICreateStoreOutput } from "@/types/store";
 import { useEffect } from "react";
 import { create } from "zustand";
 
@@ -15,9 +14,9 @@ interface IStoreStore {
   isStoresError: boolean;
   refetchStores: () => void;
 
-  createStore: (store: ICreateStoreInput) => Promise<IPaymentIntentResponse | null>;
+  createStore: (store: ICreateStoreInput) => Promise<ICreateStoreOutput | null>;
   isCreateStoreLoading: boolean;
-  createStoreResult: IPaymentIntentResponse | null;
+  createStoreResult: ICreateStoreOutput | null;
   resetCreateStoreResult: () => void;
 
   completeStorePayment: (paymentIntentId: string, storeData: ICreateStoreInput) => Promise<void>;
@@ -25,6 +24,9 @@ interface IStoreStore {
 
   updateStore: (store: IUpdateStoreInput) => void;
   isUpdateStoreLoading: boolean;
+
+  activeStore: IStore | null;
+  setActiveStore: (store: IStore) => void;
 }
 
 export const useStoreStore = create<IStoreStore>((set) => ({
@@ -45,6 +47,12 @@ export const useStoreStore = create<IStoreStore>((set) => ({
 
   updateStore: noop,
   isUpdateStoreLoading: false,
+
+  activeStore: null,
+  setActiveStore: (store: IStore) => {
+    set({ activeStore: store });
+    setLocalStorage("activeStoreId", store.ID);
+  },
 }));
 
 export function useInitializeStoreStore() {
@@ -53,7 +61,6 @@ export function useInitializeStoreStore() {
   const updateStoreMutation = useUpdateStore();
   const completeStorePaymentMutation = useCompleteStorePayment();
 
-  console.log("=======================================", storesQuery.error, "=======================================");
   useEffect(() => {
     useStoreStore.setState({
       stores: storesQuery.data,

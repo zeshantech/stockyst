@@ -9,22 +9,34 @@ import { IStore } from "@/types/store";
 import { CreateStoreDialog } from "./create-store-dialog";
 import { useStoreStore } from "@/store/useStoreStore";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, getLocalStorage } from "@/lib/utils";
 
-export function StoreSwitcher() {
+export default function StoreSwitcher() {
   const { isMobile } = useSidebar();
   const stores = useStoreStore((state) => state.stores);
   const refetchStores = useStoreStore((state) => state.refetchStores);
   const isStoresFetching = useStoreStore((state) => state.isStoresFetching);
+  const activeStore = useStoreStore((state) => state.activeStore);
+  const setActiveStore = useStoreStore((state) => state.setActiveStore);
 
-  const [activeStore, setActiveStore] = useState<IStore | null>(null);
   const [createStoreOpen, setCreateStoreOpen] = useState(false);
 
   useEffect(() => {
+    const storedActiveStoreId = getLocalStorage("activeStoreId");
+
     if (!activeStore && stores?.length) {
-      setActiveStore(stores[0]);
+      const foundStore = stores.find((store) => store.ID === storedActiveStoreId);
+      if (foundStore) {
+        setActiveStore(foundStore);
+      } else {
+        setActiveStore(stores[0]);
+      }
     }
-  }, [stores]);
+  }, [activeStore, stores]);
+
+  const handleStoreChange = (store: IStore) => {
+    setActiveStore(store);
+  };
 
   if (!activeStore) {
     return null;
@@ -55,7 +67,7 @@ export function StoreSwitcher() {
                 </Button>
               </div>
               {stores.map((store, index) => (
-                <DropdownMenuItem key={store.name} onClick={() => setActiveStore(store)} className="gap-2 p-2">
+                <DropdownMenuItem key={store.name} onClick={() => handleStoreChange(store)} className="gap-2 p-2">
                   <div className="flex size-6 items-center justify-center rounded-sm border">
                     <Image src={store.logoUrl ?? ""} alt={store.name} width={44} height={44} />
                   </div>

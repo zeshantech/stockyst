@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlanOverview } from "./plan-overview";
 import { PaymentMethods } from "./payment-methods";
-import { BillingInfo } from "./billing-info";
 import { Invoices } from "./invoices";
 import { CancelSubscription } from "./cancel-subscription";
 
@@ -17,7 +16,6 @@ export function BillingSettings() {
         <TabsList className="mb-8 w-full">
           <TabsTrigger value="plans">Plans & Usage</TabsTrigger>
           <TabsTrigger value="payment">Payment Methods</TabsTrigger>
-          <TabsTrigger value="billing">Billing Information</TabsTrigger>
           <TabsTrigger value="history">Billing History</TabsTrigger>
         </TabsList>
 
@@ -27,10 +25,6 @@ export function BillingSettings() {
 
         <TabsContent value="payment" className="space-y-8">
           <PaymentMethods />
-        </TabsContent>
-
-        <TabsContent value="billing" className="space-y-8">
-          <BillingInfo />
         </TabsContent>
 
         <TabsContent value="history" className="space-y-8">

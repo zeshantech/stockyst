@@ -8,7 +8,6 @@ export interface IUser extends IBaseEntity {
   picture: string;
   bio: string;
   publicProfile: boolean;
-  stripeCustomerId: string;
 }
 
 export interface IUpdateUserInput {

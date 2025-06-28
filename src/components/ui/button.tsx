@@ -5,6 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 import { Spinner } from "./spinner";
+import { Loader } from "lucide-react";
 
 const buttonVariants = cva("inline-flex items-center justify-center gap-4 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive", {
   variants: {
@@ -52,6 +53,27 @@ const buttonVariants = cva("inline-flex items-center justify-center gap-4 whites
   ],
 });
 
+export const buttonLoaderVariants = cva("animate-spin", {
+  variants: {
+    size: {
+      default: "size-4",
+      xs: "size-3",
+      sm: "size-4",
+      lg: "size-5",
+      icon: "size-6",
+      iconSm: "size-4",
+    },
+  },
+});
+
+const ButtonLoader = ({ size }: VariantProps<typeof buttonLoaderVariants>) => {
+  return (
+    <div>
+      <Loader size="sm" className={buttonLoaderVariants({ size })} />
+    </div>
+  );
+};
+
 export interface ButtonProps extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   href?: string;
@@ -65,23 +87,17 @@ function Button({ className, variant, size, color, asChild = false, href, loadin
   if (href) {
     return (
       <NextLink href={href} legacyBehavior passHref>
-        <Comp data-slot="button" className={cn(buttonVariants({ variant, size, color, className }))} disabled={loading || disabled} {...props}>
-          {loading ? (
-            <>
-              <Spinner size="sm" className={variant === "outline" ? "text-foreground" : "text-current"} />
-              {children}
-            </>
-          ) : (
-            children
-          )}
+        <Comp data-slot="button" className={cn(buttonVariants({ variant, size, color, className }), loading && "[&>svg]:hidden")} disabled={loading || disabled} {...props}>
+          {loading ? <ButtonLoader size={size} /> : null}
+          {children}
         </Comp>
       </NextLink>
     );
   }
 
   return (
-    <Comp data-slot="button" className={cn(buttonVariants({ variant, size, color, className }))} disabled={loading || disabled} {...props}>
-      {loading ? <Spinner size="small" className={variant === "outline" ? "text-foreground" : "text-current"} /> : null}
+    <Comp data-slot="button" className={cn(buttonVariants({ variant, size, color, className }), loading && "[&>svg]:hidden")} disabled={loading || disabled} {...props}>
+      {loading ? <ButtonLoader size={size} /> : null}
       {children}
     </Comp>
   );
