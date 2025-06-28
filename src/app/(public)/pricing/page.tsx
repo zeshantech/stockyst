@@ -12,7 +12,7 @@ export default function PricingPage() {
 
       {/* Main Content */}
       <main className="flex-grow bg-muted/30">
-        <SubscriptionManager defaultBillingCycle="yearly" />
+        <SubscriptionManager />
       </main>
 
       {/* Footer */}

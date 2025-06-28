@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { IconCheck } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
-import { SubscriptionManager } from "@/components/subscription/subscription-manager";
+import { SubscriptionManager } from "./subscription-manager";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBillingStore } from "@/store/useBillingStore";
 

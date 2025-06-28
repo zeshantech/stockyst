@@ -87,7 +87,7 @@ export function StoreSettings() {
   });
 
   const handleEditStore = (storeId: string) => {
-    const store = stores.find((s) => s.id === storeId);
+    const store = stores.find((s) => s.ID === storeId);
     if (store) {
       setSelectedStore(storeId);
       reset({
@@ -96,11 +96,11 @@ export function StoreSettings() {
         address: store.address || "",
         city: store.city || "",
         country: store.country || "",
-        phone: store.phone || "",
+        phone: store.phoneNumber || "",
         email: store.email || "",
         isActive: true,
         isDefault: false,
-        logo: store.logo || "",
+        logo: store.logoUrl || "",
       });
       setIsEditingStore(true);
     }
@@ -185,7 +185,7 @@ export function StoreSettings() {
                   className="space-y-6"
                 >
                   <ImagePicker
-                    image={watch("logo")}
+                    image={watch("logo") as unknown as File}
                     onChange={(file) => {
                       if (file) {
                         // In a real app, you would upload the file here
@@ -194,9 +194,7 @@ export function StoreSettings() {
                         setValue("logo", mockImageUrl);
                       }
                     }}
-                    onRemove={() => setValue("logo", "")}
-                    className="w-full h-32"
-                    cropOptions={{ crop: true, ratio: 1 }}
+                      className="w-full h-32"
                   />
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -360,10 +358,10 @@ export function StoreSettings() {
                     </TableHeader>
                     <TableBody>
                       {stores.map((store) => {
-                        const StoreIcon = getStoreTypeIcon(store.id);
+                        const StoreIcon = getStoreTypeIcon(store.ID);
 
                         return (
-                          <TableRow key={store.id}>
+                          <TableRow key={store.ID}>
                             <TableCell className="font-medium">
                               <div className="flex items-center gap-3">
                                 <Avatar className="h-8 w-8 bg-primary/10">
@@ -374,7 +372,7 @@ export function StoreSettings() {
                                 <div>{store.name}</div>
                               </div>
                             </TableCell>
-                            <TableCell>{getStoreType(store.id)}</TableCell>
+                            <TableCell>{getStoreType(store.ID)}</TableCell>
                             <TableCell className="hidden md:table-cell">
                               <div className="flex items-center gap-1 text-muted-foreground">
                                 <IconMapPin className="h-3.5 w-3.5" />
@@ -384,7 +382,7 @@ export function StoreSettings() {
                               </div>
                             </TableCell>
                             <TableCell>
-                              {store.id === "store-1" ? (
+                              {store.ID === "store-1" ? (
                                 <Badge variant="info">Default</Badge>
                               ) : (
                                 <Badge variant="success">Active</Badge>
@@ -395,7 +393,7 @@ export function StoreSettings() {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  onClick={() => handleEditStore(store.id)}
+                                  onClick={() => handleEditStore(store.ID)}
                                 >
                                   <IconEdit className="size-4" />
                                   <span className="sr-only">Edit</span>
@@ -404,8 +402,8 @@ export function StoreSettings() {
                                   variant="ghost"
                                   size="icon"
                                   color="error"
-                                  onClick={() => handleDeleteStore(store.id)}
-                                  disabled={store.id === "store-1"} // Prevent deleting default store
+                                  onClick={() => handleDeleteStore(store.ID)}
+                                  disabled={store.ID === "store-1"} // Prevent deleting default store
                                 >
                                   <IconTrash />
                                   <span className="sr-only">Delete</span>

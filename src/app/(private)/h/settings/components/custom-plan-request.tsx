@@ -12,8 +12,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { ICustomPlanRequestInput } from "@/types/plan";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
-import { Label } from "../ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 interface CustomPlanRequestProps {
   className?: string;
@@ -50,7 +50,7 @@ export function CustomPlanRequest({ className }: CustomPlanRequestProps) {
     watch,
     setValue,
   } = useForm<yup.InferType<typeof schema>>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as any,
     defaultValues: {
       description: "",
       companySize: 0,

@@ -93,7 +93,6 @@ export function useInitializeBillingStore() {
   }, [currentSubscriptionQuery.data, currentSubscriptionQuery.isLoading]);
 
   useEffect(() => {
-    console.log(plansQuery.data, "plansQuery.data");
     useBillingStore.setState({
       plans: plansQuery.data || null,
       isPlansLoading: plansQuery.isLoading,

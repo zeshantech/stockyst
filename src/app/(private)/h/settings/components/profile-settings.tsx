@@ -42,7 +42,7 @@ export function ProfileSettings() {
     watch,
     setValue,
   } = useForm<yup.InferType<typeof schema>>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as any,
   });
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export function ProfileSettings() {
 
                 {isUploading && (
                   <div className="absolute bottom-0 right-0 bg-black/50 w-full h-full flex items-center justify-center rounded-full">
-                    <Spinner color="primary" />
+                    <Spinner />
                   </div>
                 )}
               </div>

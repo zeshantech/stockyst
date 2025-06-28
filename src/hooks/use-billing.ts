@@ -302,9 +302,8 @@ export function useGetSubscriptionPlans() {
   const { user } = useUser();
 
   return useQuery({
-    queryKey: ["subscription", "plans"],
+    queryKey: ["subscription", "plans", user?.sub],
     queryFn: subscriptionRepositories.getPlans,
-    enabled: !!user,
   });
 }
 

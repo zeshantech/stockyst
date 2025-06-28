@@ -5,7 +5,8 @@ import { MOCK_INVOICES } from "@/constants/subscription";
 import { getLocalStorage } from "../utils";
 
 export async function getPlans() {
-  return apiCall<IPlans>("/subscription/plans", "GET");
+  const storeId = getLocalStorage("activeStoreId");
+  return apiCall<IPlans>("/subscription/plans", "GET", undefined, { "x-store-id": storeId });
 }
 
 export async function subscribeToPlan(input: ISubscribeToPlanInput) {
