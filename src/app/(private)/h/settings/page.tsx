@@ -78,12 +78,6 @@ const TABS = [
     component: ProfileSettings,
   },
   {
-    id: "security",
-    label: "Security",
-    icon: IconLock,
-    component: SecuritySettings,
-  },
-  {
     id: "api",
     label: "API",
     icon: IconKey,
