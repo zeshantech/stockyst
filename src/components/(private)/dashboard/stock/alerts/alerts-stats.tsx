@@ -71,7 +71,7 @@ const AlertsStats = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-24">
-        <Spinner size="md" />
+        <Spinner />
       </div>
     );
   }

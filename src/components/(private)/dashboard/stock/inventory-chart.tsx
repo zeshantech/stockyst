@@ -42,7 +42,7 @@ export function InventoryChart({ statistics, isLoading }: InventoryChartProps) {
       <CardContent>
         {isLoading ? (
           <div className="flex items-center justify-center h-[300px]">
-            <Spinner size="lg" />
+            <Spinner size="large" />
             <span className="ml-2">Loading chart data...</span>
           </div>
         ) : statistics?.monthlyData ? (

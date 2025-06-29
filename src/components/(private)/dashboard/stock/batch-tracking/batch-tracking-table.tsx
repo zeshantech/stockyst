@@ -130,7 +130,7 @@ const BatchTrackingTable = () => {
   if (isLoadingStock) {
     return (
       <div className="flex h-40 items-center justify-center">
-        <Spinner size="lg" />
+        <Spinner size="large" />
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { ISchema } from "./generic";
+import { IntervalType } from "./plan";
 
 export interface ISubscriptionPlan extends Omit<ISchema, "createdAt"> {
   id: string;

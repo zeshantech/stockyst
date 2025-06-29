@@ -210,7 +210,7 @@ const AlertDialogModal = ({
             {cancelText}
           </AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm} disabled={isConfirming}>
-            {isConfirming ? <Spinner className="mr-2" size="sm" /> : null}
+            {isConfirming ? <Spinner className="mr-2" size="small" /> : null}
             {confirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -653,7 +653,7 @@ const AlertsTable = () => {
     if (isLoading) {
       return (
         <div className="flex justify-center items-center h-60">
-          <Spinner size="lg" />
+          <Spinner size="large" />
         </div>
       );
     }

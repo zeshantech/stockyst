@@ -350,7 +350,7 @@ const AdjustmentForm = ({ adjustmentId, onSuccess }: AdjustmentFormProps) => {
 
       <DialogFooter className="mt-6">
         <Button type="submit" disabled={isLoading}>
-          {isLoading && <Spinner size="sm" className="mr-2" />}
+          {isLoading && <Spinner size="small" className="mr-2" />}
           {adjustmentId ? "Update Adjustment" : "Create Adjustment"}
         </Button>
       </DialogFooter>

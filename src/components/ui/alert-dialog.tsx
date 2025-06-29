@@ -134,7 +134,7 @@ function AlertDialogAction({
     >
       {loading ? (
         <>
-          <Spinner size="sm" className="mr-2" />
+          <Spinner size="small" className="mr-2" />
           {props.children}
         </>
       ) : (
