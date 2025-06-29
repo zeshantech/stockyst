@@ -1,7 +1,7 @@
 "use server";
 
 import axios from "axios";
-import { auth0 } from "@/lib/auth0";
+import { auth } from "@clerk/nextjs/server";
 
 export const api = axios.create({
   baseURL: process.env.SERVER_URL || "http://localhost:8080",
@@ -20,7 +20,8 @@ api.interceptors.response.use(
 export const apiCall = async <T>(url: string, method: string, body?: Record<string, any>, headers?: Record<string, any>): Promise<T> => {
   console.log("apiCall", url, method, body, headers);
   try {
-    const token = await auth0.getAccessToken();
+    const { getToken } = await auth();
+    const token = await getToken();
 
     const response = await api.request({
       url: url,
@@ -28,7 +29,7 @@ export const apiCall = async <T>(url: string, method: string, body?: Record<stri
       data: body,
       headers: {
         ...headers,
-        ...(token?.token ? { Authorization: `Bearer ${token.token}` } : {}),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
     });
 

@@ -1,13 +1,8 @@
 import { IBaseEntity } from "./generic";
 
 export interface IUser extends IBaseEntity {
-  auth0Id: string;
-  name: string;
+  clerkUserId: string;
   email: string;
-  phoneNumber: string;
-  picture: string;
-  bio: string;
-  publicProfile: boolean;
 }
 
 export interface IUpdateUserInput {

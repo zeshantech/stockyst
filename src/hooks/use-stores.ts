@@ -1,16 +1,16 @@
 import * as storeRepository from "@/lib/repositories/store";
 import { ICreateStoreInput, IUpdateStoreInput } from "@/types/store";
-import { useUser } from "@auth0/nextjs-auth0";
+import { useAuth } from "@clerk/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useStores = () => {
-  const { user } = useUser();
+  const { isSignedIn } = useAuth();
 
   return useQuery({
     queryKey: ["stores"],
     queryFn: storeRepository.getStores,
-    enabled: !!user,
+    enabled: isSignedIn,
   });
 };
 
@@ -19,13 +19,8 @@ export const useCreateStore = () => {
 
   return useMutation({
     mutationFn: storeRepository.createStore,
-    onSuccess: (data) => {
-      if (data?.requiresPaymentMethod) {
-        return data;
-      }
-
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stores"] });
-      toast.success("Store created successfully");
     },
     onError: () => toast.error("Failed to create store"),
   });

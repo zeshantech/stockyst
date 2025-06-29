@@ -1,136 +1,15 @@
 "use client";
 
+import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { Input } from "@/components/ui/input";
-import { IconCamera } from "@tabler/icons-react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useUserStore } from "@/store/useUserStore";
-import { IUpdateUserInput } from "@/types/user";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { useEffect, useMemo, useState } from "react";
-import { ImagePicker } from "@/components/ui/image-picker";
-import { ImageCropper } from "@/components/ui/image-cropper";
-import { useUploadImage } from "@/hooks/use-upload-image";
-import { Spinner } from "@/components/ui/spinner";
-import { Loader2 } from "lucide-react";
-
-const schema = yup.object().shape({
-  name: yup.string().optional(),
-  phoneNumber: yup.string().optional(),
-  picture: yup.string().optional(),
-  bio: yup.string().optional(),
-  publicProfile: yup.boolean().optional(),
-});
+import { UserProfile } from "@clerk/nextjs";
 
 export function ProfileSettings() {
-  const user = useUserStore((state) => state.currentUser);
-  const updateUser = useUserStore((state) => state.updateUser);
-  const { upload, isUploading } = useUploadImage();
-
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setValue,
-  } = useForm<yup.InferType<typeof schema>>({
-    resolver: yupResolver(schema) as any,
-  });
-
-  useEffect(() => {
-    if (user) {
-      setValue("name", user.name);
-      setValue("phoneNumber", user.phoneNumber);
-      setValue("bio", user.bio);
-      setValue("publicProfile", user.publicProfile);
-      setValue("picture", user.picture);
-      setValue("publicProfile", user.publicProfile);
-    }
-  }, [user]);
-
-  const selectedImageUrl = useMemo(() => {
-    if (!selectedImage) return null;
-    return URL.createObjectURL(selectedImage);
-  }, [selectedImage]);
-
-  const handleImageSelect = (file: File) => {
-    setSelectedImage(file);
-  };
-
-  const handleOnSubmit = async (data: yup.InferType<typeof schema>) => {
-    if (selectedImage) {
-      const { url } = await upload(selectedImage);
-      data.picture = url;
-    }
-
-    updateUser(data);
-  };
-
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
-          <CardDescription>Update your personal information and how others see you on the platform.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(handleOnSubmit)} className="space-y-8">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="relative group">
-                <Avatar className="h-24 w-24 border-2 border-border">
-                  <AvatarImage src={selectedImageUrl || user?.picture} alt="Profile Picture" />
-                  <AvatarFallback className="text-xl">{user?.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <ImagePicker onImageSelect={handleImageSelect} croppable image={selectedImage}>
-                  <Button size="icon" className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                    <IconCamera />
-                  </Button>
-                </ImagePicker>
-
-                {isUploading && (
-                  <div className="absolute bottom-0 right-0 bg-black/50 w-full h-full flex items-center justify-center rounded-full">
-                    <Spinner />
-                  </div>
-                )}
-              </div>
-
-              <div className="grid w-full gap-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Input id="name" name="name" {...register("name")} label="Name" error={errors.name?.message} />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input id="email" name="email" type="email" value={user?.email} readOnly label="Email" />
-                  <Input id="phoneNumber" name="phoneNumber" {...register("phoneNumber")} label="Phone Number" error={errors.phoneNumber?.message} />
-                </div>
-
-                <div className="space-y-2">
-                  <Textarea id="bio" name="bio" label="Bio" {...register("bio")} rows={4} placeholder="Tell us about yourself" />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch id="public-profile" checked={watch("publicProfile")} onCheckedChange={(checked) => setValue("publicProfile", checked)} />
-                  <Label htmlFor="public-profile">Make my profile public</Label>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end">
-              <Button type="submit">Save Changes</Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+      <div className="clerk-profile">
+        <UserProfile />
+      </div>
 
       <Card>
         <CardHeader>

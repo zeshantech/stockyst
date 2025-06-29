@@ -159,3 +159,12 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+
+.clerk-profile .cl-internal-phfxlr {
+  width: auto !important;
+}
+
+.clerk-profile .cl-cardBox {
+  width: auto !important;
+}

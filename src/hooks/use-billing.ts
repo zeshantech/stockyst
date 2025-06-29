@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import * as subscriptionRepositories from "@/lib/repositories/billing";
-import { useUser } from "@auth0/nextjs-auth0";
+import { useAuth } from "@clerk/nextjs";
 
 // export function useSubscription() {
 //   const queryClient = useQueryClient();
@@ -289,20 +289,20 @@ import { useUser } from "@auth0/nextjs-auth0";
 // }
 
 export function useGetCurrentSubscription() {
-  const { user } = useUser();
+  const { isSignedIn } = useAuth();
 
   return useQuery({
     queryKey: ["subscription", "current"],
     queryFn: subscriptionRepositories.getCurrentSubscription,
-    enabled: !!user,
+    enabled: isSignedIn,
   });
 }
 
 export function useGetSubscriptionPlans() {
-  const { user } = useUser();
+  const { isSignedIn } = useAuth();
 
   return useQuery({
-    queryKey: ["subscription", "plans", user?.sub],
+    queryKey: ["subscription", "plans", isSignedIn],
     queryFn: subscriptionRepositories.getPlans,
   });
 }
@@ -343,12 +343,12 @@ export function useCancelSubscription() {
 }
 
 export function useGetPaymentMethods() {
-  const { user } = useUser();
+  const { isSignedIn } = useAuth();
 
   return useQuery({
     queryKey: ["subscription", "payment-methods"],
     queryFn: subscriptionRepositories.getPaymentMethods,
-    enabled: !!user,
+    enabled: isSignedIn,
   });
 }
 
@@ -374,12 +374,12 @@ export function useCreateCustomerPortalSession() {
 }
 
 export function useGetInvoices() {
-  const { user } = useUser();
+  const { isSignedIn } = useAuth();
 
   return useQuery({
     queryKey: ["subscription", "invoices"],
     queryFn: subscriptionRepositories.getInvoices,
-    enabled: !!user,
+    enabled: isSignedIn,
   });
 }
 

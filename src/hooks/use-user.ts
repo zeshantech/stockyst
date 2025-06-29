@@ -1,15 +1,15 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import * as userRepository from "@/lib/repositories/user";
-import { useUser } from "@auth0/nextjs-auth0";
 import { toast } from "sonner";
+import { useAuth } from "@clerk/nextjs";
 
 export function useCurrentUser() {
-    const { user } = useUser();
+    const { isSignedIn } = useAuth();
 
     return useQuery({
         queryKey: ['user', 'current'],
         queryFn: userRepository.getCurrentUser,
-        enabled: !!user,
+        enabled: isSignedIn,
     });
 }
 

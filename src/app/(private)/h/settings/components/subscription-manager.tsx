@@ -8,8 +8,8 @@ import { PricingCard } from "./pricing-card";
 import { CustomPlanRequest } from "./custom-plan-request";
 import { useBillingStore } from "@/store/useBillingStore";
 import { IntervalType } from "@/types/plan";
-import { SpinnerBox } from "../ui/spinner";
-import { PaymentForm } from "../ui/payment-form";
+import { SpinnerBox } from "@/components/ui/spinner";
+import { PaymentForm } from "@/components/ui/payment-form";
 import ReactConfetti from "react-confetti";
 
 interface SubscriptionManagerProps {

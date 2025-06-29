@@ -5,11 +5,10 @@ import { Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IPlan, IntervalType } from "@/types/plan";
 import { useBillingStore } from "@/store/useBillingStore";
-import { useUser } from "@auth0/nextjs-auth0";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { toast } from "sonner";
-import { PaymentForm } from "../ui/payment-form";
+import { useAuth, useClerk } from "@clerk/nextjs";
 
 interface PricingCardProps extends IPlan {
   activeTab: IntervalType;
@@ -18,27 +17,20 @@ interface PricingCardProps extends IPlan {
 }
 
 export function PricingCard({ planId, name, description, features, limitations, prices, activeTab, className, isPopular }: PricingCardProps) {
+  const { isSignedIn } = useAuth();
+  const { openSignIn } = useClerk();
   const router = useRouter();
-  const { user } = useUser();
-
-  const subscribeToPlan = useBillingStore((store) => store.subscribeToPlan);
-  const isSubscribeToPlanPending = useBillingStore((store) => store.isSubscribeToPlanPending);
 
   const activePrice = useMemo(() => prices.find((price) => price.interval === activeTab), [prices, activeTab]);
-
   const isPremiumPlan = name === "Pro" || name === "Custom";
 
-  const handlePlanSelect = (planId: string) => {
-    if (!user) {
-      router.push("/auth/login?returnTo=/subscription");
+  const handlePlanSelect = () => {
+    if (!isSignedIn) {
+      openSignIn();
       return;
     }
 
-    if (activePrice) {
-      subscribeToPlan({ planId, priceId: activePrice.stripePriceId });
-    } else {
-      toast.error("No active price found");
-    }
+    router.push("/h/settings?tab=billing");
   };
 
   return (
@@ -85,8 +77,8 @@ export function PricingCard({ planId, name, description, features, limitations, 
         )}
       </CardContent>
       <CardFooter>
-        <Button onClick={() => handlePlanSelect(planId)} className={cn("w-full", isPremiumPlan && !isPopular && "bg-primary/20 text-primary hover:bg-primary hover:text-primary-foreground")} variant={isPopular ? "default" : isPremiumPlan ? "default" : "outline"} loading={isSubscribeToPlanPending}>
-          Choose {name}
+        <Button onClick={handlePlanSelect} className={cn("w-full", isPremiumPlan && !isPopular && "bg-primary/20 text-primary hover:bg-primary hover:text-primary-foreground")} variant={isPopular ? "default" : isPremiumPlan ? "default" : "outline"}>
+          {isSignedIn ? "Go to Settings" : "Login to continue"}
         </Button>
       </CardFooter>
     </Card>

@@ -5,11 +5,8 @@ import { Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IPlan, IntervalType } from "@/types/plan";
 import { useBillingStore } from "@/store/useBillingStore";
-import { useUser } from "@auth0/nextjs-auth0";
-import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { toast } from "sonner";
-import { PaymentForm } from "../ui/payment-form";
 
 interface PricingCardProps extends IPlan {
   activeTab: IntervalType;
@@ -18,9 +15,6 @@ interface PricingCardProps extends IPlan {
 }
 
 export function PricingCard({ planId, name, description, features, limitations, prices, activeTab, className, isPopular }: PricingCardProps) {
-  const router = useRouter();
-  const { user } = useUser();
-
   const subscribeToPlan = useBillingStore((store) => store.subscribeToPlan);
   const isSubscribeToPlanPending = useBillingStore((store) => store.isSubscribeToPlanPending);
 
@@ -29,11 +23,6 @@ export function PricingCard({ planId, name, description, features, limitations, 
   const isPremiumPlan = name === "Pro" || name === "Custom";
 
   const handlePlanSelect = (planId: string) => {
-    if (!user) {
-      router.push("/auth/login?returnTo=/subscription");
-      return;
-    }
-
     if (activePrice) {
       subscribeToPlan({ planId, priceId: activePrice.stripePriceId });
     } else {
