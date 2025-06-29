@@ -3,12 +3,8 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  IconArrowRight,
-  IconDeviceAnalytics,
-  IconShield,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconArrowRight, IconDeviceAnalytics, IconShield, IconUsers } from "@tabler/icons-react";
+import { useClerk } from "@clerk/nextjs";
 
 interface CTASectionProps {
   className?: string;
@@ -20,15 +16,9 @@ interface CTASectionProps {
   secondaryButtonLink?: string;
 }
 
-export function CTASection({
-  className,
-  title = "Ready to transform your inventory management?",
-  description = "Join thousands of businesses that trust Stockyst to streamline their inventory processes. Get started today with our risk-free trial.",
-  primaryButtonText = "Start Free Trial",
-  secondaryButtonText = "Schedule Demo",
-  primaryButtonLink = "/signup",
-  secondaryButtonLink = "/demo",
-}: CTASectionProps) {
+export function CTASection({ className, title = "Ready to transform your inventory management?", description = "Join thousands of businesses that trust Stockyst to streamline their inventory processes. Get started today with our risk-free trial.", primaryButtonText = "Start Free Trial", secondaryButtonText = "Schedule Demo", secondaryButtonLink = "/request-demo" }: CTASectionProps) {
+  const { openSignIn } = useClerk();
+
   return (
     <section className={cn("py-20 relative overflow-hidden", className)}>
       {/* Background elements */}
@@ -42,30 +32,18 @@ export function CTASection({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left side: Content */}
           <div className="lg:col-span-7">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="rounded-2xl border border-border bg-card p-8 md:p-12 relative overflow-hidden"
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="rounded-2xl border border-border bg-card p-8 md:p-12 relative overflow-hidden">
               {/* Badge */}
               <div className="inline-flex items-center rounded-full border border-border bg-background px-4 py-1 text-sm mb-8">
                 <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
-                <span className="text-foreground font-medium">
-                  Limited Time Offer
-                </span>
+                <span className="text-foreground font-medium">Limited Time Offer</span>
               </div>
 
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 max-w-xl">
-                {title}
-              </h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-xl">
-                {description}
-              </p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 max-w-xl">{title}</h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-xl">{description}</p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button href={primaryButtonLink} size="lg" className="group">
+                <Button size="lg" className="group" onClick={() => openSignIn()}>
                   {primaryButtonText}
                   <IconArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-1" />
                 </Button>
@@ -82,9 +60,7 @@ export function CTASection({
                   </div>
                   <div>
                     <p className="text-2xl font-bold">5,000+</p>
-                    <p className="text-sm text-muted-foreground">
-                      Active Users
-                    </p>
+                    <p className="text-sm text-muted-foreground">Active Users</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -110,25 +86,14 @@ export function CTASection({
           </div>
 
           {/* Right side: Social proof */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-5"
-          >
+          <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} className="lg:col-span-5">
             <div className="rounded-2xl border border-border bg-card p-8 md:p-10">
-              <h3 className="text-xl font-semibold mb-6">
-                Trusted by industry leaders
-              </h3>
+              <h3 className="text-xl font-semibold mb-6">Trusted by industry leaders</h3>
 
               {/* Logos grid */}
               <div className="grid grid-cols-3 gap-4 mb-8">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-center p-4 bg-muted/30 rounded-lg h-16"
-                  >
+                  <div key={i} className="flex items-center justify-center p-4 bg-muted/30 rounded-lg h-16">
                     <div className="w-full h-4 bg-muted/70 rounded animate-pulse"></div>
                   </div>
                 ))}
@@ -136,21 +101,14 @@ export function CTASection({
 
               {/* Testimonial */}
               <div className="relative">
-                <div className="absolute -top-4 -left-2 text-primary/20 text-6xl">
-                  "
-                </div>
+                <div className="absolute -top-4 -left-2 text-primary/20 text-6xl">"</div>
                 <blockquote className="relative z-10 px-2">
-                  <p className="text-muted-foreground italic mb-4">
-                    Stockyst has transformed our warehouse operations, reducing
-                    errors by 78% and saving us countless hours of manual work.
-                  </p>
+                  <p className="text-muted-foreground italic mb-4">Stockyst has transformed our warehouse operations, reducing errors by 78% and saving us countless hours of manual work.</p>
                   <footer className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary/20 rounded-full"></div>
                     <div>
                       <p className="font-medium">Sarah Johnson</p>
-                      <p className="text-sm text-muted-foreground">
-                        Operations Director, TechSupply Inc.
-                      </p>
+                      <p className="text-sm text-muted-foreground">Operations Director, TechSupply Inc.</p>
                     </div>
                   </footer>
                 </blockquote>
