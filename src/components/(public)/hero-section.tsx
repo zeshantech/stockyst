@@ -180,7 +180,7 @@ export function HeroSection({ className = "" }: HeroSectionProps) {
                 {/* Embed video (only shown when play is clicked) */}
                 {isVideoPlaying && (
                   <video
-                    src="./p2.mp4"
+                    src="./demo-video.mp4"
                     autoPlay
                     muted
                     loop
